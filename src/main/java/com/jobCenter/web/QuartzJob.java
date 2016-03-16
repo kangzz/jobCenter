@@ -35,6 +35,6 @@ public class QuartzJob implements Job {
 		System.out.println(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())+ "★★★★★★★★★★★");
 		//System.out.println(arg0.getJobDetail().getJobDataMap().get("url"));
 		JobInfo job = (JobInfo)arg0.getJobDetail().getJobDataMap().get("jobInfo");
-		System.out.println(job.getJobName());
+		System.out.println("定时任务输出数据库字段:"+job.getJobName());
 	}
 }
