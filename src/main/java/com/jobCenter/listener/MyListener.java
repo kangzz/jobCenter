@@ -1,16 +1,14 @@
 package com.jobCenter.listener;
 
-import com.jobCenter.domain.User;
-import com.jobCenter.mapper.UserMapper;
-import com.jobCenter.model.JobInfo;
-import com.jobCenter.service.IUserService;
+import com.jobCenter.model.JobInfoModel;
+import com.jobCenter.service.IJobService;
 import com.jobCenter.util.SpringTool;
-import com.jobCenter.web.QuartzJob;
-import com.jobCenter.web.QuartzManager;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.jobCenter.job.QuartzJob;
+import com.jobCenter.job.QuartzManager;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+import java.util.List;
 
 /**
  * Listener的方式在后台执行一线程
@@ -53,21 +51,17 @@ class MyThread extends Thread {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            IUserService userService = (IUserService) SpringTool.getBean("userService");
-            User aa;
-            aa = userService.getUserById("1");
-            System.out.println("监听器输出数据库数据:"+aa.getName());
+            IJobService jobService = (IJobService) SpringTool.getBean("jobService");
+            List<JobInfoModel> jobInfos =  jobService.getAllJobInfo();
+
+            System.out.println("监听器输出数据库数据:"+jobInfos.size());
 
             if(flag.equals("0")) {
                 flag = "";
                 QuartzJob quartzJob = new QuartzJob();
-                JobInfo jobInfo1 = new JobInfo();
-                jobInfo1.setJobUrl("url1");
-                jobInfo1.setJobName(aa.getName());
-                jobInfo1.setJobType("1");
                 String job_name = "动态任务调度";
                 System.out.println("【系统启动】开始(每1秒输出一次)...");
-                QuartzManager.addJob(job_name + "1", quartzJob.getClass(), "0/1 * * * * ?", jobInfo1);
+                QuartzManager.addJob(job_name + "1", quartzJob.getClass(), "0/1 * * * * ?", jobInfos);
             }
 //			 ------------------ 开始执行 ---------------------------
             //System.out.println("____FUCK TIME:" + System.currentTimeMillis());

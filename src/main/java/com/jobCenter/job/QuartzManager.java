@@ -9,24 +9,22 @@
  * @date 2014-6-26 下午03:15:52
  * @version V2.0
  */
-package com.jobCenter.web;
+package com.jobCenter.job;
 
-import com.jobCenter.model.JobInfo;
+import com.jobCenter.model.JobInfoModel;
 import org.quartz.CronTrigger;
 import org.quartz.JobDetail;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerFactory;
 import org.quartz.impl.StdSchedulerFactory;
 
+import java.util.List;
+
+
 /**
- * @Description: 定时任务管理类
- * 
- * @ClassName: QuartzManager
- * @Copyright: Copyright (c) 2014
- * 
- * @author Comsys-LZP
- * @date 2014-6-26 下午03:15:52
- * @version V2.0
+ * 描述：定时任务管理类
+ * 作者 ：kzz
+ * 日期 ：2016-03-17 23:08:30
  */
 public class QuartzManager {
 	private static SchedulerFactory gSchedulerFactory = new StdSchedulerFactory();
@@ -51,12 +49,12 @@ public class QuartzManager {
 	 * @version V2.0
 	 */
 	@SuppressWarnings("unchecked")
-	public static void addJob(String jobName, Class cls, String time,JobInfo jobInfo) {
+	public static void addJob(String jobName, Class cls, String time,List<JobInfoModel> jobInfos) {
 		try {
 			Scheduler sched = gSchedulerFactory.getScheduler();
 			JobDetail jobDetail = new JobDetail(jobName, JOB_GROUP_NAME, cls);// 任务名，任务组，任务执行类
 
-			jobDetail.getJobDataMap().put("jobInfo",jobInfo);
+			jobDetail.getJobDataMap().put("jobInfos",jobInfos);
 			// 触发器
 			CronTrigger trigger = new CronTrigger(jobName, TRIGGER_GROUP_NAME);// 触发器名,触发器组
 			trigger.setCronExpression(time);// 触发器时间设定

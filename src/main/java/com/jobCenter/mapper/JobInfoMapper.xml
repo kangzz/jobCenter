@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jobCenter.mapper.JobInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.jobCenter.domain.JobInfo" >
+    <id column="job_id" property="jobId" jdbcType="VARCHAR" />
+    <result column="job_name" property="jobName" jdbcType="VARCHAR" />
+    <result column="job_execute_type" property="jobExecuteType" jdbcType="INTEGER" />
+    <result column="job_execute_rule" property="jobExecuteRule" jdbcType="VARCHAR" />
+    <result column="job_notify_succ" property="jobNotifySucc" jdbcType="INTEGER" />
+    <result column="job_start_time" property="jobStartTime" jdbcType="TIMESTAMP" />
+    <result column="job_end_time" property="jobEndTime" jdbcType="TIMESTAMP" />
+    <result column="is_valid" property="isValid" jdbcType="INTEGER" />
+    <result column="is_del" property="isDel" jdbcType="INTEGER" />
+    <result column="create_id" property="createId" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_id" property="updateId" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    job_id, job_name, job_execute_type, job_execute_rule, job_notify_succ, job_start_time,
+    job_end_time, is_valid, is_del, create_id, create_time, update_id, update_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from job_info
+    where job_id = #{jobId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from job_info
+    where job_id = #{jobId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.jobCenter.domain.JobInfo" >
+    insert into job_info (job_id, job_name, job_execute_type,
+      job_execute_rule, job_notify_succ, job_start_time, 
+      job_end_time, is_valid, is_del, 
+      create_id, create_time, update_id, 
+      update_time)
+    values (#{jobId,jdbcType=VARCHAR}, #{jobName,jdbcType=VARCHAR}, #{jobExecuteType,jdbcType=INTEGER}, 
+      #{jobExecuteRule,jdbcType=VARCHAR}, #{jobNotifySucc,jdbcType=INTEGER}, #{jobStartTime,jdbcType=TIMESTAMP}, 
+      #{jobEndTime,jdbcType=TIMESTAMP}, #{isValid,jdbcType=INTEGER}, #{isDel,jdbcType=INTEGER}, 
+      #{createId,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateId,jdbcType=VARCHAR}, 
+      #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jobCenter.domain.JobInfo" >
+    insert into job_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="jobId != null" >
+        job_id,
+      </if>
+      <if test="jobName != null" >
+        job_name,
+      </if>
+      <if test="jobExecuteType != null" >
+        job_execute_type,
+      </if>
+      <if test="jobExecuteRule != null" >
+        job_execute_rule,
+      </if>
+      <if test="jobNotifySucc != null" >
+        job_notify_succ,
+      </if>
+      <if test="jobStartTime != null" >
+        job_start_time,
+      </if>
+      <if test="jobEndTime != null" >
+        job_end_time,
+      </if>
+      <if test="isValid != null" >
+        is_valid,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+      <if test="createId != null" >
+        create_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateId != null" >
+        update_id,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="jobId != null" >
+        #{jobId,jdbcType=VARCHAR},
+      </if>
+      <if test="jobName != null" >
+        #{jobName,jdbcType=VARCHAR},
+      </if>
+      <if test="jobExecuteType != null" >
+        #{jobExecuteType,jdbcType=INTEGER},
+      </if>
+      <if test="jobExecuteRule != null" >
+        #{jobExecuteRule,jdbcType=VARCHAR},
+      </if>
+      <if test="jobNotifySucc != null" >
+        #{jobNotifySucc,jdbcType=INTEGER},
+      </if>
+      <if test="jobStartTime != null" >
+        #{jobStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="jobEndTime != null" >
+        #{jobEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isValid != null" >
+        #{isValid,jdbcType=INTEGER},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=INTEGER},
+      </if>
+      <if test="createId != null" >
+        #{createId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateId != null" >
+        #{updateId,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jobCenter.domain.JobInfo" >
+    update job_info
+    <set >
+      <if test="jobName != null" >
+        job_name = #{jobName,jdbcType=VARCHAR},
+      </if>
+      <if test="jobExecuteType != null" >
+        job_execute_type = #{jobExecuteType,jdbcType=INTEGER},
+      </if>
+      <if test="jobExecuteRule != null" >
+        job_execute_rule = #{jobExecuteRule,jdbcType=VARCHAR},
+      </if>
+      <if test="jobNotifySucc != null" >
+        job_notify_succ = #{jobNotifySucc,jdbcType=INTEGER},
+      </if>
+      <if test="jobStartTime != null" >
+        job_start_time = #{jobStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="jobEndTime != null" >
+        job_end_time = #{jobEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isValid != null" >
+        is_valid = #{isValid,jdbcType=INTEGER},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=INTEGER},
+      </if>
+      <if test="createId != null" >
+        create_id = #{createId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateId != null" >
+        update_id = #{updateId,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where job_id = #{jobId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jobCenter.domain.JobInfo" >
+    update job_info
+    set job_name = #{jobName,jdbcType=VARCHAR},
+      job_execute_type = #{jobExecuteType,jdbcType=INTEGER},
+      job_execute_rule = #{jobExecuteRule,jdbcType=VARCHAR},
+      job_notify_succ = #{jobNotifySucc,jdbcType=INTEGER},
+      job_start_time = #{jobStartTime,jdbcType=TIMESTAMP},
+      job_end_time = #{jobEndTime,jdbcType=TIMESTAMP},
+      is_valid = #{isValid,jdbcType=INTEGER},
+      is_del = #{isDel,jdbcType=INTEGER},
+      create_id = #{createId,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_id = #{updateId,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where job_id = #{jobId,jdbcType=VARCHAR}
+  </update>
+
+  <sql id="whereSql">
+    <trim prefix="WHERE" prefixOverrides="AND">
+      <if test="jobId != null" >
+        AND job_id = #{jobId,jdbcType=VARCHAR}
+      </if>
+      <if test="jobName != null" >
+        AND job_name = #{jobName,jdbcType=VARCHAR}
+      </if>
+      <if test="jobExecuteType != null" >
+        AND job_execute_type = #{jobExecuteType,jdbcType=INTEGER}
+      </if>
+      <if test="jobExecuteRule != null" >
+        AND job_execute_rule = #{jobExecuteRule,jdbcType=VARCHAR}
+      </if>
+      <if test="jobNotifySucc != null" >
+        AND job_notify_succ = #{jobNotifySucc,jdbcType=INTEGER}
+      </if>
+      <if test="jobStartTime != null" >
+        AND job_start_time = #{jobStartTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="jobEndTime != null" >
+        AND job_end_time = #{jobEndTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="isValid != null" >
+        AND is_valid = #{isValid,jdbcType=INTEGER}
+      </if>
+      <if test="isDel != null" >
+        AND is_del = #{isDel,jdbcType=INTEGER}
+      </if>
+      <if test="createId != null" >
+        AND create_id = #{createId,jdbcType=VARCHAR}
+      </if>
+      <if test="createTime != null" >
+        AND create_time = #{createTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="updateId != null" >
+        AND update_id = #{updateId,jdbcType=VARCHAR}
+      </if>
+      <if test="updateTime != null" >
+        AND update_time = #{updateTime,jdbcType=TIMESTAMP}
+      </if>
+    </trim>
+  </sql>
+
+  <!-- 根据实体查询数据 -->
+  <select id="selectByJobInfo" resultMap="BaseResultMap"  parameterType="com.jobCenter.domain.JobInfo" >
+    select
+    <include refid="Base_Column_List" />
+    from job_info
+    <include refid="whereSql"/>
+  </select>
+</mapper>

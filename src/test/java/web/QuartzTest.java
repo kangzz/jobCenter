@@ -12,9 +12,8 @@
 package web;
 
 
-import com.jobCenter.model.JobInfo;
-import com.jobCenter.web.QuartzJob;
-import com.jobCenter.web.QuartzManager;
+import com.jobCenter.job.QuartzJob;
+import com.jobCenter.job.QuartzManager;
 
 /**
  * @Description: 测试类
@@ -29,7 +28,7 @@ import com.jobCenter.web.QuartzManager;
 public class QuartzTest {
 	public static void main(String[] args) {
 		try {
-			QuartzJob quartzJob = new QuartzJob();
+			/*QuartzJob quartzJob = new QuartzJob();
 			JobInfo jobInfo1 = new JobInfo();
 			jobInfo1.setJobUrl("url1");
 			jobInfo1.setJobName("第一个定时任务");
@@ -52,11 +51,11 @@ public class QuartzTest {
 			System.out.println("【移除定时】成功");  
 			
 			System.out.println("【再次添加定时任务】开始(每10秒输出一次)...");  
-			QuartzManager.addJob(job_name, QuartzJob.class, "*/10 * * * * ?",null);
+			QuartzManager.addJob(job_name, QuartzJob.class, "*//*10 * * * * ?",null);
 			Thread.sleep(60000);  
 			System.out.println("【移除定时】开始...");  
 			QuartzManager.removeJob(job_name);  
-			System.out.println("【移除定时】成功");
+			System.out.println("【移除定时】成功");*/
 		} catch (Exception e) {
 			e.printStackTrace();
 
