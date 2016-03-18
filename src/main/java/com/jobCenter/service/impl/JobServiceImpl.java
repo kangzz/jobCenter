@@ -1,7 +1,11 @@
 package com.jobCenter.service.impl;
+import com.jobCenter.domain.HeartBeatInfo;
 import com.jobCenter.domain.JobInfo;
 import com.jobCenter.domain.JobLinkInfo;
 import com.jobCenter.enums.IsType;
+import com.jobCenter.job.QuartzJob;
+import com.jobCenter.job.QuartzManager;
+import com.jobCenter.mapper.HeartBeatInfoMapper;
 import com.jobCenter.mapper.JobInfoMapper;
 import com.jobCenter.mapper.JobLinkInfoMapper;
 import com.jobCenter.model.JobInfoModel;
@@ -13,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service(value = "jobService")
@@ -22,8 +27,86 @@ public class JobServiceImpl implements IJobService {
 	private JobInfoMapper jobInfoMapper;
 	@Autowired
 	private JobLinkInfoMapper jobLinkInfoMapper;
+	@Autowired
+	private HeartBeatInfoMapper heartBeatInfoMapper;
 
 	private final static Logger logger = Logger.getLogger(JobServiceImpl.class);
+	/**
+	 * 描述： 初始化如无数据需要加载
+	 * 作者 ：kangzz
+	 * 日期 ：2016-03-19 01:30:16
+	 */
+	public void initHeartBeatInfo(HeartBeatInfo heartBeatInfo){
+		HeartBeatInfo searchParam = new HeartBeatInfo();
+		searchParam.setHeartType(heartBeatInfo.getHeartType());
+		searchParam.setIsDel(IsType.YES.getValue());
+		HeartBeatInfo info = heartBeatInfoMapper.selectByRecord(searchParam);
+		if(info == null){
+			heartBeatInfoMapper.insertSelective(heartBeatInfo);
+		}
+	}
+	/**
+	 * 描述：检查当前机器是否是主机
+	 * 作者 ：kangzz
+	 * 日期 ：2016-03-18 23:25:16
+	 */
+	public Boolean cheakIsMaster(HeartBeatInfo heartBeatInfo) {
+
+		heartBeatInfo.setIsDel(IsType.NO.getValue());
+		int countNum = heartBeatInfoMapper.updateByMasterIdentity(heartBeatInfo);
+		if(countNum > 0 ){
+			return true;
+		}else{
+			return false;
+		}
+
+	}
+	/**
+	 * 描述：切换当前机器为主机是否成功
+	 * 作者 ：kangzz
+	 * 日期 ：2016-03-18 23:25:49
+	 */
+	public Boolean changeToMaster(HeartBeatInfo heartBeatInfo) {
+		int countNum = heartBeatInfoMapper.updateByOutTime(heartBeatInfo);
+		if(countNum > 0 ){
+			return true;
+		}else{
+			return false;
+		}
+	}
+
+
+	/**
+	 * 描述：加载所有的定时任务到内存中
+	 * 作者 ：kangzz
+	 * 日期 ：2016-03-19 02:11:42
+	 */
+	public Boolean loadAllJobListForMaster(){
+
+		try {
+			List<JobInfoModel> jobList = getAllJobInfo();
+			int jobSize = jobList.size();
+
+			for (int i = 0; i < jobSize; i++) {
+
+				JobInfoModel jobInfoMode = jobList.get(i);
+
+				List<JobLinkInfoModel> linkList = jobInfoMode.getJobLinkInfoModels();
+
+				if(linkList == null || linkList.isEmpty()){
+					continue;
+				}
+				QuartzJob quartzJob = new QuartzJob();
+				QuartzManager.addJob(jobInfoMode.getJobName(), quartzJob.getClass(), jobInfoMode.getJobExecuteRule(), jobInfoMode);
+			}
+			return true;
+		}catch (Exception e) {
+			logger.error("查询任务集合信息为空!",e);
+			return false;
+		}
+
+	}
+
 	/**
 	 * 描述：获取所有的任务信息
 	 * 作者 ：kangzz

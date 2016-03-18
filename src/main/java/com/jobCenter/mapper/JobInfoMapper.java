@@ -3,9 +3,10 @@ package com.jobCenter.mapper;
 
 import com.jobCenter.domain.JobInfo;
 import com.jobCenter.model.JobInfoModel;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
-
+@Repository
 public interface JobInfoMapper {
 
     int deleteByPrimaryKey(String jobId);

@@ -13,10 +13,10 @@ import java.util.List;
 /**
  * Listener的方式在后台执行一线程
  *
- * @author Champion.Wong
+ * @author Champion.Wong  implements ServletContextListener
  *
  */
-public class MyListener implements ServletContextListener {
+public class MyListener  {
     private MyThread myThread;
 
 
@@ -61,7 +61,8 @@ class MyThread extends Thread {
                 QuartzJob quartzJob = new QuartzJob();
                 String job_name = "动态任务调度";
                 System.out.println("【系统启动】开始(每1秒输出一次)...");
-                QuartzManager.addJob(job_name + "1", quartzJob.getClass(), "0/1 * * * * ?", jobInfos);
+                JobInfoModel jobInfoMode = new JobInfoModel();
+                QuartzManager.addJob(job_name + "1", quartzJob.getClass(), "0/1 * * * * ?", jobInfoMode);
             }
 //			 ------------------ 开始执行 ---------------------------
             //System.out.println("____FUCK TIME:" + System.currentTimeMillis());

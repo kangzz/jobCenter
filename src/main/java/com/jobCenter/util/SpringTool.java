@@ -11,10 +11,9 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 import javax.servlet.ServletContext;
 
 /**
- * 封装spring上下文,取得bean实例的工具类
- * 
- * @author thinkpad
- * @Apr 14, 2009
+ * 描述：封装spring上下文,取得bean实例的工具类
+ * 作者 ：kangzz
+ * 日期 ：2016-03-10 22:14:31
  */
 public class SpringTool {
 

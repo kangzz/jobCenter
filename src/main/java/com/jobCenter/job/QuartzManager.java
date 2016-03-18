@@ -49,12 +49,11 @@ public class QuartzManager {
 	 * @version V2.0
 	 */
 	@SuppressWarnings("unchecked")
-	public static void addJob(String jobName, Class cls, String time,List<JobInfoModel> jobInfos) {
+	public static void addJob(String jobName, Class cls, String time,JobInfoModel jobInfoMode) {
 		try {
 			Scheduler sched = gSchedulerFactory.getScheduler();
 			JobDetail jobDetail = new JobDetail(jobName, JOB_GROUP_NAME, cls);// 任务名，任务组，任务执行类
-
-			jobDetail.getJobDataMap().put("jobInfos",jobInfos);
+			jobDetail.getJobDataMap().put("jobInfoMode",jobInfoMode);
 			// 触发器
 			CronTrigger trigger = new CronTrigger(jobName, TRIGGER_GROUP_NAME);// 触发器名,触发器组
 			trigger.setCronExpression(time);// 触发器时间设定

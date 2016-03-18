@@ -37,9 +37,9 @@ public class QuartzJob implements Job {
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
 		System.out.println(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())+ "★★★★★★★★★★★");
 		//System.out.println(arg0.getJobDetail().getJobDataMap().get("url"));
-		List<JobInfoModel> jobs = (List<JobInfoModel>)arg0.getJobDetail().getJobDataMap().get("jobInfos");
-		System.out.println("定时任务输出数据库字段:"+jobs.size());
-		logger.info("jobId="+jobs.get(0).getJobId());
-
+		JobInfoModel jobInfoModel = (JobInfoModel)arg0.getJobDetail().getJobDataMap().get("jobInfoMode");
+		System.out.println("定时任务输出数据库字段:"+jobInfoModel.getJobName());
+		logger.info(jobInfoModel.getJobName());
+		logger.info("jobId="+jobInfoModel.getJobLinkInfoModels().get(0).getJobLink());
 	}
 }
