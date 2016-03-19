@@ -51,7 +51,7 @@ class SlaveChangeToMasterThread extends Thread {
         Thread.currentThread().setName("slave_change_to_master_thread");
         try {
             if (isFirst) {
-                Thread.sleep(SystemConstant.SLAVE_TOMASTER_WAIT_TIME); //首次加载多等待20秒
+                Thread.sleep(SystemConstant.SLAVE_TO_MASTER_WAIT_TIME); //首次加载多等待20秒
                 isFirst = false;
             }
         } catch (InterruptedException e) {

@@ -17,6 +17,8 @@ public class JobInfoModel implements Serializable {
 
     private Integer jobNotifySucc;//'是否需要通知成功 1 是 0 否'
 
+    private Integer jobRetryTimes;//重试次数
+
     private Date jobStartTime;//'任务生效时间'
 
     private Date jobEndTime;//'任务失效时间'
@@ -61,6 +63,14 @@ public class JobInfoModel implements Serializable {
 
     public void setJobNotifySucc(Integer jobNotifySucc) {
         this.jobNotifySucc = jobNotifySucc;
+    }
+
+    public Integer getJobRetryTimes() {
+        return jobRetryTimes;
+    }
+
+    public void setJobRetryTimes(Integer jobRetryTimes) {
+        this.jobRetryTimes = jobRetryTimes;
     }
 
     public Date getJobStartTime() {

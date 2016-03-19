@@ -15,6 +15,13 @@ public class StringUtil {
 
     private static Logger logger = Logger.getLogger(StringUtil.class);
 
+    public static final String EMPTY = "";
+
+    public static final String STATUS = "status";
+
+    public static final String SUCCESS = "success";
+
+    public static final String FAIL = "fail";
     /**
      * 验证字符串是否为double类型
      *

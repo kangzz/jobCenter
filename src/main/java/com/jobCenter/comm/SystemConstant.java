@@ -19,9 +19,9 @@ public class SystemConstant {
     //主机监听器等候启动时间 单位:毫秒
     public static final Integer MASTER_LISTENER_WAIT_TIME = 10000;
     //备机切换主机监听器等候启动时间 单位:毫秒
-    public static final Integer SLAVE_TOMASTER_WAIT_TIME = 20000;
+    public static final Integer SLAVE_TO_MASTER_WAIT_TIME = 20000;
     //AES加密key
-    public static final String AES_KEY = "JOB_CENTER_AES_KEY";
+    public static final String AES_KEY = "748d5cb7c2c6824b";
     //AES加密截取字符占比
     public static  final int AES_RATIO = 2;
 

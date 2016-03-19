@@ -7,6 +7,7 @@
     <result column="job_execute_type" property="jobExecuteType" jdbcType="INTEGER" />
     <result column="job_execute_rule" property="jobExecuteRule" jdbcType="VARCHAR" />
     <result column="job_notify_succ" property="jobNotifySucc" jdbcType="INTEGER" />
+    <result column="job_retry_times" property="jobRetryTimes" jdbcType="INTEGER" />
     <result column="job_start_time" property="jobStartTime" jdbcType="TIMESTAMP" />
     <result column="job_end_time" property="jobEndTime" jdbcType="TIMESTAMP" />
     <result column="is_valid" property="isValid" jdbcType="INTEGER" />
@@ -17,7 +18,7 @@
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
-    job_id, job_name, job_execute_type, job_execute_rule, job_notify_succ, job_start_time,
+    job_id, job_name, job_execute_type, job_execute_rule, job_notify_succ, job_retry_times, job_start_time,
     job_end_time, is_valid, is_del, create_id, create_time, update_id, update_time
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
@@ -32,12 +33,12 @@
   </delete>
   <insert id="insert" parameterType="com.jobCenter.domain.JobInfo" >
     insert into job_info (job_id, job_name, job_execute_type,
-      job_execute_rule, job_notify_succ, job_start_time, 
+      job_execute_rule, job_notify_succ, job_retry_times, job_start_time,
       job_end_time, is_valid, is_del, 
       create_id, create_time, update_id, 
       update_time)
     values (#{jobId,jdbcType=VARCHAR}, #{jobName,jdbcType=VARCHAR}, #{jobExecuteType,jdbcType=INTEGER}, 
-      #{jobExecuteRule,jdbcType=VARCHAR}, #{jobNotifySucc,jdbcType=INTEGER}, #{jobStartTime,jdbcType=TIMESTAMP}, 
+      #{jobExecuteRule,jdbcType=VARCHAR}, #{jobNotifySucc,jdbcType=INTEGER},#{jobRetryTimes,jdbcType=INTEGER}, #{jobStartTime,jdbcType=TIMESTAMP},
       #{jobEndTime,jdbcType=TIMESTAMP}, #{isValid,jdbcType=INTEGER}, #{isDel,jdbcType=INTEGER}, 
       #{createId,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateId,jdbcType=VARCHAR}, 
       #{updateTime,jdbcType=TIMESTAMP})
@@ -59,6 +60,9 @@
       </if>
       <if test="jobNotifySucc != null" >
         job_notify_succ,
+      </if>
+      <if test="jibRetryTimes != null" >
+        job_retry_times,
       </if>
       <if test="jobStartTime != null" >
         job_start_time,
@@ -101,6 +105,9 @@
       <if test="jobNotifySucc != null" >
         #{jobNotifySucc,jdbcType=INTEGER},
       </if>
+      <if test="jobRetryTimes != null" >
+        #{jobRetryTimes,jdbcType=INTEGER},
+      </if>
       <if test="jobStartTime != null" >
         #{jobStartTime,jdbcType=TIMESTAMP},
       </if>
@@ -142,6 +149,9 @@
       <if test="jobNotifySucc != null" >
         job_notify_succ = #{jobNotifySucc,jdbcType=INTEGER},
       </if>
+      <if test="jobRetryTimes != null" >
+        job_retry_times = #{jobRetryTimes,jdbcType=INTEGER},
+      </if>
       <if test="jobStartTime != null" >
         job_start_time = #{jobStartTime,jdbcType=TIMESTAMP},
       </if>
@@ -175,6 +185,7 @@
       job_execute_type = #{jobExecuteType,jdbcType=INTEGER},
       job_execute_rule = #{jobExecuteRule,jdbcType=VARCHAR},
       job_notify_succ = #{jobNotifySucc,jdbcType=INTEGER},
+      job_retry_times = #{jobRetryTimes,jdbcType=INTEGER}
       job_start_time = #{jobStartTime,jdbcType=TIMESTAMP},
       job_end_time = #{jobEndTime,jdbcType=TIMESTAMP},
       is_valid = #{isValid,jdbcType=INTEGER},
@@ -202,6 +213,9 @@
       </if>
       <if test="jobNotifySucc != null" >
         AND job_notify_succ = #{jobNotifySucc,jdbcType=INTEGER}
+      </if>
+      <if test="jobRetryTimes != null" >
+        AND job_retry_times = #{jobRetryTimes,jdbcType=INTEGER}
       </if>
       <if test="jobStartTime != null" >
         AND job_start_time = #{jobStartTime,jdbcType=TIMESTAMP}

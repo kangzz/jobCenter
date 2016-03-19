@@ -14,6 +14,8 @@ public class JobInfo {
 
     private Integer jobNotifySucc;//'是否需要通知成功 1 是 0 否'
 
+    private Integer jobRetryTimes;//定时任务重试次数
+
     private Date jobStartTime;//'任务生效时间'
 
     private Date jobEndTime;//'任务失效时间'
@@ -132,5 +134,13 @@ public class JobInfo {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public Integer getJobRetryTimes() {
+        return jobRetryTimes;
+    }
+
+    public void setJobRetryTimes(Integer jobRetryTimes) {
+        this.jobRetryTimes = jobRetryTimes;
     }
 }
