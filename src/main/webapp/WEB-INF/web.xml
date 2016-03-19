@@ -7,9 +7,13 @@
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
-
+    <!--加载主机任务监听-->
     <listener>
         <listener-class>com.jobCenter.listener.MasterLoadJobListener</listener-class>
+    </listener>
+    <!--备机切换主机是否成功监听监听-->
+    <listener>
+        <listener-class>com.jobCenter.listener.SlaveChangeToMasterListener</listener-class>
     </listener>
 
     <context-param>

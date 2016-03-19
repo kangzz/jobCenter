@@ -1,10 +1,10 @@
-package com.jobCenter.job;
+package com.jobCenter.listener;
 
 import com.jobCenter.domain.HeartBeatInfo;
 import com.jobCenter.enums.HeartType;
 import com.jobCenter.service.IJobService;
 import com.jobCenter.util.SpringTool;
-import com.jobCenter.util.SystemConstant;
+import com.jobCenter.comm.SystemConstant;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletContextEvent;
@@ -62,7 +62,7 @@ class SlaveChangeToMasterThread extends Thread {
             HeartBeatInfo info = new HeartBeatInfo();
             info.setHeartType(HeartType.JOB_CENTER.getValue());
             info.setMasterIdentity(SystemConstant.MASTER_IDENTITY);
-            //检查是否切换成功 切换成功需要加载任务到内存
+            //检查是否切换成功 切换成功需要加载任务到内存 同时更新心跳时间
             Boolean changeSuccess = jobService.changeToMaster(info);
             if (changeSuccess && jobService.loadAllJobListForMaster()) {
                 //加载成功 主机就不要尝试切换了

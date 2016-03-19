@@ -5,7 +5,7 @@ import com.jobCenter.enums.HeartType;
 import com.jobCenter.enums.IsType;
 import com.jobCenter.service.IJobService;
 import com.jobCenter.util.SpringTool;
-import com.jobCenter.util.SystemConstant;
+import com.jobCenter.comm.SystemConstant;
 import com.xiaoleilu.hutool.system.SystemUtil;
 
 import javax.servlet.ServletContextEvent;
@@ -68,6 +68,7 @@ class MasterLoadJobThread extends Thread {
             //校验当前机器是否为主机
             HeartBeatInfo heartBeatInfo = new HeartBeatInfo();
             heartBeatInfo.setMasterIdentity(masterIdentity);
+            //判断当前主机是否为主机 若为主机 同步更新最后心跳时间
             Boolean isMaster = jobService.cheakIsMaster(heartBeatInfo);
             //如果是主服务器 那么加载服务到内存
             if (isMaster && jobService.loadAllJobListForMaster()) {

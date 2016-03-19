@@ -1,4 +1,4 @@
-package com.jobCenter.util;
+package com.jobCenter.comm;
 
 import com.jobCenter.enums.HeartType;
 import com.xiaoleilu.hutool.system.SystemUtil;

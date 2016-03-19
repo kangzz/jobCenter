@@ -19,14 +19,14 @@ public interface IJobService {
      */
     void initHeartBeatInfo(HeartBeatInfo heartBeatInfo);
     /**
-     * 描述：检查当前机器是否是主机
+     * 描述：检查当前机器是否是主机 通过根据主机标志id修改成功记录是否为0判断
      * 作者 ：kangzz
      * 日期 ：2016-03-18 23:25:16
      */
     Boolean cheakIsMaster(HeartBeatInfo heartBeatInfo);
 
     /**
-     * 描述：切换当前机器为主机是否成功
+     * 描述：切换当前机器为主机是否成功 通过根据超时时间修改任务成功记录是否为0判断
      * 作者 ：kangzz
      * 日期 ：2016-03-18 23:25:49
      */

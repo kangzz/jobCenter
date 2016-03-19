@@ -14,7 +14,7 @@ import com.jobCenter.model.JobInfoModel;
 import com.jobCenter.model.JobLinkInfoModel;
 import com.jobCenter.util.CryptAES;
 import com.jobCenter.util.HttpPoster;
-import com.jobCenter.util.SystemConstant;
+import com.jobCenter.comm.SystemConstant;
 import com.jobCenter.util.http.MessageUtil;
 import org.apache.log4j.Logger;
 import org.quartz.Job;
