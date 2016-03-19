@@ -1,11 +1,8 @@
 package com.jobCenter.listener;
 
 import com.jobCenter.domain.HeartBeatInfo;
-import com.jobCenter.domain.HeartType;
+import com.jobCenter.enums.HeartType;
 import com.jobCenter.enums.IsType;
-import com.jobCenter.job.QuartzJob;
-import com.jobCenter.job.QuartzManager;
-import com.jobCenter.model.JobInfoModel;
 import com.jobCenter.service.IJobService;
 import com.jobCenter.util.SpringTool;
 import com.jobCenter.util.SystemConstant;
@@ -14,7 +11,6 @@ import com.xiaoleilu.hutool.system.SystemUtil;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import java.util.Date;
-import java.util.List;
 
 /**
  * 描述：主机加载任务数据监听
@@ -47,11 +43,9 @@ public class MasterLoadJobListener implements ServletContextListener {
  */
 class MasterLoadJobThread extends Thread {
 
-
-
     public void run() {
         try {
-            Thread.sleep(10000); //每隔2000ms执行一次
+            Thread.sleep(10000); //等十秒再执行 加载Spring需要时间
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -62,10 +56,9 @@ class MasterLoadJobThread extends Thread {
                     HeartType.JOB_CENTER.getValue() + ":"
                             + SystemUtil.getHostInfo().getName() + ":" + SystemUtil.getHostInfo().getAddress();
 
-
             //初始化加载一条主机数据
             HeartBeatInfo initInfo = new HeartBeatInfo();
-            initInfo.setMasterIdentity(masterIdentity);
+            initInfo.setMasterIdentity(SystemConstant.MASTER_IDENTITY);
             initInfo.setHeartType(HeartType.JOB_CENTER.getValue());
             initInfo.setHeartMaxVal(SystemConstant.HEAR_MAX_VAL);
             initInfo.setLastModifyTime(new Date());
@@ -77,8 +70,7 @@ class MasterLoadJobThread extends Thread {
             heartBeatInfo.setMasterIdentity(masterIdentity);
             Boolean isMaster = jobService.cheakIsMaster(heartBeatInfo);
             //如果是主服务器 那么加载服务到内存
-            if (isMaster) {
-                jobService.loadAllJobListForMaster();
+            if (isMaster && jobService.loadAllJobListForMaster()) {
                 MasterLoadJobThread.currentThread().interrupt();
             } else {
                 MasterLoadJobThread.currentThread().interrupt();

@@ -3,6 +3,8 @@ package com.jobCenter.mapper;
 import com.jobCenter.domain.HeartBeatInfo;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface HeartBeatInfoMapper {
 
@@ -23,7 +25,7 @@ public interface HeartBeatInfoMapper {
      * 作者 ：kangzz
      * 日期 ：2016-03-19 01:35:12
      */
-    HeartBeatInfo selectByRecord(HeartBeatInfo record);
+    List<HeartBeatInfo> selectByRecord(HeartBeatInfo record);
     /**
      * 描述：根据主机标志修改最后修改时间
      * 作者 ：kangzz

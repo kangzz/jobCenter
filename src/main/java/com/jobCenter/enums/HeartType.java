@@ -1,4 +1,4 @@
-package com.jobCenter.domain;
+package com.jobCenter.enums;
 
 import java.util.EnumSet;
 import java.util.HashMap;

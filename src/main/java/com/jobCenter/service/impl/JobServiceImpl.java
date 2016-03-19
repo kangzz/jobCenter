@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Service(value = "jobService")
@@ -39,9 +38,9 @@ public class JobServiceImpl implements IJobService {
 	public void initHeartBeatInfo(HeartBeatInfo heartBeatInfo){
 		HeartBeatInfo searchParam = new HeartBeatInfo();
 		searchParam.setHeartType(heartBeatInfo.getHeartType());
-		searchParam.setIsDel(IsType.YES.getValue());
-		HeartBeatInfo info = heartBeatInfoMapper.selectByRecord(searchParam);
-		if(info == null){
+		searchParam.setIsDel(IsType.NO.getValue());
+		List<HeartBeatInfo> infoList = heartBeatInfoMapper.selectByRecord(searchParam);
+		if(infoList == null || infoList.isEmpty()){
 			heartBeatInfoMapper.insertSelective(heartBeatInfo);
 		}
 	}
