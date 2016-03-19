@@ -49,6 +49,8 @@ public class QuartzJob implements Job {
      */
     private void sendRequest(JobInfoModel jobInfoModel) {
 
+        Thread.currentThread().setName("job_center_send_request_job_id:"+jobInfoModel.getJobId());
+
         logger.info("任务[" + jobInfoModel.getJobName() + "]请求开始时间:" + System.currentTimeMillis());
 
 
@@ -79,9 +81,9 @@ public class QuartzJob implements Job {
                 logger.info("本次定时任务调用地址：" + sendUrl);
                 logger.info("本次定时任务调用参数：" + param);
 
-                String jsonStr = HttpPoster.postWithRes(sendUrl, param);
+                //String jsonStr = HttpPoster.postWithRes(sendUrl, param);
 
-                logger.info("任务[" + jobInfoModel.getJobName() + "]调用返回值:" + jsonStr);
+                logger.info("任务[" + jobInfoModel.getJobName() + "]调用返回值:" + null);
 
             }
 

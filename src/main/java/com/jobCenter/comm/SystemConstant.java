@@ -12,8 +12,14 @@ public class SystemConstant {
     //主机标志
     public static final String MASTER_IDENTITY = HeartType.JOB_CENTER.getValue() + ":"
             + SystemUtil.getHostInfo().getName() + ":" + SystemUtil.getHostInfo().getAddress();
-    //定时任务心跳最大间隔时间
+    //定时任务心跳最大间隔时间 若未更新则认为超时 可已切换为主机 单位:秒
     public static final Integer HEAR_MAX_VAL = 10;
+    //定时任务心跳频率 单位:毫秒
+    public static final Integer HEAR_RATE = 5000;
+    //主机监听器等候启动时间 单位:毫秒
+    public static final Integer MASTER_LISTENER_WAIT_TIME = 10000;
+    //备机切换主机监听器等候启动时间 单位:毫秒
+    public static final Integer SLAVE_TOMASTER_WAIT_TIME = 20000;
     //AES加密key
     public static final String AES_KEY = "JOB_CENTER_AES_KEY";
     //AES加密截取字符占比

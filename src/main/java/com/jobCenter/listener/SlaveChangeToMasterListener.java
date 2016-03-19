@@ -48,25 +48,35 @@ class SlaveChangeToMasterThread extends Thread {
     Boolean isFirst = true;
 
     public void run() {
+        Thread.currentThread().setName("slave_change_to_master_thread");
         try {
-            if (!isFirst) {
-                Thread.sleep(5000); //5秒一次心跳
-            } else {
-                Thread.sleep(20000); //首次加载多等待20秒
+            if (isFirst) {
+                Thread.sleep(SystemConstant.SLAVE_TOMASTER_WAIT_TIME); //首次加载多等待20秒
+                isFirst = false;
             }
         } catch (InterruptedException e) {
             logger.error("备机尝试切换为主机异常!", e);
         }
         IJobService jobService = (IJobService) SpringTool.getBean("jobService");
         while (!this.isInterrupted()) {// 线程未中断执行循环
+            try {
+                if (!isFirst) {
+                    Thread.sleep(SystemConstant.HEAR_RATE); //5秒一次心跳
+                }
+            } catch (InterruptedException e) {
+                logger.error("备机尝试切换为主机异常!", e);
+            }
             HeartBeatInfo info = new HeartBeatInfo();
             info.setHeartType(HeartType.JOB_CENTER.getValue());
             info.setMasterIdentity(SystemConstant.MASTER_IDENTITY);
             //检查是否切换成功 切换成功需要加载任务到内存 同时更新心跳时间
             Boolean changeSuccess = jobService.changeToMaster(info);
-            if (changeSuccess && jobService.loadAllJobListForMaster()) {
-                //加载成功 主机就不要尝试切换了
-                SlaveChangeToMasterThread.currentThread().interrupt();
+            if (changeSuccess) {
+                logger.info("切换当前机器为主机成功!");
+               if(jobService.loadAllJobListForMaster()){
+                    //加载成功 主机就不要尝试切换了
+                    SlaveChangeToMasterThread.currentThread().interrupt();
+                }
             }
         }
     }
