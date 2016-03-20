@@ -1,7 +1,11 @@
 package com.jobCenter.domain;
 
 import java.util.Date;
-
+/**
+ * 描述：定时任务主信息
+ * 作者 ：kangzz
+ * 日期 ：2016-03-19 21:57:09
+ */
 public class JobInfo {
 
     private String jobId;//定时任务信息主键

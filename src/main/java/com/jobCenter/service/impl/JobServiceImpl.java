@@ -33,7 +33,7 @@ public class JobServiceImpl implements IJobService {
     private final static Logger logger = Logger.getLogger(JobServiceImpl.class);
 
     /**
-     * 描述： 初始化如无数据需要加载
+     * 描述： 初始化如无数据需要加载 初始化心跳数据
      * 作者 ：kangzz
      * 日期 ：2016-03-19 01:30:16
      */
@@ -48,7 +48,7 @@ public class JobServiceImpl implements IJobService {
     }
 
     /**
-     * 描述：检查当前机器是否是主机
+     * 描述：检查当前机器是否是主机 通过根据主机标志更新数据条数来判断
      * 作者 ：kangzz
      * 日期 ：2016-03-18 23:25:16
      */
@@ -104,7 +104,7 @@ public class JobServiceImpl implements IJobService {
             }
             return true;
         } catch (Exception e) {
-            logger.error("查询任务集合信息为空!", e);
+            logger.error("添加所有的任务信息异常:", e);
             return false;
         }
 
@@ -176,8 +176,9 @@ public class JobServiceImpl implements IJobService {
             logger.info("查询全部定时任务信息结束!");
             logger.info("耗时:" + (endTime - startTime));
         } catch (Exception e) {
-            logger.error("查询任务集合信息为空!", e);
+            logger.error("查询任务集合信息异常!", e);
         }
+        logger.info("添加任务总条数["+jobInfoModes.size()+"]条");
         return jobInfoModes;
     }
 }

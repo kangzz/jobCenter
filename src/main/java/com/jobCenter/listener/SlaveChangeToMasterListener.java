@@ -74,9 +74,12 @@ class SlaveChangeToMasterThread extends Thread {
             if (changeSuccess) {
                 logger.info("切换当前机器为主机成功!");
                if(jobService.loadAllJobListForMaster()){
+                   SystemConstant.localIsMaster = true;
                     //加载成功 主机就不要尝试切换了
                     SlaveChangeToMasterThread.currentThread().interrupt();
-                }
+                }else{
+                   SystemConstant.localIsMaster = false;
+               }
             }
         }
     }

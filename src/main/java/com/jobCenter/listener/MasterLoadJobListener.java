@@ -44,18 +44,20 @@ public class MasterLoadJobListener implements ServletContextListener {
  */
 class MasterLoadJobThread extends Thread {
     private final static Logger logger = Logger.getLogger(SlaveChangeToMasterThread.class);
-    //是否首次加载 如果首次加载需要走初始化方法 否则 直接走心跳方法 并且只有首次加载所有任务
-    Boolean isFirst = true;
+    //初始化心跳数据
+    Boolean initHeatInfo = true;
     public void run() {
+        //设置当前线程名称
         Thread.currentThread().setName("master_heart_thread");
         try {
-            Thread.sleep(SystemConstant.MASTER_LISTENER_WAIT_TIME); //等十秒再执行 加载Spring需要时间
+            Thread.sleep(SystemConstant.MASTER_LISTENER_WAIT_TIME); //等N秒再执行 加载Spring需要时间
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         IJobService jobService = (IJobService) SpringTool.getBean("jobService");
         while (!this.isInterrupted()) {// 线程未中断执行循环
-            if(isFirst) {
+            //为了避免心跳数据没有初始化 这里需要初始化心跳数据
+            if(initHeatInfo) {
                 //初始化加载一条主机数据
                 HeartBeatInfo initInfo = new HeartBeatInfo();
                 initInfo.setMasterIdentity(SystemConstant.MASTER_IDENTITY);
@@ -64,6 +66,7 @@ class MasterLoadJobThread extends Thread {
                 initInfo.setLastModifyTime(new Date());
                 initInfo.setIsDel(IsType.NO.getValue());
                 jobService.initHeartBeatInfo(initInfo);
+                initHeatInfo = false;
             }
             try {
                 Thread.sleep(SystemConstant.HEAR_RATE); //5秒心跳一次
@@ -75,12 +78,13 @@ class MasterLoadJobThread extends Thread {
             heartBeatInfo.setMasterIdentity(SystemConstant.MASTER_IDENTITY);
             //判断当前主机是否为主机 若为主机 同步更新最后心跳时间
             Boolean isMaster = jobService.cheakIsMaster(heartBeatInfo);
-            //如果是主服务器 并且是首次加载 那么加载服务到内存 如果加载成功 那么这个监听的任务就结束了
-            if (isMaster && isFirst) {
-                //如果加载成功了 那么不再加载任务 否则就会重试加载
-                isFirst = jobService.loadAllJobListForMaster() ? false : true;
-            }else if(isMaster && !isFirst){
-                logger.info("主机心跳记录_当前主机信息为:"+SystemConstant.MASTER_IDENTITY);
+            //如果是主服务器 那么加载服务到内存 如果加载成功 那么这个监听的任务就结束了
+            if (isMaster) {
+                if(jobService.loadAllJobListForMaster()){
+                    MasterLoadJobThread.currentThread().interrupt();
+                }else{
+                    logger.info("主机心跳记录_当前主机信息为:"+SystemConstant.MASTER_IDENTITY);
+                }
             }else {
                 //不是主机就不要再跑这个线程了 因为切换主机监听的方法已经有加载所有任务的方法
                 MasterLoadJobThread.currentThread().interrupt();

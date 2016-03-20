@@ -53,6 +53,7 @@ public class QuartzManager {
 		try {
 			Scheduler sched = gSchedulerFactory.getScheduler();
 			JobDetail jobDetail = new JobDetail(jobName, JOB_GROUP_NAME, cls);// 任务名，任务组，任务执行类
+			//设置任务基本信息数据
 			jobDetail.getJobDataMap().put("jobInfoMode",jobInfoMode);
 			// 触发器
 			CronTrigger trigger = new CronTrigger(jobName, TRIGGER_GROUP_NAME);// 触发器名,触发器组
