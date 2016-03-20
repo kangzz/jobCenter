@@ -83,6 +83,7 @@ class MasterLoadJobThread extends Thread {
             //如果是主服务器 那么加载服务到内存 如果加载成功 那么这个监听的任务的任务就剩定时更新最后修改时间
             if (isMaster && firstLoad) {
                 firstLoad = jobService.loadAllJobListForMaster();
+                //如果当前机器为主机 那么要设置标志为true
                 SystemConstant.localIsMaster = true;
             }else if(isMaster && !firstLoad){
                 logger.info("主机心跳记录_当前主机信息为:"+SystemConstant.MASTER_IDENTITY);
