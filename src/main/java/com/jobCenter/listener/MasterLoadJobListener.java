@@ -87,8 +87,7 @@ class MasterLoadJobThread extends Thread {
             }else if(isMaster && !firstLoad){
                 logger.info("主机心跳记录_当前主机信息为:"+SystemConstant.MASTER_IDENTITY);
             }else {
-                //不是主机就不要再跑这个线程了 因为切换主机监听的方法已经有加载所有任务的方法
-                MasterLoadJobThread.currentThread().interrupt();
+                logger.info("当前机器不是主机信息:"+SystemConstant.MASTER_IDENTITY);
             }
         }
     }
