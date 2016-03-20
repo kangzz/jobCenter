@@ -13,6 +13,7 @@ public class JobLinkInfoModel implements Serializable {
     private String jobLinkId;//请求路径id
     private String jobId;//任务ID
     private String jobLink;//任务链接
+    private String serviceName;//任务Service名称
 
     public String getJobLinkId() {
         return jobLinkId;
@@ -36,5 +37,13 @@ public class JobLinkInfoModel implements Serializable {
 
     public void setJobLink(String jobLink) {
         this.jobLink = jobLink;
+    }
+
+    public String getServiceName() {
+        return serviceName;
+    }
+
+    public void setServiceName(String serviceName) {
+        this.serviceName = serviceName;
     }
 }

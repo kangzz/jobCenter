@@ -16,6 +16,7 @@ import com.jobCenter.model.JobInfoModel;
 import com.jobCenter.model.JobLinkInfoModel;
 import com.jobCenter.util.CryptAES;
 import com.jobCenter.util.HttpPoster;
+import com.jobCenter.util.MD5Util;
 import com.jobCenter.util.StringUtil;
 import com.jobCenter.util.http.MessageUtil;
 import org.apache.log4j.Logger;
@@ -76,19 +77,25 @@ public class QuartzJob implements Job {
             String jobLinkId = jobLinkInfoModel.getJobLinkId();
             String jobId = jobLinkInfoModel.getJobId();
             //封装加密字符串信息 加密字符串使用两个uuid截取部分拼装后再加密
-            int jobLinkIdSubCount = jobLinkId.length() / SystemConstant.AES_RATIO;
+            String uuid = UUID.randomUUID().toString();
+            int jobLinkIdSubCount = jobLinkId.length() / SystemConstant.MD5_RATIO;
             jobLinkIdSubCount = jobLinkIdSubCount == 0 ? jobLinkId.length() : jobLinkIdSubCount;
-            int jobIdSubCount = jobId.length() / SystemConstant.AES_RATIO;
-            jobIdSubCount = jobIdSubCount == 0 ? jobId.length() : jobIdSubCount;
-            String securityStr = jobLinkId.substring(0, jobLinkIdSubCount) + jobId.substring(0, jobIdSubCount);
-            try {
-                paramMap.put("securityCode", URLEncoder.encode(CryptAES.AES_Encrypt(SystemConstant.AES_KEY, securityStr),"UTF-8"));//加密字符串
-            }catch (Exception e){
-                logger.error("生成加密字符串失败",e);
-            }
-            paramMap.put("uuid", UUID.randomUUID());//唯一标志本次请求id
+            int uuidSubCount = uuid.length() / SystemConstant.MD5_RATIO;
+            uuidSubCount = uuidSubCount == 0 ? uuid.length() : uuidSubCount;
+            String securityStr = jobLinkId.substring(0, jobLinkIdSubCount) + uuid.substring(0, uuidSubCount);
+            paramMap.put("securityCode",MD5Util.encodeMD5(securityStr,SystemConstant.MD5_KEY));
+            paramMap.put("uuid", uuid);//唯一标志本次请求id
             paramMap.put("jobId", jobLinkInfoModel.getJobLinkId());//任务主id
             paramMap.put("linkId", jobLinkInfoModel.getJobLinkId());//子任务id
+            paramMap.put("serviceName",jobLinkInfoModel.getServiceName());//子任务执行的service
+
+            if(jobLinkInfoModel.getJobLinkId().equals("4")){
+                paramMap.put("serviceName", "jobServiceTest1");//子任务id
+            }else{
+                paramMap.put("serviceName", "jobServiceTest2");//子任务id
+            }
+
+
             //转换发送参数
             String param = MessageUtil.getParameter(paramMap);
             //获取请求url信息

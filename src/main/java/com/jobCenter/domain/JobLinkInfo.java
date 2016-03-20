@@ -14,6 +14,10 @@ public class JobLinkInfo {
 
     private String jobLink;//任务链接
 
+    // TODO 定时任务子表需要增加该字段 减少服务器接口暴露
+    private String serviceName;//定时任务Service名称
+
+
     private Integer isValid;//是否有效 1是 0否
 
     private Integer isDel;//是否删除 1是 0否
@@ -96,5 +100,13 @@ public class JobLinkInfo {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getServiceName() {
+        return serviceName;
+    }
+
+    public void setServiceName(String serviceName) {
+        this.serviceName = serviceName;
     }
 }

@@ -157,6 +157,7 @@ public class JobServiceImpl implements IJobService {
                         jobLinkModel.setJobId(jobLinkInfoDb.getJobId());
                         jobLinkModel.setJobLink(jobLinkInfoDb.getJobLink());
                         jobLinkModel.setJobLinkId(jobLinkInfoDb.getJobLinkId());
+                        jobLinkModel.setServiceName(jobLinkInfoDb.getServiceName());
                         jobLinkInfoModels.add(jobLinkModel);
                     }
                     jobInfoModel.setJobLinkInfoModels(jobLinkInfoModels);

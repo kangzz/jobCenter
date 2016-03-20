@@ -259,6 +259,7 @@ public class QuartzManager {
 	public static void shutdownJobs() {
 		try {
 			Scheduler sched = gSchedulerFactory.getScheduler();
+
 			if (!sched.isShutdown()) {
 				sched.shutdown();
 			}
