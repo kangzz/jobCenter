@@ -71,7 +71,7 @@ class SlaveChangeToMasterThread extends Thread {
             info.setMasterIdentity(SystemConstant.MASTER_IDENTITY);
             //检查是否切换成功 切换成功需要加载任务到内存 同时更新心跳时间
             Boolean changeSuccess = jobService.changeToMaster(info);
-            if (changeSuccess) {
+            if (changeSuccess && !SystemConstant.localIsMaster) {
                 logger.info("切换当前机器为主机成功!");
                if(jobService.loadAllJobListForMaster()){
                    SystemConstant.localIsMaster = true;

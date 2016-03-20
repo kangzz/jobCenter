@@ -46,6 +46,8 @@ class MasterLoadJobThread extends Thread {
     private final static Logger logger = Logger.getLogger(SlaveChangeToMasterThread.class);
     //初始化心跳数据
     Boolean initHeatInfo = true;
+    //主机是否已加载
+    Boolean firstLoad = true;
     public void run() {
         //设置当前线程名称
         Thread.currentThread().setName("master_heart_thread");
@@ -78,13 +80,12 @@ class MasterLoadJobThread extends Thread {
             heartBeatInfo.setMasterIdentity(SystemConstant.MASTER_IDENTITY);
             //判断当前主机是否为主机 若为主机 同步更新最后心跳时间
             Boolean isMaster = jobService.cheakIsMaster(heartBeatInfo);
-            //如果是主服务器 那么加载服务到内存 如果加载成功 那么这个监听的任务就结束了
-            if (isMaster) {
-                if(jobService.loadAllJobListForMaster()){
-                    MasterLoadJobThread.currentThread().interrupt();
-                }else{
-                    logger.info("主机心跳记录_当前主机信息为:"+SystemConstant.MASTER_IDENTITY);
-                }
+            //如果是主服务器 那么加载服务到内存 如果加载成功 那么这个监听的任务的任务就剩定时更新最后修改时间
+            if (isMaster && firstLoad) {
+                firstLoad = jobService.loadAllJobListForMaster();
+                SystemConstant.localIsMaster = true;
+            }else if(isMaster && !firstLoad){
+                logger.info("主机心跳记录_当前主机信息为:"+SystemConstant.MASTER_IDENTITY);
             }else {
                 //不是主机就不要再跑这个线程了 因为切换主机监听的方法已经有加载所有任务的方法
                 MasterLoadJobThread.currentThread().interrupt();
