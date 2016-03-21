@@ -5,6 +5,7 @@
     <id column="job_link_id" jdbcType="VARCHAR" property="jobLinkId" />
     <result column="job_id" jdbcType="VARCHAR" property="jobId" />
     <result column="job_link" jdbcType="VARCHAR" property="jobLink" />
+    <result column="service_name" jdbcType="VARCHAR" property="serviceName" />
     <result column="is_valid" jdbcType="INTEGER" property="isValid" />
     <result column="is_del" jdbcType="INTEGER" property="isDel" />
     <result column="create_id" jdbcType="VARCHAR" property="createId" />
@@ -13,7 +14,7 @@
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
   <sql id="Base_Column_List">
-    job_link_id, job_id, job_link, is_valid, is_del, create_id, create_time, update_id, 
+    job_link_id, job_id, job_link, service_name, is_valid, is_del, create_id, create_time, update_id,
     update_time
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
@@ -27,11 +28,12 @@
     where job_link_id = #{jobLinkId,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.jobCenter.domain.JobLinkInfo">
-    insert into job_link_info (job_link_id, job_id, job_link, 
+    insert into job_link_info (job_link_id, job_id, job_link, service_name,
       is_valid, is_del, create_id, 
       create_time, update_id, update_time
       )
-    values (#{jobLinkId,jdbcType=VARCHAR}, #{jobId,jdbcType=VARCHAR}, #{jobLink,jdbcType=VARCHAR}, 
+    values (#{jobLinkId,jdbcType=VARCHAR}, #{jobId,jdbcType=VARCHAR}, #{jobLink,jdbcType=VARCHAR},
+      #{serviceName,jdbcType=VARCHAR},
       #{isValid,jdbcType=INTEGER}, #{isDel,jdbcType=INTEGER}, #{createId,jdbcType=VARCHAR}, 
       #{createTime,jdbcType=TIMESTAMP}, #{updateId,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}
       )
@@ -47,6 +49,9 @@
       </if>
       <if test="jobLink != null">
         job_link,
+      </if>
+      <if test="serviceName != null">
+        service_name,
       </if>
       <if test="isValid != null">
         is_valid,
@@ -76,6 +81,9 @@
       </if>
       <if test="jobLink != null">
         #{jobLink,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceName != null">
+        #{serviceName,jdbcType=VARCHAR},
       </if>
       <if test="isValid != null">
         #{isValid,jdbcType=INTEGER},
@@ -109,6 +117,9 @@
       <if test="isValid != null">
         is_valid = #{isValid,jdbcType=INTEGER},
       </if>
+      <if test="serviceName != null">
+        service_name = #{serviceName,jdbcType=VARCHAR},
+      </if>
       <if test="isDel != null">
         is_del = #{isDel,jdbcType=INTEGER},
       </if>
@@ -131,6 +142,7 @@
     update job_link_info
     set job_id = #{jobId,jdbcType=VARCHAR},
       job_link = #{jobLink,jdbcType=VARCHAR},
+      service_name = #{serviceName,jdbcType=VARCHAR},
       is_valid = #{isValid,jdbcType=INTEGER},
       is_del = #{isDel,jdbcType=INTEGER},
       create_id = #{createId,jdbcType=VARCHAR},
@@ -151,6 +163,9 @@
       </if>
       <if test="jobLink != null">
         AND job_link = #{jobLink,jdbcType=VARCHAR}
+      </if>
+      <if test="serviceName != null">
+      AND service_name = #{serviceName,jdbcType=VARCHAR}
       </if>
       <if test="isValid != null">
         AND is_valid = #{isValid,jdbcType=INTEGER}

@@ -89,11 +89,11 @@ public class QuartzJob implements Job {
             paramMap.put("linkId", jobLinkInfoModel.getJobLinkId());//子任务id
             paramMap.put("serviceName",jobLinkInfoModel.getServiceName());//子任务执行的service
 
-            if(jobLinkInfoModel.getJobLinkId().equals("4")){
+            /*if(jobLinkInfoModel.getJobLinkId().equals("4")){
                 paramMap.put("serviceName", "jobServiceTest1");//子任务id
             }else{
                 paramMap.put("serviceName", "jobServiceTest2");//子任务id
-            }
+            }*/
 
 
             //转换发送参数
