@@ -1,15 +1,17 @@
 package com.jobCenter.domain;
 
 import java.util.Date;
-
+/**
+ * 描述：任务执行记录实体
+ * 作者 ：kangzz
+ * 日期 ：2016-03-22 22:28:19
+ */
 public class JobExecuteResult {
     private Long id;//执行结果id
 
     private String jobUuid;//某条任务标志
 
     private String jobId;//定时任务主表ID
-
-    private String jobName;//定时任务名称
 
     private String jobLinkId;//定时任务子任务id
 
@@ -45,14 +47,6 @@ public class JobExecuteResult {
 
     public void setJobId(String jobId) {
         this.jobId = jobId == null ? null : jobId.trim();
-    }
-
-    public String getJobName() {
-        return jobName;
-    }
-
-    public void setJobName(String jobName) {
-        this.jobName = jobName == null ? null : jobName.trim();
     }
 
     public String getJobLinkId() {

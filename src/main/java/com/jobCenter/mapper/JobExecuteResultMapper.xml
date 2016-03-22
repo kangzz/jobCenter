@@ -5,7 +5,6 @@
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="job_uuid" property="jobUuid" jdbcType="VARCHAR" />
     <result column="job_id" property="jobId" jdbcType="VARCHAR" />
-    <result column="job_name" property="jobName" jdbcType="VARCHAR" />
     <result column="job_link_id" property="jobLinkId" jdbcType="VARCHAR" />
     <result column="job_start_time" property="jobStartTime" jdbcType="TIMESTAMP" />
     <result column="job_end_time" property="jobEndTime" jdbcType="TIMESTAMP" />
@@ -14,7 +13,7 @@
     <result column="result_message" property="resultMessage" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, job_uuid, job_id, job_name, job_link_id, job_start_time, job_end_time, result_status, 
+    id, job_uuid, job_id, job_link_id, job_start_time, job_end_time, result_status,
     result_code, result_message
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
@@ -29,11 +28,11 @@
   </delete>
   <insert id="insert" parameterType="com.jobCenter.domain.JobExecuteResult" >
     insert into job_execute_result (id, job_uuid, job_id, 
-      job_name, job_link_id, job_start_time, 
+      job_link_id, job_start_time,
       job_end_time, result_status, result_code, 
       result_message)
     values (#{id,jdbcType=BIGINT}, #{jobUuid,jdbcType=VARCHAR}, #{jobId,jdbcType=VARCHAR}, 
-      #{jobName,jdbcType=VARCHAR}, #{jobLinkId,jdbcType=VARCHAR}, #{jobStartTime,jdbcType=TIMESTAMP}, 
+      #{jobLinkId,jdbcType=VARCHAR}, #{jobStartTime,jdbcType=TIMESTAMP},
       #{jobEndTime,jdbcType=TIMESTAMP}, #{resultStatus,jdbcType=VARCHAR}, #{resultCode,jdbcType=INTEGER}, 
       #{resultMessage,jdbcType=VARCHAR})
   </insert>
@@ -48,9 +47,6 @@
       </if>
       <if test="jobId != null" >
         job_id,
-      </if>
-      <if test="jobName != null" >
-        job_name,
       </if>
       <if test="jobLinkId != null" >
         job_link_id,
@@ -81,9 +77,6 @@
       <if test="jobId != null" >
         #{jobId,jdbcType=VARCHAR},
       </if>
-      <if test="jobName != null" >
-        #{jobName,jdbcType=VARCHAR},
-      </if>
       <if test="jobLinkId != null" >
         #{jobLinkId,jdbcType=VARCHAR},
       </if>
@@ -113,9 +106,6 @@
       <if test="jobId != null" >
         job_id = #{jobId,jdbcType=VARCHAR},
       </if>
-      <if test="jobName != null" >
-        job_name = #{jobName,jdbcType=VARCHAR},
-      </if>
       <if test="jobLinkId != null" >
         job_link_id = #{jobLinkId,jdbcType=VARCHAR},
       </if>
@@ -141,7 +131,6 @@
     update job_execute_result
     set job_uuid = #{jobUuid,jdbcType=VARCHAR},
       job_id = #{jobId,jdbcType=VARCHAR},
-      job_name = #{jobName,jdbcType=VARCHAR},
       job_link_id = #{jobLinkId,jdbcType=VARCHAR},
       job_start_time = #{jobStartTime,jdbcType=TIMESTAMP},
       job_end_time = #{jobEndTime,jdbcType=TIMESTAMP},
@@ -156,9 +145,6 @@
     <set >
       <if test="jobId != null" >
         job_id = #{jobId,jdbcType=VARCHAR},
-      </if>
-      <if test="jobName != null" >
-        job_name = #{jobName,jdbcType=VARCHAR},
       </if>
       <if test="jobLinkId != null" >
         job_link_id = #{jobLinkId,jdbcType=VARCHAR},

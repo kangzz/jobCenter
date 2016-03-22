@@ -19,13 +19,11 @@ public class JobServiceTest3 extends AbstractService {
         //业务
 
         try {
-            Thread.sleep(100);
+            Thread.sleep(30000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         doSomeThing();
-
-        getUuid();
 
         failCallBackToJobCenter(1,"test3测试失败返回!");
         //回调

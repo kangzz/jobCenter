@@ -1,18 +1,11 @@
 package com.jobCenter.util.client;
 
-import com.alibaba.fastjson.JSONObject;
-import com.jobCenter.comm.SystemConstant;
 import com.jobCenter.util.HttpPoster;
-import com.jobCenter.util.MD5Util;
-import com.jobCenter.util.StringUtil;
 import com.jobCenter.util.http.MessageUtil;
 import org.apache.log4j.Logger;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * 描述：业务系统定时任务service需要继承的类
@@ -21,7 +14,7 @@ import java.util.UUID;
  */
 public abstract class AbstractService implements Runnable  {
 
-    private static final Logger logger = Logger.getLogger(JobCenterCommonAction.class);
+    private static final Logger logger = Logger.getLogger(JobCenterCommonController.class);
 
     private String uuid;
     private String jobId;
@@ -47,7 +40,7 @@ public abstract class AbstractService implements Runnable  {
     * 作者 ：kangzz
     * 日期 ：2016-03-22 23:12:23
     */
-    public void successCallBackToJobCenter() {
+    public synchronized void successCallBackToJobCenter() {
         try {
             Map<String, Object> paramMap = new HashMap<String, Object>();
             paramMap.put("uuid", uuid);//唯一标志本次请求id
@@ -75,7 +68,7 @@ public abstract class AbstractService implements Runnable  {
      * 作者 ：kangzz
      * 日期 ：2016-03-22 23:12:23
      */
-    public void failCallBackToJobCenter(int code, String message) {
+    public synchronized void failCallBackToJobCenter(int code, String message) {
         try {
             Map<String, Object> paramMap = new HashMap<String, Object>();
             paramMap.put("uuid", uuid);//唯一标志本次请求id

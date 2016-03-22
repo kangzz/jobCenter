@@ -20,13 +20,13 @@ public class JobServiceTest2 extends AbstractService {
         //业务
 
         try {
-            Thread.sleep(100);
+            Thread.sleep(15000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         doSomeThing();
 
-        getUuid();
+        String uuid = getUuid();
         //回调
         //callback(jobId,uuid,"true");
         successCallBackToJobCenter();

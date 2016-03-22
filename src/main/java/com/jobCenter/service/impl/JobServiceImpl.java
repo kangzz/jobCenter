@@ -206,11 +206,11 @@ public class JobServiceImpl implements IJobService {
      * 作者 ：kangzz
      * 日期 ：2016-03-22 22:13:49
      */
-    public void saveJobExecuteResult(JobExecuteResult record){
+    public synchronized void saveJobExecuteResult(JobExecuteResult record){
         try {
             jobExecuteResultMapper.insertSelective(record);
         }catch (Exception e) {
-            logger.error("移除所有的定时任务信息异常!", e);
+            logger.error("初始保存任务执行信息异常!", e);
         }
     }
     /**
@@ -218,13 +218,13 @@ public class JobServiceImpl implements IJobService {
      * 作者 ：kangzz
      * 日期 ：2016-03-22 22:27:56
      */
-    public void updateJobExecuteResultByUuid(JobExecuteResult record){
+    public synchronized void updateJobExecuteResultByUuid(JobExecuteResult record){
         try {
             if(jobExecuteResultMapper.updateByUuid(record) == 0){
                 throw new RuntimeException("更新执行数据失败!没有找到纪录!");
             }
         }catch (Exception e){
-            logger.error("更新定时任务执行数据失败!");
+            logger.error("更新定时任务执行数据失败!",e);
         }
     }
 }
