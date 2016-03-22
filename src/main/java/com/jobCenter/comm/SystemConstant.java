@@ -18,6 +18,10 @@ public class SystemConstant {
     public static final Integer HEAR_MAX_VAL = 10;
     //定时任务心跳频率 单位:毫秒
     public static final Integer HEAR_RATE = 5000;
+    //抢占监听器等候启动时间 单位:毫秒
+    public static final Integer GRAD_TO_MASTER_LISTENER_WAIT_TIME = 10000;
+
+
     //主机监听器等候启动时间 单位:毫秒
     public static final Integer MASTER_LISTENER_WAIT_TIME = 10000;
     //备机切换主机监听器等候启动时间 单位:毫秒

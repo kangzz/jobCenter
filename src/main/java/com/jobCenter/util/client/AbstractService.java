@@ -1,4 +1,4 @@
-package com.jobCenter.web.manger;
+package com.jobCenter.util.client;
 
 /**
  * 描述：业务系统定时任务service需要继承的类

@@ -14,7 +14,6 @@ import com.jobCenter.comm.SystemConstant;
 import com.jobCenter.enums.JobExecuteType;
 import com.jobCenter.model.JobInfoModel;
 import com.jobCenter.model.JobLinkInfoModel;
-import com.jobCenter.util.CryptAES;
 import com.jobCenter.util.HttpPoster;
 import com.jobCenter.util.MD5Util;
 import com.jobCenter.util.StringUtil;
@@ -24,7 +23,6 @@ import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
-import java.net.URLEncoder;
 import java.util.*;
 
 /**
@@ -35,8 +33,6 @@ import java.util.*;
 public class QuartzJob implements Job {
 
     private static final Logger logger = Logger.getLogger(QuartzJob.class);
-
-    //private static final Byte[] lock = new Byte[0];
 
     public void execute(JobExecutionContext arg0) throws JobExecutionException {
         //发送请求
@@ -56,13 +52,14 @@ public class QuartzJob implements Job {
             logger.info("定时任务不在有效期内!");
             return;
         }
-        logger.info("任务[" + jobInfoModel.getJobName() + "]请求开始时间:" + System.currentTimeMillis());
+        long startTime = System.currentTimeMillis();
+        logger.info("任务[" + jobInfoModel.getJobName() + "]请求开始时间:" + startTime);
 
         logger.info("任务名称::::::" + jobInfoModel.getJobName());
+        //任务id
+        String jobId = jobInfoModel.getJobId();
         //0 只执行一台 1 全部执行
         Integer jobExecuteType = jobInfoModel.getJobExecuteType();
-        //是否需要保证通知成功
-        Integer jobNotifySuccess = jobInfoModel.getJobNotifySucc();
         //需要保证通知成功时最大重试次数 这里用的是总调用次数 需要在重试基础上加1
         Integer jobRetryTimes = jobInfoModel.getJobRetryTimes() + 1;
         //获取主任务下的所有子任务信息
@@ -75,7 +72,6 @@ public class QuartzJob implements Job {
             Map<String, Object> paramMap = new HashMap<String, Object>();
             //获取子任务id
             String jobLinkId = jobLinkInfoModel.getJobLinkId();
-            String jobId = jobLinkInfoModel.getJobId();
             //封装加密字符串信息 加密字符串使用两个uuid截取部分拼装后再加密
             String uuid = UUID.randomUUID().toString();
             int jobLinkIdSubCount = jobLinkId.length() / SystemConstant.MD5_RATIO;
@@ -83,25 +79,19 @@ public class QuartzJob implements Job {
             int uuidSubCount = uuid.length() / SystemConstant.MD5_RATIO;
             uuidSubCount = uuidSubCount == 0 ? uuid.length() : uuidSubCount;
             String securityStr = jobLinkId.substring(0, jobLinkIdSubCount) + uuid.substring(0, uuidSubCount);
+
             paramMap.put("securityCode",MD5Util.encodeMD5(securityStr,SystemConstant.MD5_KEY));
             paramMap.put("uuid", uuid);//唯一标志本次请求id
-            paramMap.put("jobId", jobLinkInfoModel.getJobLinkId());//任务主id
-            paramMap.put("linkId", jobLinkInfoModel.getJobLinkId());//子任务id
+            paramMap.put("jobId", jobId);//任务主id
+            paramMap.put("linkId", jobLinkId);//子任务id
             paramMap.put("serviceName",jobLinkInfoModel.getServiceName());//子任务执行的service
-
-            /*if(jobLinkInfoModel.getJobLinkId().equals("4")){
-                paramMap.put("serviceName", "jobServiceTest1");//子任务id
-            }else{
-                paramMap.put("serviceName", "jobServiceTest2");//子任务id
-            }*/
-
-
             //转换发送参数
             String param = MessageUtil.getParameter(paramMap);
             //获取请求url信息
             String sendUrl = jobLinkInfoModel.getJobLink();
 
             logger.info("本次定时任务调用地址：" + sendUrl);
+
             logger.info("本次定时任务调用参数：" + param);
 
             //本次请求是否成功
@@ -109,7 +99,7 @@ public class QuartzJob implements Job {
             String jsonStr = StringUtil.EMPTY;
             for (int j = 0; j < jobRetryTimes; j++) {
                 jsonStr = HttpPoster.postWithRes(sendUrl, param);
-                logger.info("任务[" + jobInfoModel.getJobName() + "]第" + j + "次调用返回值:" + jsonStr);
+                logger.info("任务[" + jobInfoModel.getJobName() +"_jobLinkId:"+jobLinkId+ "]第" + (j+1) + "次调用返回值:" + jsonStr);
                 if (checkIsSuccess(jsonStr)) {
                     sendIsSuccess = true;
                     break;
@@ -126,7 +116,10 @@ public class QuartzJob implements Job {
                 break;
             }
         }
-        logger.info("任务[" + jobInfoModel.getJobName() + "]请求结束时间:" + System.currentTimeMillis());
+        long endTime = System.currentTimeMillis();
+        logger.info("任务[" + jobInfoModel.getJobName() + "]请求结束时间:" + endTime);
+
+        logger.info("任务[" + jobInfoModel.getJobName() + "]请求总耗时:" + (endTime-startTime)+"毫秒");
     }
 
     /**

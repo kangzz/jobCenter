@@ -10,10 +10,10 @@ import org.springframework.transaction.annotation.Transactional;
  * 作者 ：kangzz
  * 日期 ：2016-03-21 01:22:59
  */
-@Service(value = "jobServiceTest1")
+@Service(value = "jobServiceTest3")
 @Transactional
-public class JobServiceTest1 extends AbstractService {
-    private final static Logger logger = Logger.getLogger(JobServiceTest1.class);
+public class JobServiceTest3 extends AbstractService {
+    private final static Logger logger = Logger.getLogger(JobServiceTest3.class);
 
     public void run() {
         //业务
@@ -31,6 +31,6 @@ public class JobServiceTest1 extends AbstractService {
         //callback(jobId,uuid,"true");
     }
     public void doSomeThing(){
-        logger.info("jobServiceTest1获取到的uuid========"+getUuid());
+        logger.info("jobServiceTest3获取到的uuid========"+getUuid());
     }
 }

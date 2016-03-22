@@ -17,8 +17,9 @@ import java.util.Date;
  * 描述：主机加载任务数据监听
  * 作者 ：kangzz
  * 日期 ：2016-03-19 02:02:18
+ * implements ServletContextListener
  */
-public class MasterLoadJobListener implements ServletContextListener {
+public class MasterLoadJobListener {
 
     private MasterLoadJobThread myThread;
 
@@ -78,7 +79,7 @@ class MasterLoadJobThread extends Thread {
             HeartBeatInfo heartBeatInfo = new HeartBeatInfo();
             heartBeatInfo.setMasterIdentity(SystemConstant.MASTER_IDENTITY);
             //判断当前主机是否为主机 若为主机 同步更新最后心跳时间
-            Boolean isMaster = jobService.cheakIsMaster(heartBeatInfo);
+            Boolean isMaster = jobService.cheakIsMasterAndUpdateHeartBeat(heartBeatInfo);
             //如果是主服务器 那么加载服务到内存 如果加载成功 那么这个监听的任务的任务就剩定时更新最后修改时间
             if (isMaster && !SystemConstant.localIsMaster) {
                 if(jobService.loadAllJobListForMaster()){

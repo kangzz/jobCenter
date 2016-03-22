@@ -14,8 +14,9 @@ import javax.servlet.ServletContextListener;
  * 描述：备机尝试切换为主机
  * 作者 ：kangzz
  * 日期 ：2016-03-19 02:02:18
+ * implements ServletContextListener
  */
-public class SlaveChangeToMasterListener implements ServletContextListener {
+public class SlaveChangeToMasterListener {
 
     private SlaveChangeToMasterThread myThread;
 

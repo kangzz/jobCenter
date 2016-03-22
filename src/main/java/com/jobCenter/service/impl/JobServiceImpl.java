@@ -52,7 +52,7 @@ public class JobServiceImpl implements IJobService {
      * 作者 ：kangzz
      * 日期 ：2016-03-18 23:25:16
      */
-    public Boolean cheakIsMaster(HeartBeatInfo heartBeatInfo) {
+    public Boolean cheakIsMasterAndUpdateHeartBeat(HeartBeatInfo heartBeatInfo) {
 
         heartBeatInfo.setIsDel(IsType.NO.getValue());
         int countNum = heartBeatInfoMapper.updateByMasterIdentity(heartBeatInfo);
@@ -181,5 +181,20 @@ public class JobServiceImpl implements IJobService {
         }
         logger.info("添加任务总条数["+jobInfoModes.size()+"]条");
         return jobInfoModes;
+    }
+
+    /**
+     * 描述：移除所有的定时任务信息
+     * 作者 ：kangzz
+     * 日期 ：2016-03-22 09:42:26
+     */
+    public Boolean removeAllJobs(){
+        try {
+            QuartzManager.removeAllJobs();
+            return true;
+        }catch (Exception e) {
+            logger.error("移除所有的定时任务信息异常!", e);
+            return false;
+        }
     }
 }

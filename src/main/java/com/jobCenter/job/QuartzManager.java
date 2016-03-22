@@ -12,10 +12,8 @@
 package com.jobCenter.job;
 
 import com.jobCenter.model.JobInfoModel;
-import org.quartz.CronTrigger;
-import org.quartz.JobDetail;
-import org.quartz.Scheduler;
-import org.quartz.SchedulerFactory;
+import org.apache.log4j.Logger;
+import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
 
 import java.util.List;
@@ -27,6 +25,8 @@ import java.util.List;
  * 日期 ：2016-03-17 23:08:30
  */
 public class QuartzManager {
+
+	private final static Logger logger = Logger.getLogger(QuartzManager.class);
 	private static SchedulerFactory gSchedulerFactory = new StdSchedulerFactory();
 	private static String JOB_GROUP_NAME = "EXTJWEB_JOBGROUP_NAME";
 	private static String TRIGGER_GROUP_NAME = "EXTJWEB_TRIGGERGROUP_NAME";
@@ -64,6 +64,22 @@ public class QuartzManager {
 				sched.start();
 			}
 		} catch (Exception e) {
+			logger.error("添加任务失败!",e);
+			throw new RuntimeException(e);
+		}
+	}
+
+	public static void removeAllJobs(){
+		try {
+			Scheduler sched = gSchedulerFactory.getScheduler();
+			String[] jobNames = sched.getJobNames(JOB_GROUP_NAME);
+			if(jobNames!=null && jobNames.length > 0){
+				for (int i = 0; i < jobNames.length; i++) {
+					removeJob(jobNames[i]);
+				}
+			}
+		} catch (SchedulerException e) {
+			logger.error("移除所有定时任务失败!",e);
 			throw new RuntimeException(e);
 		}
 	}

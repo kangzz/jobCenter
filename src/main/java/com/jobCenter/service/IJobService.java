@@ -23,7 +23,7 @@ public interface IJobService {
      * 作者 ：kangzz
      * 日期 ：2016-03-18 23:25:16
      */
-    Boolean cheakIsMaster(HeartBeatInfo heartBeatInfo);
+    Boolean cheakIsMasterAndUpdateHeartBeat(HeartBeatInfo heartBeatInfo);
 
     /**
      * 描述：切换当前机器为主机是否成功 通过根据超时时间修改任务成功记录是否为0判断
@@ -45,4 +45,11 @@ public interface IJobService {
      * 日期 ：2016-03-18 23:26:38
      */
     List<JobInfoModel> getAllJobInfo();
+    /**
+     * 描述：移除所有的定时任务信息
+     * 作者 ：kangzz
+     * 日期 ：2016-03-22 09:42:26
+     */
+    Boolean removeAllJobs();
 }
+

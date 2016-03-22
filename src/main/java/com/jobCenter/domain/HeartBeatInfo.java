@@ -2,6 +2,11 @@ package com.jobCenter.domain;
 
 import java.util.Date;
 
+/**
+ * 描述：心跳信息实体
+ * 作者 ：kangzz
+ * 日期 ：2016-03-21 20:21:27
+ */
 public class HeartBeatInfo {
     private Integer id;//心跳id
 
