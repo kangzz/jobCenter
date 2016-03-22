@@ -12,11 +12,9 @@ public class JobLinkInfo {
 
     private Integer jobId;//任务ID
 
-    private String jobLink;//任务链接
+    private String jobLink;//任务链接 为的是支持一个任务多台机器执行
 
-    // TODO 定时任务子表需要增加该字段 减少服务器接口暴露
     private String serviceName;//定时任务Service名称
-
 
     private Integer isValid;//是否有效 1是 0否
 

@@ -111,7 +111,6 @@ public class QuartzJob implements Job {
                     sendIsSuccess = true;
                     JobExecuteResult record = new JobExecuteResult();
                     record.setJobStartTime(new Date());
-                    record.setJobName(jobName);
                     record.setJobId(jobId);
                     record.setJobLinkId(jobLinkId);
                     record.setJobUuid(uuid);

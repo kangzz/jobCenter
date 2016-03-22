@@ -3,7 +3,6 @@ package com.jobCenter.web.manger;
 import com.alibaba.fastjson.JSONObject;
 import com.jobCenter.domain.JobExecuteResult;
 import com.jobCenter.service.IJobService;
-import com.jobCenter.util.SpringTool;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,12 +15,12 @@ import java.io.IOException;
 import java.util.Date;
 
 /**
- * 描述：回调方法
+ * 描述：定时任务服务器提供给业务系统的回调方法
  * 作者 ：kangzz
  * 日期 ：2016-03-22 23:23:44
  */
 @Controller
-@RequestMapping(value="/CallBackAction")
+@RequestMapping(value="/callBackToJobCenter")
 public class CallBackController {
 
 	private static final Logger logger = Logger.getLogger(CallBackController.class);
@@ -32,17 +31,12 @@ public class CallBackController {
 	 * 作者 ：kangzz
 	 * 日期 ：2016-03-22 23:22:12
 	 */
-	@RequestMapping(value="callBack",method={RequestMethod.GET,RequestMethod.POST})
+	@RequestMapping(value="callBack.do",method={RequestMethod.GET,RequestMethod.POST})
 	public void callBack(HttpServletRequest request, HttpServletResponse response) {
 		String uuid = request.getParameter("uuid");
 		String status = request.getParameter("status");
 		String code = request.getParameter("code");
 		String message = request.getParameter("message");
-		logger.info("回调参数:");
-		logger.info("uuid:"+uuid);
-		logger.info("status:"+status);
-		logger.info("code:"+code);
-		logger.info("message:"+message);
 		JobExecuteResult record = new JobExecuteResult();
 		record.setJobUuid(uuid);
 		record.setJobEndTime(new Date());

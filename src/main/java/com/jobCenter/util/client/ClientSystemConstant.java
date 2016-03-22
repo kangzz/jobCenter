@@ -10,7 +10,7 @@ import com.xiaoleilu.hutool.system.SystemUtil;
  */
 public class ClientSystemConstant {
     //主机标志
-    public static final String JOB_CENTER_CALL_BACK_URL = "http://localhost:8080/CallBackAction/callBack";
+    public static final String JOB_CENTER_CALL_BACK_URL = "http://localhost:8080/callBackToJobCenter/callBack.do";
     //MD5加密key
     public static final String MD5_KEY = "748d5cb7c2c6824b";
     //MD5加密截取字符占比
