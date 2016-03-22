@@ -1,5 +1,7 @@
 package com.jobCenter.util.client;
 
+import com.jobCenter.enums.DoneStatus;
+import com.jobCenter.enums.JobStatus;
 import com.jobCenter.util.HttpPoster;
 import com.jobCenter.util.http.MessageUtil;
 import org.apache.log4j.Logger;
@@ -44,9 +46,9 @@ public abstract class AbstractService implements Runnable  {
         try {
             Map<String, Object> paramMap = new HashMap<String, Object>();
             paramMap.put("uuid", uuid);//唯一标志本次请求id
-            paramMap.put("status", "success");//执行成功标志
-            paramMap.put("code", 0);//执行成功编码
-            paramMap.put("message", "成功");//执行成功信息
+            paramMap.put("status", DoneStatus.ZZCG.getValue());//执行成功标志
+            paramMap.put("code", JobStatus.ZXCG.getValue());//执行成功编码
+            paramMap.put("message", JobStatus.ZXCG.getName());//执行成功信息
             //转换发送参数
             String param = MessageUtil.getParameter(paramMap);
             //获取请求url信息
@@ -72,9 +74,9 @@ public abstract class AbstractService implements Runnable  {
         try {
             Map<String, Object> paramMap = new HashMap<String, Object>();
             paramMap.put("uuid", uuid);//唯一标志本次请求id
-            paramMap.put("status", "fail");//任务执行失败
-            paramMap.put("code", code);//失败错误码
-            paramMap.put("message", message);//失败错误原因
+            paramMap.put("status", DoneStatus.ZZSB.getValue());//任务执行失败
+            paramMap.put("code", JobStatus.ZXSB.getValue());//失败错误码
+            paramMap.put("message", JobStatus.ZXSB.getName());//失败错误原因
             //转换发送参数
             String param = MessageUtil.getParameter(paramMap);
             //获取请求url信息

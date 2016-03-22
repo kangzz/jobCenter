@@ -64,7 +64,7 @@ class GrabToMasterListenerThread extends Thread {
             initInfo.setMasterIdentity(SystemConstant.MASTER_IDENTITY);
             initInfo.setHeartType(HeartType.JOB_CENTER.getValue());
             initInfo.setHeartMaxVal(SystemConstant.HEAR_MAX_VAL);
-            initInfo.setLastModifyTime(new Date());
+            initInfo.setHeartBeatTime(new Date());
             initInfo.setIsDel(IsType.NO.getValue());
             jobService.initHeartBeatInfo(initInfo);
             initHeatInfo = false;
@@ -83,6 +83,7 @@ class GrabToMasterListenerThread extends Thread {
             HeartBeatInfo info = new HeartBeatInfo();
             info.setHeartType(HeartType.JOB_CENTER.getValue());
             info.setMasterIdentity(SystemConstant.MASTER_IDENTITY);
+            info.setHeartBeatTime(new Date());
             //检查是否切换成功 切换成功需要加载任务到内存 同时更新心跳时间
             //超时抢占标志
             Boolean outTimeChangeSuccess = jobService.changeToMaster(info);
@@ -103,8 +104,9 @@ class GrabToMasterListenerThread extends Thread {
                 //校验当前机器是否为主机
                 HeartBeatInfo heartBeatInfo = new HeartBeatInfo();
                 heartBeatInfo.setMasterIdentity(SystemConstant.MASTER_IDENTITY);
+                heartBeatInfo.setHeartBeatTime(new Date());
                 //检查本机是否为主机 同时更新心跳时间
-                Boolean isMaster = jobService.cheakIsMasterAndUpdateHeartBeat(heartBeatInfo);
+                Boolean isMaster = jobService.checkIsMasterAndUpdateHeartBeat(heartBeatInfo);
                 if(isMaster){
                     logger.info("当前主机信息为:"+SystemConstant.MASTER_IDENTITY);
                 }else{

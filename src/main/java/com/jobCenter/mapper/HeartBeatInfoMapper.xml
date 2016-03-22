@@ -5,12 +5,12 @@
         <id column="id" property="id" jdbcType="INTEGER"/>
         <result column="master_identity" property="masterIdentity" jdbcType="VARCHAR"/>
         <result column="heart_type" property="heartType" jdbcType="VARCHAR"/>
-        <result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP"/>
+        <result column="heart_beat_time" property="heartBeatTime" jdbcType="TIMESTAMP"/>
         <result column="heart_max_val" property="heartMaxVal" jdbcType="INTEGER"/>
         <result column="is_del" property="isDel" jdbcType="INTEGER"/>
     </resultMap>
     <sql id="Base_Column_List">
-    id, master_identity, heart_type, last_modify_time, heart_max_val, is_del
+    id, master_identity, heart_type, heart_beat_time, heart_max_val, is_del
   </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         select
@@ -24,10 +24,10 @@
   </delete>
     <insert id="insert" parameterType="com.jobCenter.domain.HeartBeatInfo">
     insert into heart_beat_Info (id, master_identity, heart_type,
-    last_modify_time, heart_max_val, is_del
+    heart_beat_time, heart_max_val, is_del
     )
     values (#{id,jdbcType=INTEGER}, #{masterIdentity,jdbcType=VARCHAR}, #{heartType,jdbcType=VARCHAR},
-    #{lastModifyTime,jdbcType=TIMESTAMP}, #{heartMaxVal,jdbcType=INTEGER}, #{isDel,jdbcType=INTEGER}
+    #{heartBeatTime,jdbcType=TIMESTAMP}, #{heartMaxVal,jdbcType=INTEGER}, #{isDel,jdbcType=INTEGER}
     )
   </insert>
     <insert id="insertSelective" parameterType="com.jobCenter.domain.HeartBeatInfo">
@@ -42,8 +42,8 @@
             <if test="heartType != null">
                 heart_type,
             </if>
-            <if test="lastModifyTime != null">
-                last_modify_time,
+            <if test="heartBeatTime != null">
+                heart_beat_time,
             </if>
             <if test="heartMaxVal != null">
                 heart_max_val,
@@ -62,8 +62,8 @@
             <if test="heartType != null">
                 #{heartType,jdbcType=VARCHAR},
             </if>
-            <if test="lastModifyTime != null">
-                #{lastModifyTime,jdbcType=TIMESTAMP},
+            <if test="heartBeatTime != null">
+                #{heartBeatTime,jdbcType=TIMESTAMP},
             </if>
             <if test="heartMaxVal != null">
                 #{heartMaxVal,jdbcType=INTEGER},
@@ -82,8 +82,8 @@
             <if test="heartType != null">
                 heart_type = #{heartType,jdbcType=VARCHAR},
             </if>
-            <if test="lastModifyTime != null">
-                last_modify_time = #{lastModifyTime,jdbcType=TIMESTAMP},
+            <if test="heartBeatTime != null">
+                heart_beat_time = #{heartBeatTime,jdbcType=TIMESTAMP},
             </if>
             <if test="heartMaxVal != null">
                 heart_max_val = #{heartMaxVal,jdbcType=INTEGER},
@@ -98,7 +98,7 @@
     update heart_beat_Info
     set master_identity = #{masterIdentity,jdbcType=VARCHAR},
       heart_type = #{heartType,jdbcType=VARCHAR},
-      last_modify_time = #{lastModifyTime,jdbcType=TIMESTAMP},
+      heart_beat_time = #{heartBeatTime,jdbcType=TIMESTAMP},
       heart_max_val = #{heartMaxVal,jdbcType=INTEGER},
       is_del = #{isDel,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
@@ -116,8 +116,8 @@
             <if test="heartType != null">
                 AND heart_type = #{heartType,jdbcType=VARCHAR}
             </if>
-            <if test="lastModifyTime != null">
-                AND last_modify_time = #{lastModifyTime,jdbcType=TIMESTAMP}
+            <if test="heartBeatTime != null">
+                AND heart_beat_time = #{heartBeatTime,jdbcType=TIMESTAMP}
             </if>
             <if test="heartMaxVal != null">
                 AND heart_max_val = #{heartMaxVal,jdbcType=INTEGER}
@@ -137,14 +137,16 @@
     <!--  主机正常修改心跳时间 -->
   <update id="updateByMasterIdentity" parameterType="com.jobCenter.domain.HeartBeatInfo">
     update heart_beat_Info
-    set last_modify_time = now()
+    set heart_beat_time = #{heartBeatTime,jdbcType=TIMESTAMP}
     where master_identity = #{masterIdentity,jdbcType=VARCHAR}
     and is_del = #{isDel,jdbcType=INTEGER}
   </update>
     <!-- 检测主机是否已失效 本机是否可以接管 -->
   <update id="updateByOutTime" parameterType="com.jobCenter.domain.HeartBeatInfo">
-    update heart_beat_Info set last_modify_time = now(),master_identity = #{masterIdentity,jdbcType=VARCHAR}
-    where unix_timestamp(now()) - unix_timestamp(last_modify_time) > heart_max_val
+    update heart_beat_Info
+    set heart_beat_time = #{heartBeatTime,jdbcType=TIMESTAMP},
+    master_identity = #{masterIdentity,jdbcType=VARCHAR}
+    where unix_timestamp(#{heartBeatTime,jdbcType=TIMESTAMP}) - unix_timestamp(heart_beat_time) > heart_max_val
     and heart_type = #{heartType,jdbcType=VARCHAR}
     and is_del = 0
   </update>

@@ -1,6 +1,8 @@
 package com.jobCenter.util.client;
 
 import com.alibaba.fastjson.JSONObject;
+import com.jobCenter.enums.DoneStatus;
+import com.jobCenter.enums.JobStatus;
 import com.jobCenter.util.MD5Util;
 import com.jobCenter.util.SpringTool;
 import org.apache.log4j.Logger;
@@ -33,14 +35,14 @@ public class JobCenterCommonController {
 		//安全码校验
 		if(!checkIsValidVisit(uuid,linkId,securityCode)){
 			logger.info("安全码校验失败!");
-			printResult(response,uuid,"fail",2,"安全码校验失败");
+			printResult(response,uuid,DoneStatus.TZCG.getValue(),JobStatus.JYSB.getValue(),JobStatus.JYSB.getName());
 			return;
 		}else{
 			logger.info("安全码校验成功!");
 		}
 		//校验房前serviceName是否有县城正在执行 如果正在执行 那么返回错误
 		if(cache.containsKey(serviceName) && cache.get(serviceName).isAlive()) {
-			printResult(response,uuid,"fail",-100,"当前任务正在执行!");
+			printResult(response,uuid, DoneStatus.UNDONE.getValue(),JobStatus.ZZZX.getValue(),JobStatus.ZZZX.getName());
 			return;
 		}
 		AbstractService abstractService = (AbstractService) SpringTool.getBean(serviceName);
@@ -50,7 +52,7 @@ public class JobCenterCommonController {
 		t.setName(uuid);
 		cache.put(serviceName,t);
 		t.start();
-		printResult(response,uuid,"success",0,"成功");
+		printResult(response,uuid,DoneStatus.TZCG.getValue(),JobStatus.TZCG.getValue(),JobStatus.TZCG.getName());
 	}
 
 	//封装返回数据

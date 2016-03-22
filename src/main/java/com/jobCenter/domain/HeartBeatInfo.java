@@ -14,7 +14,7 @@ public class HeartBeatInfo {
 
     private String heartType;//心跳类型
 
-    private Date lastModifyTime;//最后修改时间
+    private Date heartBeatTime;//最后修改时间
 
     private Integer heartMaxVal;//最大间隔时间
 
@@ -44,12 +44,12 @@ public class HeartBeatInfo {
         this.heartType = heartType == null ? null : heartType.trim();
     }
 
-    public Date getLastModifyTime() {
-        return lastModifyTime;
+    public Date getHeartBeatTime() {
+        return heartBeatTime;
     }
 
-    public void setLastModifyTime(Date lastModifyTime) {
-        this.lastModifyTime = lastModifyTime;
+    public void setHeartBeatTime(Date heartBeatTime) {
+        this.heartBeatTime = heartBeatTime;
     }
 
     public Integer getHeartMaxVal() {
