@@ -7,7 +7,7 @@ import java.util.List;
 public class JobInfoModel implements Serializable {
 
     private static final long serialVersionUID = -5138174371495651441L;
-    private String jobId;//定时任务信息主键
+    private Integer jobId;//定时任务信息主键
 
     private String jobName;//定时任务名称
 
@@ -25,11 +25,11 @@ public class JobInfoModel implements Serializable {
 
     private List<JobLinkInfoModel> jobLinkInfoModels;//链接集合
 
-    public String getJobId() {
+    public Integer getJobId() {
         return jobId;
     }
 
-    public void setJobId(String jobId) {
+    public void setJobId(Integer jobId) {
         this.jobId = jobId;
     }
 

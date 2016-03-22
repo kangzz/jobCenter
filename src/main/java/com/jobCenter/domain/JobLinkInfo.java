@@ -8,9 +8,9 @@ import java.util.Date;
  * 日期 ：2016-03-18 00:37:58
  */
 public class JobLinkInfo {
-    private String jobLinkId;//请求路径id
+    private Integer jobLinkId;//请求路径id
 
-    private String jobId;//任务ID
+    private Integer jobId;//任务ID
 
     private String jobLink;//任务链接
 
@@ -30,20 +30,20 @@ public class JobLinkInfo {
 
     private Date updateTime;//修改时间
 
-    public String getJobLinkId() {
+    public Integer getJobLinkId() {
         return jobLinkId;
     }
 
-    public void setJobLinkId(String jobLinkId) {
-        this.jobLinkId = jobLinkId == null ? null : jobLinkId.trim();
+    public void setJobLinkId(Integer jobLinkId) {
+        this.jobLinkId = jobLinkId == null ? null : jobLinkId;
     }
 
-    public String getJobId() {
+    public Integer getJobId() {
         return jobId;
     }
 
-    public void setJobId(String jobId) {
-        this.jobId = jobId == null ? null : jobId.trim();
+    public void setJobId(Integer jobId) {
+        this.jobId = jobId == null ? null : jobId;
     }
 
     public String getJobLink() {

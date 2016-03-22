@@ -10,24 +10,24 @@ import java.util.Date;
 public class JobLinkInfoModel implements Serializable {
 
     private static final long serialVersionUID = 5839382299698006071L;
-    private String jobLinkId;//请求路径id
-    private String jobId;//任务ID
+    private Integer jobLinkId;//请求路径id
+    private Integer jobId;//任务ID
     private String jobLink;//任务链接
     private String serviceName;//任务Service名称
 
-    public String getJobLinkId() {
+    public Integer getJobLinkId() {
         return jobLinkId;
     }
 
-    public void setJobLinkId(String jobLinkId) {
+    public void setJobLinkId(Integer jobLinkId) {
         this.jobLinkId = jobLinkId;
     }
 
-    public String getJobId() {
+    public Integer getJobId() {
         return jobId;
     }
 
-    public void setJobId(String jobId) {
+    public void setJobId(Integer jobId) {
         this.jobId = jobId;
     }
 

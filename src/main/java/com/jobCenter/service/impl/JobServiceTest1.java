@@ -26,9 +26,9 @@ public class JobServiceTest1 extends AbstractService {
         doSomeThing();
 
         getUuid();
-        Thread.currentThread().interrupt();
         //回调
         //callback(jobId,uuid,"true");
+        failCallBackToJobCenter(1,"test1执行失败!!!!!");
     }
     public void doSomeThing(){
         logger.info("jobServiceTest1获取到的uuid========"+getUuid());

@@ -1,12 +1,14 @@
 package com.jobCenter.service.impl;
 
 import com.jobCenter.domain.HeartBeatInfo;
+import com.jobCenter.domain.JobExecuteResult;
 import com.jobCenter.domain.JobInfo;
 import com.jobCenter.domain.JobLinkInfo;
 import com.jobCenter.enums.IsType;
 import com.jobCenter.job.QuartzJob;
 import com.jobCenter.job.QuartzManager;
 import com.jobCenter.mapper.HeartBeatInfoMapper;
+import com.jobCenter.mapper.JobExecuteResultMapper;
 import com.jobCenter.mapper.JobInfoMapper;
 import com.jobCenter.mapper.JobLinkInfoMapper;
 import com.jobCenter.model.JobInfoModel;
@@ -29,6 +31,8 @@ public class JobServiceImpl implements IJobService {
     private JobLinkInfoMapper jobLinkInfoMapper;
     @Autowired
     private HeartBeatInfoMapper heartBeatInfoMapper;
+    @Autowired
+    private JobExecuteResultMapper jobExecuteResultMapper;
 
     private final static Logger logger = Logger.getLogger(JobServiceImpl.class);
 
@@ -195,6 +199,32 @@ public class JobServiceImpl implements IJobService {
         }catch (Exception e) {
             logger.error("移除所有的定时任务信息异常!", e);
             return false;
+        }
+    }
+    /**
+     * 描述：保存任务执行日志
+     * 作者 ：kangzz
+     * 日期 ：2016-03-22 22:13:49
+     */
+    public void saveJobExecuteResult(JobExecuteResult record){
+        try {
+            jobExecuteResultMapper.insertSelective(record);
+        }catch (Exception e) {
+            logger.error("移除所有的定时任务信息异常!", e);
+        }
+    }
+    /**
+     * 描述：更新任务执行日志
+     * 作者 ：kangzz
+     * 日期 ：2016-03-22 22:27:56
+     */
+    public void updateJobExecuteResultByUuid(JobExecuteResult record){
+        try {
+            if(jobExecuteResultMapper.updateByUuid(record) == 0){
+                throw new RuntimeException("更新执行数据失败!没有找到纪录!");
+            }
+        }catch (Exception e){
+            logger.error("更新定时任务执行数据失败!");
         }
     }
 }

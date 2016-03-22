@@ -8,7 +8,7 @@ import java.util.Date;
  */
 public class JobInfo {
 
-    private String jobId;//定时任务信息主键
+    private Integer jobId;//定时任务信息主键
 
     private String jobName;//定时任务名称
 
@@ -36,12 +36,12 @@ public class JobInfo {
 
     private Date updateTime;//'修改时间'
 
-    public String getJobId() {
+    public Integer getJobId() {
         return jobId;
     }
 
-    public void setJobId(String jobId) {
-        this.jobId = jobId == null ? null : jobId.trim();
+    public void setJobId(Integer jobId) {
+        this.jobId = jobId == null ? null : jobId;
     }
 
     public String getJobName() {

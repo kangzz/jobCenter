@@ -11,17 +11,21 @@ package com.jobCenter.job;
 
 import com.alibaba.fastjson.JSONObject;
 import com.jobCenter.comm.SystemConstant;
+import com.jobCenter.domain.JobExecuteResult;
 import com.jobCenter.enums.JobExecuteType;
 import com.jobCenter.model.JobInfoModel;
 import com.jobCenter.model.JobLinkInfoModel;
+import com.jobCenter.service.IJobService;
 import com.jobCenter.util.HttpPoster;
 import com.jobCenter.util.MD5Util;
+import com.jobCenter.util.SpringTool;
 import com.jobCenter.util.StringUtil;
 import com.jobCenter.util.http.MessageUtil;
 import org.apache.log4j.Logger;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.*;
 
@@ -31,6 +35,9 @@ import java.util.*;
  * 日期 ：2016-03-19 03:39:27
  */
 public class QuartzJob implements Job {
+
+
+    IJobService jobService = (IJobService) SpringTool.getBean("jobService");
 
     private static final Logger logger = Logger.getLogger(QuartzJob.class);
 
@@ -53,11 +60,11 @@ public class QuartzJob implements Job {
             return;
         }
         long startTime = System.currentTimeMillis();
-        logger.info("任务[" + jobInfoModel.getJobName() + "]请求开始时间:" + startTime);
-
-        logger.info("任务名称::::::" + jobInfoModel.getJobName());
         //任务id
-        String jobId = jobInfoModel.getJobId();
+        String jobId = String.valueOf(jobInfoModel.getJobId());
+        //任务名称
+        String jobName = jobInfoModel.getJobName();
+        logger.info("任务[" + jobName + "]请求开始时间:" + startTime);
         //0 只执行一台 1 全部执行
         Integer jobExecuteType = jobInfoModel.getJobExecuteType();
         //需要保证通知成功时最大重试次数 这里用的是总调用次数 需要在重试基础上加1
@@ -71,7 +78,7 @@ public class QuartzJob implements Job {
             JobLinkInfoModel jobLinkInfoModel = jobLinkInfoModels.get(i);
             Map<String, Object> paramMap = new HashMap<String, Object>();
             //获取子任务id
-            String jobLinkId = jobLinkInfoModel.getJobLinkId();
+            String jobLinkId = String.valueOf(jobLinkInfoModel.getJobLinkId());
             //封装加密字符串信息 加密字符串使用两个uuid截取部分拼装后再加密
             String uuid = UUID.randomUUID().toString();
             int jobLinkIdSubCount = jobLinkId.length() / SystemConstant.MD5_RATIO;
@@ -102,6 +109,13 @@ public class QuartzJob implements Job {
                 logger.info("任务[" + jobInfoModel.getJobName() +"_jobLinkId:"+jobLinkId+ "]第" + (j+1) + "次调用返回值:" + jsonStr);
                 if (checkIsSuccess(jsonStr)) {
                     sendIsSuccess = true;
+                    JobExecuteResult record = new JobExecuteResult();
+                    record.setJobStartTime(new Date());
+                    record.setJobName(jobName);
+                    record.setJobId(jobId);
+                    record.setJobLinkId(jobLinkId);
+                    record.setJobUuid(uuid);
+                    jobService.saveJobExecuteResult(record);
                     break;
                 } else {
                     continue;

@@ -26,7 +26,8 @@ public class JobServiceTest3 extends AbstractService {
         doSomeThing();
 
         getUuid();
-        Thread.currentThread().interrupt();
+
+        failCallBackToJobCenter(1,"test3测试失败返回!");
         //回调
         //callback(jobId,uuid,"true");
     }

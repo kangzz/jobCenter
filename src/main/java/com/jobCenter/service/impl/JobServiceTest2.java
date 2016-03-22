@@ -27,10 +27,10 @@ public class JobServiceTest2 extends AbstractService {
         doSomeThing();
 
         getUuid();
-
-        Thread.currentThread().interrupt();
         //回调
         //callback(jobId,uuid,"true");
+        successCallBackToJobCenter();
+
     }
     public void doSomeThing(){
         logger.info("jobServiceTest2获取到的uuid========"+getUuid());

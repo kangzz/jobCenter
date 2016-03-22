@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.jobCenter.mapper.JobInfoMapper" >
   <resultMap id="BaseResultMap" type="com.jobCenter.domain.JobInfo" >
-    <id column="job_id" property="jobId" jdbcType="VARCHAR" />
+    <id column="job_id" property="jobId" jdbcType="INTEGER" />
     <result column="job_name" property="jobName" jdbcType="VARCHAR" />
     <result column="job_execute_type" property="jobExecuteType" jdbcType="INTEGER" />
     <result column="job_execute_rule" property="jobExecuteRule" jdbcType="VARCHAR" />
@@ -25,11 +25,11 @@
     select 
     <include refid="Base_Column_List" />
     from job_info
-    where job_id = #{jobId,jdbcType=VARCHAR}
+    where job_id = #{jobId,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from job_info
-    where job_id = #{jobId,jdbcType=VARCHAR}
+    where job_id = #{jobId,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.jobCenter.domain.JobInfo" >
     insert into job_info (job_id, job_name, job_execute_type,
@@ -37,7 +37,7 @@
       job_end_time, is_valid, is_del, 
       create_id, create_time, update_id, 
       update_time)
-    values (#{jobId,jdbcType=VARCHAR}, #{jobName,jdbcType=VARCHAR}, #{jobExecuteType,jdbcType=INTEGER}, 
+    values (#{jobId,jdbcType=INTEGER}, #{jobName,jdbcType=VARCHAR}, #{jobExecuteType,jdbcType=INTEGER},
       #{jobExecuteRule,jdbcType=VARCHAR}, #{jobNotifySucc,jdbcType=INTEGER},#{jobRetryTimes,jdbcType=INTEGER}, #{jobStartTime,jdbcType=TIMESTAMP},
       #{jobEndTime,jdbcType=TIMESTAMP}, #{isValid,jdbcType=INTEGER}, #{isDel,jdbcType=INTEGER}, 
       #{createId,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateId,jdbcType=VARCHAR}, 
@@ -91,7 +91,7 @@
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="jobId != null" >
-        #{jobId,jdbcType=VARCHAR},
+        #{jobId,jdbcType=INTEGER},
       </if>
       <if test="jobName != null" >
         #{jobName,jdbcType=VARCHAR},
@@ -177,7 +177,7 @@
         update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
-    where job_id = #{jobId,jdbcType=VARCHAR}
+    where job_id = #{jobId,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.jobCenter.domain.JobInfo" >
     update job_info
@@ -194,13 +194,13 @@
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_id = #{updateId,jdbcType=VARCHAR},
       update_time = #{updateTime,jdbcType=TIMESTAMP}
-    where job_id = #{jobId,jdbcType=VARCHAR}
+    where job_id = #{jobId,jdbcType=INTEGER}
   </update>
 
   <sql id="whereSql">
     <trim prefix="WHERE" prefixOverrides="AND">
       <if test="jobId != null" >
-        AND job_id = #{jobId,jdbcType=VARCHAR}
+        AND job_id = #{jobId,jdbcType=INTEGER}
       </if>
       <if test="jobName != null" >
         AND job_name = #{jobName,jdbcType=VARCHAR}

@@ -2,6 +2,7 @@ package com.jobCenter.service;
 
 
 import com.jobCenter.domain.HeartBeatInfo;
+import com.jobCenter.domain.JobExecuteResult;
 import com.jobCenter.model.JobInfoModel;
 
 import java.util.List;
@@ -51,5 +52,17 @@ public interface IJobService {
      * 日期 ：2016-03-22 09:42:26
      */
     Boolean removeAllJobs();
+    /**
+     * 描述：保存任务执行日志
+     * 作者 ：kangzz
+     * 日期 ：2016-03-22 22:13:49
+     */
+    void saveJobExecuteResult(JobExecuteResult record);
+    /**
+     * 描述：更新任务执行日志
+     * 作者 ：kangzz
+     * 日期 ：2016-03-22 22:27:56
+     */
+    void updateJobExecuteResultByUuid(JobExecuteResult record);
 }
 

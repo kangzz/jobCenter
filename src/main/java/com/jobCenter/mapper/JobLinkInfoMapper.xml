@@ -2,8 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jobCenter.mapper.JobLinkInfoMapper">
   <resultMap id="BaseResultMap" type="com.jobCenter.domain.JobLinkInfo">
-    <id column="job_link_id" jdbcType="VARCHAR" property="jobLinkId" />
-    <result column="job_id" jdbcType="VARCHAR" property="jobId" />
+    <id column="job_link_id" jdbcType="INTEGER" property="jobLinkId" />
+    <result column="job_id" jdbcType="INTEGER" property="jobId" />
     <result column="job_link" jdbcType="VARCHAR" property="jobLink" />
     <result column="service_name" jdbcType="VARCHAR" property="serviceName" />
     <result column="is_valid" jdbcType="INTEGER" property="isValid" />
@@ -21,18 +21,18 @@
     select 
     <include refid="Base_Column_List" />
     from job_link_info
-    where job_link_id = #{jobLinkId,jdbcType=VARCHAR}
+    where job_link_id = #{jobLinkId,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     delete from job_link_info
-    where job_link_id = #{jobLinkId,jdbcType=VARCHAR}
+    where job_link_id = #{jobLinkId,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.jobCenter.domain.JobLinkInfo">
     insert into job_link_info (job_link_id, job_id, job_link, service_name,
       is_valid, is_del, create_id, 
       create_time, update_id, update_time
       )
-    values (#{jobLinkId,jdbcType=VARCHAR}, #{jobId,jdbcType=VARCHAR}, #{jobLink,jdbcType=VARCHAR},
+    values (#{jobLinkId,jdbcType=INTEGER}, #{jobId,jdbcType=INTEGER}, #{jobLink,jdbcType=VARCHAR},
       #{serviceName,jdbcType=VARCHAR},
       #{isValid,jdbcType=INTEGER}, #{isDel,jdbcType=INTEGER}, #{createId,jdbcType=VARCHAR}, 
       #{createTime,jdbcType=TIMESTAMP}, #{updateId,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}
@@ -74,10 +74,10 @@
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="jobLinkId != null">
-        #{jobLinkId,jdbcType=VARCHAR},
+        #{jobLinkId,jdbcType=INTEGER},
       </if>
       <if test="jobId != null">
-        #{jobId,jdbcType=VARCHAR},
+        #{jobId,jdbcType=INTEGER},
       </if>
       <if test="jobLink != null">
         #{jobLink,jdbcType=VARCHAR},
@@ -109,7 +109,7 @@
     update job_link_info
     <set>
       <if test="jobId != null">
-        job_id = #{jobId,jdbcType=VARCHAR},
+        job_id = #{jobId,jdbcType=INTEGER},
       </if>
       <if test="jobLink != null">
         job_link = #{jobLink,jdbcType=VARCHAR},
@@ -136,11 +136,11 @@
         update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
-    where job_link_id = #{jobLinkId,jdbcType=VARCHAR}
+    where job_link_id = #{jobLinkId,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.jobCenter.domain.JobLinkInfo">
     update job_link_info
-    set job_id = #{jobId,jdbcType=VARCHAR},
+    set job_id = #{jobId,jdbcType=INTEGER},
       job_link = #{jobLink,jdbcType=VARCHAR},
       service_name = #{serviceName,jdbcType=VARCHAR},
       is_valid = #{isValid,jdbcType=INTEGER},
@@ -149,17 +149,17 @@
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_id = #{updateId,jdbcType=VARCHAR},
       update_time = #{updateTime,jdbcType=TIMESTAMP}
-    where job_link_id = #{jobLinkId,jdbcType=VARCHAR}
+    where job_link_id = #{jobLinkId,jdbcType=INTEGER}
   </update>
 
 
   <sql id="whereSql">
     <trim prefix="WHERE" prefixOverrides="AND">
       <if test="jobLinkId != null" >
-        AND job_link_id = #{jobLinkId,jdbcType=VARCHAR}
+        AND job_link_id = #{jobLinkId,jdbcType=INTEGER}
       </if>
       <if test="jobId != null">
-        AND job_id = #{jobId,jdbcType=VARCHAR}
+        AND job_id = #{jobId,jdbcType=INTEGER}
       </if>
       <if test="jobLink != null">
         AND job_link = #{jobLink,jdbcType=VARCHAR}

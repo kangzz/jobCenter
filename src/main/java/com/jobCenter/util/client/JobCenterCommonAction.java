@@ -70,13 +70,13 @@ public class JobCenterCommonAction{
 	 */
 	private synchronized Boolean checkIsValidVisit(String uuid, String jobLinkId, String securityCode){
 		//jobCenter的加密规则是uuid和linkId各取一半后进行md5
-		int jobLinkIdSubCount = jobLinkId.length() / SystemConstant.MD5_RATIO;
+		int jobLinkIdSubCount = jobLinkId.length() / ClientSystemConstant.MD5_RATIO;
 		jobLinkIdSubCount = jobLinkIdSubCount == 0 ? jobLinkId.length() : jobLinkIdSubCount;
-		int uuidSubCount = uuid.length() / SystemConstant.MD5_RATIO;
+		int uuidSubCount = uuid.length() / ClientSystemConstant.MD5_RATIO;
 		uuidSubCount = uuidSubCount == 0 ? uuid.length() : uuidSubCount;
 		//业务系统根据加密规则生成的安全码
 		String securityStr = jobLinkId.substring(0, jobLinkIdSubCount) + uuid.substring(0, uuidSubCount);
-		return securityCode.equals(MD5Util.encodeMD5(securityStr,SystemConstant.MD5_KEY));
+		return securityCode.equals(MD5Util.encodeMD5(securityStr,ClientSystemConstant.MD5_KEY));
 	}
 
 }
