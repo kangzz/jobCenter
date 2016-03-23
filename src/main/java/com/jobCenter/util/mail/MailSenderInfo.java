@@ -1,6 +1,8 @@
 package com.jobCenter.util.mail;
 
+import java.util.List;
 import java.util.Properties;
+import java.util.Set;
 
 public class MailSenderInfo {
     // 发送邮件的服务器的IP和端口
@@ -11,7 +13,7 @@ public class MailSenderInfo {
     //发件人昵称
     private String fromName;
     // 邮件接收者的地址
-    private String[] toAddress;
+    private List<String> toAddress;
     // 登陆邮件发送服务器的用户名和密码
     private String userName;
     private String password;
@@ -22,9 +24,9 @@ public class MailSenderInfo {
     // 邮件的文本内容
     private String content;
     // 邮件附件的文件名
-    private String[] attachFileNames;
+    private List<String> attachFileNames;
     //邮件抄送人
-    private String[] receiveAddress;
+    private List<String> receiveAddress;
 
     /** *//**
      * 获得邮件会话属性
@@ -69,11 +71,11 @@ public class MailSenderInfo {
         this.fromName = fromName;
     }
 
-    public String[] getToAddress() {
+    public List<String> getToAddress() {
         return toAddress;
     }
 
-    public void setToAddress(String[] toAddress) {
+    public void setToAddress(List<String> toAddress) {
         this.toAddress = toAddress;
     }
 
@@ -117,19 +119,19 @@ public class MailSenderInfo {
         this.content = content;
     }
 
-    public String[] getAttachFileNames() {
+    public List<String> getAttachFileNames() {
         return attachFileNames;
     }
 
-    public void setAttachFileNames(String[] attachFileNames) {
+    public void setAttachFileNames(List<String> attachFileNames) {
         this.attachFileNames = attachFileNames;
     }
 
-    public String[] getReceiveAddress() {
+    public List<String> getReceiveAddress() {
         return receiveAddress;
     }
 
-    public void setReceiveAddress(String[] receiveAddress) {
+    public void setReceiveAddress(List<String> receiveAddress) {
         this.receiveAddress = receiveAddress;
     }
 }

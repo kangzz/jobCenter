@@ -4,6 +4,8 @@ import com.jobCenter.comm.GlobalVariable;
 import org.apache.log4j.Logger;
 
 import java.io.UnsupportedEncodingException;
+import java.util.List;
+import java.util.Set;
 
 /**
  * 描述：添加发送邮件工具类
@@ -18,7 +20,7 @@ public class MailUtils {
      * 作者 ：kangzz
      * 日期 ：2016-03-23 12:55:21
      */
-    public static boolean sendHtmlEmail(String[] toAddress,String subject,String contact,String[] receiveAddress,String[] fileNames){
+    public static boolean sendHtmlEmail(List<String> toAddress, String subject, String contact, List<String> receiveAddress, List<String> fileNames){
         MailSenderInfo mailInfo = new MailSenderInfo();
 
         mailInfo.setMailServerHost(GlobalVariable.Email_Host);
@@ -33,7 +35,7 @@ public class MailUtils {
             e.printStackTrace();
         }
         mailInfo.setToAddress(toAddress);
-        if(receiveAddress != null && receiveAddress.length!=0){
+        if(receiveAddress != null && !receiveAddress.isEmpty()){
             mailInfo.setReceiveAddress(receiveAddress);
         }
         mailInfo.setAttachFileNames(fileNames);
@@ -50,6 +52,6 @@ public class MailUtils {
         String [] toAddress = new String[1];
         toAddress[0] = "515294820@qq.com";
         MailUtils UseEmail = new MailUtils();
-        logger.info(UseEmail.sendHtmlEmail(toAddress,"标题2333","内容3",null,null));
+        //logger.info(UseEmail.sendHtmlEmail(toAddress,"标题2333","内容3",null,null));
     }
 }

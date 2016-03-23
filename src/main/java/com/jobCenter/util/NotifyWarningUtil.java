@@ -1,12 +1,13 @@
 package com.jobCenter.util;
 
 
+import com.jobCenter.enums.JobWarningPersonType;
 import com.jobCenter.model.JobWarningModel;
 import com.jobCenter.model.JobWarningPersonModel;
 import com.jobCenter.util.mail.MailUtils;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 描述：报警信息工具类
@@ -21,10 +22,21 @@ public class NotifyWarningUtil {
      * 日期 ：2016-03-23 19:37:22
      */
     public static Boolean notifyJobWarningMessage(List<JobWarningPersonModel> personModelList, JobWarningModel jobWarningModel) {
-        //String[] toAddress,String subject,String contact,String[] receiveAddress,String[] fileNames
-        String[] toAddress = new String[1];
-        toAddress[0] = personModelList.get(0).getPersonEmail();
-        MailUtils.sendHtmlEmail(toAddress, jobWarningModel.getWarningTitle(), jobWarningModel.getWarningContent(), null, null);
+
+        List<String> toAddressList = new ArrayList<String>();
+        List<String> receiveAddress = new ArrayList<String>();
+        if (personModelList!=null && !personModelList.isEmpty()) {
+            for (int i = 0; i <personModelList.size(); i++) {
+                JobWarningPersonModel jobWarningPersonModel = personModelList.get(i);
+                String personEmail = jobWarningPersonModel.getPersonEmail();
+                if(JobWarningPersonType.ZYRY.getValue() == jobWarningPersonModel.getPersonType()){
+                    toAddressList.add(personEmail);
+                }else{
+                    receiveAddress.add(personEmail);
+                }
+            }
+        }
+        MailUtils.sendHtmlEmail(toAddressList, jobWarningModel.getWarningTitle(), jobWarningModel.getWarningContent(), receiveAddress, null);
         return false;
     }
 

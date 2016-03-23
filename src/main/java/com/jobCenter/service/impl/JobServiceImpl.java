@@ -125,9 +125,12 @@ public class JobServiceImpl implements IJobService {
                     List<JobWarningPersonModel> personModelList = new ArrayList<JobWarningPersonModel>();
                     JobWarningPersonModel jobWarningPersonModel = new JobWarningPersonModel();
                     jobWarningPersonModel.setPersonEmail("85138124@qq.com");
+                    jobWarningPersonModel.setPersonType(0);
                     personModelList.add(jobWarningPersonModel);
-
-
+                    jobWarningPersonModel = new JobWarningPersonModel();
+                    jobWarningPersonModel.setPersonEmail("515294820@qq.com");
+                    jobWarningPersonModel.setPersonType(1);
+                    personModelList.add(jobWarningPersonModel);
                     JobWarningModel jobWarningModel = new JobWarningModel();
                     jobWarningModel.setWarningTitle("添加定时任务["+jobInfoMode.getJobName()+"]异常");
                     jobWarningModel.setWarningContent(NotifyWarningUtil.getStackMsg(e));
