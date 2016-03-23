@@ -29,3 +29,6 @@ http://blog.csdn.net/it_wangxiangpan/article/details/7168286
 任务子表需要加ServiceName字段 实现统一接口暴露
 
 0321:
+
+
+0323:需要处理异常和报警信息

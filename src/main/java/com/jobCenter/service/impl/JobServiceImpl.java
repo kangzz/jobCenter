@@ -12,15 +12,15 @@ import com.jobCenter.enums.JobExecuteType;
 import com.jobCenter.enums.JobStatus;
 import com.jobCenter.job.QuartzJob;
 import com.jobCenter.job.QuartzManager;
-import com.jobCenter.mapper.HeartBeatInfoMapper;
-import com.jobCenter.mapper.JobExecuteResultMapper;
-import com.jobCenter.mapper.JobInfoMapper;
-import com.jobCenter.mapper.JobLinkInfoMapper;
+import com.jobCenter.mapper.*;
 import com.jobCenter.model.JobInfoModel;
 import com.jobCenter.model.JobLinkInfoModel;
+import com.jobCenter.model.JobWarningModel;
+import com.jobCenter.model.JobWarningPersonModel;
 import com.jobCenter.service.IJobService;
 import com.jobCenter.util.HttpPoster;
 import com.jobCenter.util.MD5Util;
+import com.jobCenter.util.NotifyWarningUtil;
 import com.jobCenter.util.StringUtil;
 import com.jobCenter.util.http.MessageUtil;
 import org.apache.log4j.Logger;
@@ -41,6 +41,8 @@ public class JobServiceImpl implements IJobService {
     private HeartBeatInfoMapper heartBeatInfoMapper;
     @Autowired
     private JobExecuteResultMapper jobExecuteResultMapper;
+    @Autowired
+    private JobWarningPersonRelationMapper jobWarningPersonRelationMapper;
 
     private final static Logger logger = Logger.getLogger(JobServiceImpl.class);
 
@@ -82,10 +84,15 @@ public class JobServiceImpl implements IJobService {
      * 日期 ：2016-03-18 23:25:49
      */
     public Boolean changeToMaster(HeartBeatInfo heartBeatInfo) {
-        int countNum = heartBeatInfoMapper.updateByOutTime(heartBeatInfo);
-        if (countNum > 0) {
-            return true;
-        } else {
+        try {
+            int countNum = heartBeatInfoMapper.updateByOutTime(heartBeatInfo);
+            if (countNum > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        }catch (Exception e){
+            logger.error("修改心跳失败!",e);
             return false;
         }
     }
@@ -97,11 +104,11 @@ public class JobServiceImpl implements IJobService {
      * 日期 ：2016-03-19 02:11:42
      */
     public Boolean loadAllJobListForMaster() {
-
         try {
             //获取所有的主任务信息
             List<JobInfoModel> jobList = getAllJobInfo();
-            int jobSize = jobList.size();
+            //所有任务的数量
+            int jobSize = jobList == null ? 0 : jobList.size();
 
             for (int i = 0; i < jobSize; i++) {
                 JobInfoModel jobInfoMode = jobList.get(i);
@@ -112,7 +119,20 @@ public class JobServiceImpl implements IJobService {
                 }
                 QuartzJob quartzJob = new QuartzJob();
                 //添加任务信息
-                QuartzManager.addJob(jobInfoMode.getJobName(), quartzJob.getClass(), jobInfoMode.getJobExecuteRule(), jobInfoMode);
+                try {
+                    QuartzManager.addJob(jobInfoMode.getJobName(), quartzJob.getClass(), jobInfoMode.getJobExecuteRule(), jobInfoMode);
+                }catch (Exception e) {
+                    List<JobWarningPersonModel> personModelList = new ArrayList<JobWarningPersonModel>();
+                    JobWarningPersonModel jobWarningPersonModel = new JobWarningPersonModel();
+                    jobWarningPersonModel.setPersonEmail("85138124@qq.com");
+                    personModelList.add(jobWarningPersonModel);
+
+
+                    JobWarningModel jobWarningModel = new JobWarningModel();
+                    jobWarningModel.setWarningTitle("添加定时任务["+jobInfoMode.getJobName()+"]异常");
+                    jobWarningModel.setWarningContent(NotifyWarningUtil.getStackMsg(e));
+                    NotifyWarningUtil.notifyJobWarningMessage(personModelList,jobWarningModel);
+                }
             }
             return true;
         } catch (Exception e) {
@@ -339,7 +359,7 @@ public class JobServiceImpl implements IJobService {
      * 作者 ：kangzz
      * 日期 ：2016-03-22 22:13:49
      */
-    public synchronized void saveJobExecuteResult(JobExecuteResult record){
+    public void saveJobExecuteResult(JobExecuteResult record){
         try {
             jobExecuteResultMapper.insertSelective(record);
         }catch (Exception e) {
@@ -351,7 +371,7 @@ public class JobServiceImpl implements IJobService {
      * 作者 ：kangzz
      * 日期 ：2016-03-22 22:27:56
      */
-    public synchronized void updateJobExecuteResultByUuid(JobExecuteResult record){
+    public void updateJobExecuteResultByUuid(JobExecuteResult record){
         try {
             if(jobExecuteResultMapper.updateByUuid(record) == 0){
                 throw new RuntimeException("更新执行数据失败!没有找到纪录!");
@@ -360,4 +380,13 @@ public class JobServiceImpl implements IJobService {
             logger.error("更新定时任务执行数据失败!",e);
         }
     }
+    /**
+     * 描述：根据任务id和报警类型获取对应人员信息
+     * 作者 ：kangzz
+     * 日期 ：2016-03-23 22:27:45
+     */
+    public List<JobWarningPersonModel> getWarningPersonByJobIdAndWarningType(Long jobId, Integer warningType){
+        return jobWarningPersonRelationMapper.getWarningPersonByJobIdAndWarningType(jobId,warningType);
+    }
+
 }

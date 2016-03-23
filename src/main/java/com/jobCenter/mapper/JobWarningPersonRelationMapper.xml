@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jobCenter.mapper.JobWarningPersonRelationMapper" >
+  <resultMap id="BaseResultMap" type="com.jobCenter.domain.JobWarningPersonRelation" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="job_id" property="jobId" jdbcType="BIGINT" />
+    <result column="person_id" property="personId" jdbcType="BIGINT" />
+    <result column="warning_type" property="warningType" jdbcType="INTEGER" />
+    <result column="person_type" property="personType" jdbcType="INTEGER" />
+    <result column="is_del" property="isDel" jdbcType="INTEGER" />
+    <result column="create_id" property="createId" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_id" property="updateId" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, job_id, person_id, warning_type, person_type, is_del, create_id, create_time, 
+    update_id, update_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from job_warning_person_relation
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from job_warning_person_relation
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.jobCenter.domain.JobWarningPersonRelation" >
+    insert into job_warning_person_relation (id, job_id, person_id, 
+      warning_type, person_type, is_del, 
+      create_id, create_time, update_id, 
+      update_time)
+    values (#{id,jdbcType=BIGINT}, #{jobId,jdbcType=BIGINT}, #{personId,jdbcType=BIGINT}, 
+      #{warningType,jdbcType=INTEGER}, #{personType,jdbcType=INTEGER}, #{isDel,jdbcType=INTEGER}, 
+      #{createId,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateId,jdbcType=VARCHAR}, 
+      #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jobCenter.domain.JobWarningPersonRelation" >
+    insert into job_warning_person_relation
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="jobId != null" >
+        job_id,
+      </if>
+      <if test="personId != null" >
+        person_id,
+      </if>
+      <if test="warningType != null" >
+        warning_type,
+      </if>
+      <if test="personType != null" >
+        person_type,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+      <if test="createId != null" >
+        create_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateId != null" >
+        update_id,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="jobId != null" >
+        #{jobId,jdbcType=BIGINT},
+      </if>
+      <if test="personId != null" >
+        #{personId,jdbcType=BIGINT},
+      </if>
+      <if test="warningType != null" >
+        #{warningType,jdbcType=INTEGER},
+      </if>
+      <if test="personType != null" >
+        #{personType,jdbcType=INTEGER},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=INTEGER},
+      </if>
+      <if test="createId != null" >
+        #{createId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateId != null" >
+        #{updateId,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jobCenter.domain.JobWarningPersonRelation" >
+    update job_warning_person_relation
+    <set >
+      <if test="jobId != null" >
+        job_id = #{jobId,jdbcType=BIGINT},
+      </if>
+      <if test="personId != null" >
+        person_id = #{personId,jdbcType=BIGINT},
+      </if>
+      <if test="warningType != null" >
+        warning_type = #{warningType,jdbcType=INTEGER},
+      </if>
+      <if test="personType != null" >
+        person_type = #{personType,jdbcType=INTEGER},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=INTEGER},
+      </if>
+      <if test="createId != null" >
+        create_id = #{createId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateId != null" >
+        update_id = #{updateId,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jobCenter.domain.JobWarningPersonRelation" >
+    update job_warning_person_relation
+    set job_id = #{jobId,jdbcType=BIGINT},
+      person_id = #{personId,jdbcType=BIGINT},
+      warning_type = #{warningType,jdbcType=INTEGER},
+      person_type = #{personType,jdbcType=INTEGER},
+      is_del = #{isDel,jdbcType=INTEGER},
+      create_id = #{createId,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_id = #{updateId,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <select id="getWarningPersonByJobIdAndWarningType" resultType="com.jobCenter.model.JobWarningPersonModel">
+    select t.job_id as jobId,t.warning_type as warningType,
+    t.person_type as personType,t1.person_name as personName,
+    t1.person_email as personEmail,t1.person_phone as personPhone
+    from job_warning_person_relation t
+    join job_warning_person_info t1
+    on t.person_id = t1.id
+    and t.is_del = 0 and t1.is_del = 0
+    and t.job_id = #{jobId,jdbcType=BIGINT} and t.warning_type = #{warningType,jdbcType=INTEGER}
+  </select>
+</mapper>

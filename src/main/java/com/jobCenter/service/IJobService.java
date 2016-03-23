@@ -4,6 +4,7 @@ package com.jobCenter.service;
 import com.jobCenter.domain.HeartBeatInfo;
 import com.jobCenter.domain.JobExecuteResult;
 import com.jobCenter.model.JobInfoModel;
+import com.jobCenter.model.JobWarningPersonModel;
 
 import java.util.List;
 
@@ -72,5 +73,11 @@ public interface IJobService {
      * 日期 ：2016-03-22 22:27:56
      */
     void updateJobExecuteResultByUuid(JobExecuteResult record);
+    /**
+     * 描述：根据任务id和报警类型获取对应人员信息
+     * 作者 ：kangzz
+     * 日期 ：2016-03-23 22:27:45
+     */
+    List<JobWarningPersonModel> getWarningPersonByJobIdAndWarningType(Long jobId, Integer warningType);
 }
 
