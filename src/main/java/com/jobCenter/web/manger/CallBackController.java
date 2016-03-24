@@ -2,7 +2,7 @@ package com.jobCenter.web.manger;
 
 import com.alibaba.fastjson.JSONObject;
 import com.jobCenter.domain.JobExecuteResult;
-import com.jobCenter.service.IJobService;
+import com.jobCenter.service.JobService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -25,7 +25,7 @@ public class CallBackController {
 
 	private static final Logger logger = Logger.getLogger(CallBackController.class);
 	@Autowired
-	private IJobService jobService;
+	private JobService jobService;
 	/**
 	 * 描述：业务系统回调方法 告知定时任务服务器任务执行结果
 	 * 作者 ：kangzz
@@ -33,18 +33,23 @@ public class CallBackController {
 	 */
 	@RequestMapping(value="callBack.do",method={RequestMethod.GET,RequestMethod.POST})
 	public void callBack(HttpServletRequest request, HttpServletResponse response) {
-		String uuid = request.getParameter("uuid");
-		String status = request.getParameter("status");
-		String code = request.getParameter("code");
-		String message = request.getParameter("message");
-		JobExecuteResult record = new JobExecuteResult();
-		record.setJobUuid(uuid);
-		record.setJobEndTime(new Date());
-		record.setResultCode(Integer.valueOf(code));
-		record.setResultStatus(status);
-		record.setResultMessage(message);
-		jobService.updateJobExecuteResultByUuid(record);
-		printResult(response,"success",0,"成功");
+		try {
+			String uuid = request.getParameter("uuid");
+			String status = request.getParameter("status");
+			String code = request.getParameter("code");
+			String message = request.getParameter("message");
+			JobExecuteResult record = new JobExecuteResult();
+			record.setJobUuid(uuid);
+			record.setJobEndTime(new Date());
+			record.setResultCode(Integer.valueOf(code));
+			record.setResultStatus(status);
+			record.setResultMessage(message);
+
+			jobService.updateJobExecuteResultByUuid(record);
+			printResult(response, "success", 0, "成功");
+		}catch (Exception e){
+			logger.error("回调异常,",e);
+		}
 	}
 	//封装返回数据
 	private synchronized void  printResult(HttpServletResponse response , String status,int code,String message) {

@@ -96,4 +96,19 @@ public class JobInfoModel implements Serializable {
     public void setJobLinkInfoModels(List<JobLinkInfoModel> jobLinkInfoModels) {
         this.jobLinkInfoModels = jobLinkInfoModels;
     }
+
+    @Override
+    public String toString() {
+        return "JobInfoModel{" +
+                "jobId=" + jobId +
+                ", jobName='" + jobName + '\'' +
+                ", jobExecuteType=" + jobExecuteType +
+                ", jobExecuteRule='" + jobExecuteRule + '\'' +
+                ", jobNotifySucc=" + jobNotifySucc +
+                ", jobRetryTimes=" + jobRetryTimes +
+                ", jobStartTime=" + jobStartTime +
+                ", jobEndTime=" + jobEndTime +
+                ", jobLinkInfoModels=" + jobLinkInfoModels +
+                '}';
+    }
 }

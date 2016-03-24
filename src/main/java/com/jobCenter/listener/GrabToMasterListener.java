@@ -4,8 +4,9 @@ import com.jobCenter.comm.SystemConstant;
 import com.jobCenter.domain.HeartBeatInfo;
 import com.jobCenter.enums.HeartType;
 import com.jobCenter.enums.IsType;
-import com.jobCenter.service.IJobService;
+import com.jobCenter.service.JobService;
 import com.jobCenter.util.SpringTool;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletContextEvent;
@@ -57,7 +58,7 @@ class GrabToMasterListenerThread extends Thread {
         } catch (InterruptedException e) {
             logger.error("线程等待异常!", e);
         }
-        IJobService jobService = (IJobService) SpringTool.getBean("jobService");
+        JobService jobService = (JobService) SpringTool.getBean("jobService");
         if (initHeatInfo) {
             //初始化加载一条主机数据
             HeartBeatInfo initInfo = new HeartBeatInfo();
@@ -66,14 +67,18 @@ class GrabToMasterListenerThread extends Thread {
             initInfo.setHeartMaxVal(SystemConstant.HEAR_MAX_VAL);
             initInfo.setHeartBeatTime(new Date());
             initInfo.setIsDel(IsType.NO.getValue());
-            jobService.initHeartBeatInfo(initInfo);
+            try {
+                jobService.initHeartBeatInfo(initInfo);
+            } catch (Exception e) {
+                logger.error(e.getMessage(), e);
+            }
             initHeatInfo = false;
             //logger.info("初始加载一条心跳数据!");
         }
         while (!this.isInterrupted()) {// 线程未中断执行循环
             try {
                 Thread.sleep(SystemConstant.HEAR_RATE); //5秒一次心跳
-                logger.info("心跳时间间隔:"+SystemConstant.HEAR_RATE+"毫秒");
+                logger.info("心跳时间间隔:" + SystemConstant.HEAR_RATE + "毫秒");
             } catch (InterruptedException e) {
                 logger.error("心跳时间睡眠异常!", e);
             }
@@ -86,45 +91,64 @@ class GrabToMasterListenerThread extends Thread {
             info.setHeartBeatTime(new Date());
             //检查是否切换成功 切换成功需要加载任务到内存 同时更新心跳时间
             //超时抢占标志
-            Boolean outTimeChangeSuccess = jobService.changeToMaster(info);
+            Boolean outTimeChangeSuccess = false;
+            try {
+                outTimeChangeSuccess = jobService.changeToMaster(info);
+            } catch (Exception e) {
+                logger.error(e.getMessage(), e);
+            }
             //如果切换成功 而且当前机器不是主机 那么要加载任务信息
             if (outTimeChangeSuccess && !SystemConstant.LOCAL_IS_MASTER) {
                 logger.info("抢占成功,开始加载定时任务信息!");
                 //判断是否加载成功
-                if(jobService.loadAllJobListForMaster()) {
+                Boolean loadSuccess = false;
+                try {
+                    loadSuccess = jobService.loadAllJobListForMaster();
+                } catch (Exception e) {
+                    logger.error(e.getMessage(), e);
+                }
+                if (loadSuccess) {
                     SystemConstant.LOCAL_IS_MASTER = true;
                     logger.info("加载定时任务信息成功,设置本机为主机!");
-                }else{
+                } else {
                     logger.info("抢占成功,但是加载定时任务失败!");
                     SystemConstant.LOCAL_IS_MASTER = false;
                     //移除本机定时任务信息
                     isNeedRemoveJobs = true;
                 }
-            }else if(SystemConstant.LOCAL_IS_MASTER){
+            } else if (SystemConstant.LOCAL_IS_MASTER) {
                 //校验当前机器是否为主机
                 HeartBeatInfo heartBeatInfo = new HeartBeatInfo();
                 heartBeatInfo.setMasterIdentity(SystemConstant.MASTER_IDENTITY);
                 heartBeatInfo.setHeartBeatTime(new Date());
                 //检查本机是否为主机 同时更新心跳时间
-                Boolean isMaster = jobService.checkIsMasterAndUpdateHeartBeat(heartBeatInfo);
-                if(isMaster){
-                    logger.info("当前主机信息为:"+SystemConstant.MASTER_IDENTITY);
-                }else{
+                Boolean isMaster = false;
+                try {
+                    isMaster = jobService.checkIsMasterAndUpdateHeartBeat(heartBeatInfo);
+                } catch (Exception e) {
+                    logger.error(e.getMessage(), e);
+                }
+                if (isMaster) {
+                    logger.info("当前主机信息为:" + SystemConstant.MASTER_IDENTITY);
+                } else {
                     SystemConstant.LOCAL_IS_MASTER = false;
                     logger.info("抢占成功,但是心跳失败!");
                     //删除本机定时任务信息
                     isNeedRemoveJobs = true;
                 }
-            }else{//如果抢占失败 那么要移除所有的任务
+            } else {//如果抢占失败 那么要移除所有的任务
                 SystemConstant.LOCAL_IS_MASTER = false;
                 //删除本机定时任务信息
                 isNeedRemoveJobs = true;
                 logger.info("抢占失败!");
             }
             //判断是否需要移除任务信息
-            if(isNeedRemoveJobs){
-                jobService.removeAllJobs();
-                logger.info("移除所有的任务信息!");
+            if (isNeedRemoveJobs) {
+                try {
+                    jobService.removeAllJobs();
+                } catch (Exception e) {
+                    logger.error(e.getMessage(), e);
+                }
             }
         }
     }

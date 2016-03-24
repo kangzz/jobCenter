@@ -96,4 +96,19 @@ public class JobExecuteResult {
     public void setJobEndTime(Date jobEndTime) {
         this.jobEndTime = jobEndTime;
     }
+
+    @Override
+    public String toString() {
+        return "JobExecuteResult{" +
+                "id=" + id +
+                ", jobUuid='" + jobUuid + '\'' +
+                ", jobId='" + jobId + '\'' +
+                ", jobLinkId='" + jobLinkId + '\'' +
+                ", jobStartTime=" + jobStartTime +
+                ", jobEndTime=" + jobEndTime +
+                ", resultStatus='" + resultStatus + '\'' +
+                ", resultCode=" + resultCode +
+                ", resultMessage='" + resultMessage + '\'' +
+                '}';
+    }
 }

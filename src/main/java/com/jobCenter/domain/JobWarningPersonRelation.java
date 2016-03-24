@@ -106,4 +106,20 @@ public class JobWarningPersonRelation {
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
     }
+
+    @Override
+    public String toString() {
+        return "JobWarningPersonRelation{" +
+                "id=" + id +
+                ", jobId=" + jobId +
+                ", personId=" + personId +
+                ", warningType=" + warningType +
+                ", personType=" + personType +
+                ", isDel=" + isDel +
+                ", createId='" + createId + '\'' +
+                ", createTime=" + createTime +
+                ", updateId='" + updateId + '\'' +
+                ", updateTime=" + updateTime +
+                '}';
+    }
 }

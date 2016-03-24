@@ -147,4 +147,24 @@ public class JobInfo {
     public void setJobRetryTimes(Integer jobRetryTimes) {
         this.jobRetryTimes = jobRetryTimes;
     }
+
+    @Override
+    public String toString() {
+        return "JobInfo{" +
+                "jobId=" + jobId +
+                ", jobName='" + jobName + '\'' +
+                ", jobExecuteType=" + jobExecuteType +
+                ", jobExecuteRule='" + jobExecuteRule + '\'' +
+                ", jobNotifySucc=" + jobNotifySucc +
+                ", jobRetryTimes=" + jobRetryTimes +
+                ", jobStartTime=" + jobStartTime +
+                ", jobEndTime=" + jobEndTime +
+                ", isValid=" + isValid +
+                ", isDel=" + isDel +
+                ", createId='" + createId + '\'' +
+                ", createTime=" + createTime +
+                ", updateId='" + updateId + '\'' +
+                ", updateTime=" + updateTime +
+                '}';
+    }
 }

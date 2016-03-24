@@ -7,6 +7,8 @@ import com.jobCenter.util.SysPropUtil;
  */
 public class GlobalVariable {
 
+
+
     public  static String Email_Host = "";
     public  static String Email_Port ="";
     public  static String Email_User ="";

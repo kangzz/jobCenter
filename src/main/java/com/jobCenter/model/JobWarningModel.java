@@ -11,8 +11,19 @@ import java.util.List;
  */
 public class JobWarningModel {
 
+    private Long jobId;//报警任务id
+
     private String warningTitle;//报警标题
+
     private String warningContent;//报警内容
+
+    public Long getJobId() {
+        return jobId;
+    }
+
+    public void setJobId(Long jobId) {
+        this.jobId = jobId;
+    }
 
     public String getWarningTitle() {
         return warningTitle;

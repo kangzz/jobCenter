@@ -107,4 +107,20 @@ public class JobLinkInfo {
     public void setServiceName(String serviceName) {
         this.serviceName = serviceName;
     }
+
+    @Override
+    public String toString() {
+        return "JobLinkInfo{" +
+                "jobLinkId=" + jobLinkId +
+                ", jobId=" + jobId +
+                ", jobLink='" + jobLink + '\'' +
+                ", serviceName='" + serviceName + '\'' +
+                ", isValid=" + isValid +
+                ", isDel=" + isDel +
+                ", createId='" + createId + '\'' +
+                ", createTime=" + createTime +
+                ", updateId='" + updateId + '\'' +
+                ", updateTime=" + updateTime +
+                '}';
+    }
 }

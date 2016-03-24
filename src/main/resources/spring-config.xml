@@ -153,5 +153,29 @@
             expression="execution(* service..*.*(..))" />
         <aop:advisor advice-ref="txAdvice"
             pointcut-ref="interceptorPoint" />        
-    </aop:config> 
+    </aop:config>
+
+	<!--<bean id="exceptionLog" class="com.jobCenter.interceptor.ExceptionLog" />
+	<aop:config>
+		<aop:aspect id="exceptionCatchMapper" ref="exceptionLog">
+			<aop:pointcut id="expect1" expression="execution(* com.jobCenter.service..*.*(..))"/>
+			<aop:before pointcut-ref="expect1" method="afterThrowing"/>
+		</aop:aspect>
+	</aop:config>
+	-->
+	<bean id="exceptionLog" class="com.jobCenter.interceptor.ExceptionLog"></bean>
+	<!-- beanName自动代理 -->
+	<bean id="logAdvice"
+		  class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">
+		<property name="beanNames">
+			<list>
+				<value>jobService</value>
+			</list>
+		</property>
+		<property name="interceptorNames">
+			<list>
+				<value>exceptionLog</value>
+			</list>
+		</property>
+	</bean>
 </beans>

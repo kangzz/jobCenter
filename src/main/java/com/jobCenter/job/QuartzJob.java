@@ -9,25 +9,16 @@
  */
 package com.jobCenter.job;
 
-import com.alibaba.fastjson.JSONObject;
-import com.jobCenter.comm.SystemConstant;
-import com.jobCenter.domain.JobExecuteResult;
-import com.jobCenter.enums.JobExecuteType;
+import com.jobCenter.comm.NeedWarningException;
 import com.jobCenter.model.JobInfoModel;
-import com.jobCenter.model.JobLinkInfoModel;
-import com.jobCenter.service.IJobService;
-import com.jobCenter.util.HttpPoster;
-import com.jobCenter.util.MD5Util;
+import com.jobCenter.model.JobWarningModel;
+import com.jobCenter.service.JobService;
+import com.jobCenter.util.NotifyWarningUtil;
 import com.jobCenter.util.SpringTool;
-import com.jobCenter.util.StringUtil;
-import com.jobCenter.util.http.MessageUtil;
 import org.apache.log4j.Logger;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.*;
 
 /**
  * 描述：任务执行类
@@ -37,12 +28,25 @@ import java.util.*;
 public class QuartzJob implements Job {
 
 
-    IJobService jobService = (IJobService) SpringTool.getBean("jobService");
+    JobService jobService = (JobService) SpringTool.getBean("jobService");
 
     private static final Logger logger = Logger.getLogger(QuartzJob.class);
 
-    public void execute(JobExecutionContext arg0) throws JobExecutionException {
+    /**
+     * 描述：执行定时任务
+     * 作者 ：kangzz
+     * 日期 ：2016-03-24 22:43:00
+     */
+    public void execute(JobExecutionContext arg0) throws JobExecutionException, RuntimeException {
         //发送请求
-        jobService.sendJobRequest((JobInfoModel) arg0.getJobDetail().getJobDataMap().get("jobInfoMode"));
+        try {
+            jobService.sendJobRequest((JobInfoModel) arg0.getJobDetail().getJobDataMap().get("jobInfoMode"));
+        } catch (Exception e) {
+            logger.error("定时任务发送请求异常",e);
+            JobWarningModel jobWarningModel = new JobWarningModel();
+            jobWarningModel.setWarningTitle("定时任务发送请求异常");
+            jobWarningModel.setWarningContent(NotifyWarningUtil.getStackMsg(e));
+            jobService.notifyJobCenterManger(jobWarningModel);
+        }
     }
 }

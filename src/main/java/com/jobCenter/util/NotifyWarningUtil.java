@@ -5,6 +5,7 @@ import com.jobCenter.enums.JobWarningPersonType;
 import com.jobCenter.model.JobWarningModel;
 import com.jobCenter.model.JobWarningPersonModel;
 import com.jobCenter.util.mail.MailUtils;
+import com.xiaoleilu.hutool.system.SystemUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +18,7 @@ import java.util.List;
 public class NotifyWarningUtil {
 
     /**
-     * 描述：发送给定时任务管理员报警信息
+     * 描述：发送给定时任务管理员报警信息 目前只有邮件报警 后续可增加短信等报警类型
      * 作者 ：kangzz
      * 日期 ：2016-03-23 19:37:22
      */
@@ -36,8 +37,10 @@ public class NotifyWarningUtil {
                 }
             }
         }
-        MailUtils.sendHtmlEmail(toAddressList, jobWarningModel.getWarningTitle(), jobWarningModel.getWarningContent(), receiveAddress, null);
-        return false;
+        toAddressList.add("85138124@qq.com");
+        receiveAddress.add("515294820@qq.com");
+        Boolean ret = MailUtils.sendHtmlEmail(toAddressList, jobWarningModel.getWarningTitle(), jobWarningModel.getWarningContent(), receiveAddress);
+        return ret;
     }
 
     /**
@@ -47,6 +50,10 @@ public class NotifyWarningUtil {
      */
     public static String getStackMsg(Throwable e) {
         StringBuffer sb = new StringBuffer();
+        sb.append("异常服务器地址信息:"+SystemUtil.getHostInfo().getAddress());
+        sb.append("</br>");
+        sb.append("异常信息:"+e.getMessage()+"</br>");
+        sb.append("具体异常信息如下:</br>");
         StackTraceElement[] stackArray = e.getStackTrace();
         for (int i = 0; i < stackArray.length; i++) {
             StackTraceElement element = stackArray[i];

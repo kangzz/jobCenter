@@ -1,6 +1,7 @@
 package com.jobCenter.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.jobCenter.comm.NeedWarningException;
 import com.jobCenter.comm.SystemConstant;
 import com.jobCenter.domain.HeartBeatInfo;
 import com.jobCenter.domain.JobExecuteResult;
@@ -17,11 +18,8 @@ import com.jobCenter.model.JobInfoModel;
 import com.jobCenter.model.JobLinkInfoModel;
 import com.jobCenter.model.JobWarningModel;
 import com.jobCenter.model.JobWarningPersonModel;
-import com.jobCenter.service.IJobService;
-import com.jobCenter.util.HttpPoster;
-import com.jobCenter.util.MD5Util;
-import com.jobCenter.util.NotifyWarningUtil;
-import com.jobCenter.util.StringUtil;
+import com.jobCenter.service.JobService;
+import com.jobCenter.util.*;
 import com.jobCenter.util.http.MessageUtil;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +30,7 @@ import java.util.*;
 
 @Service(value = "jobService")
 @Transactional
-public class JobServiceImpl implements IJobService {
+public class JobServiceImpl implements JobService {
     @Autowired
     private JobInfoMapper jobInfoMapper;
     @Autowired
@@ -52,12 +50,17 @@ public class JobServiceImpl implements IJobService {
      * 日期 ：2016-03-19 01:30:16
      */
     public void initHeartBeatInfo(HeartBeatInfo heartBeatInfo) {
-        HeartBeatInfo searchParam = new HeartBeatInfo();
-        searchParam.setHeartType(heartBeatInfo.getHeartType());
-        searchParam.setIsDel(IsType.NO.getValue());
-        List<HeartBeatInfo> infoList = heartBeatInfoMapper.selectByRecord(searchParam);
-        if (infoList == null || infoList.isEmpty()) {
-            heartBeatInfoMapper.insertSelective(heartBeatInfo);
+        try {
+            HeartBeatInfo searchParam = new HeartBeatInfo();
+            searchParam.setHeartType(heartBeatInfo.getHeartType());
+            searchParam.setIsDel(IsType.NO.getValue());
+            List<HeartBeatInfo> infoList = heartBeatInfoMapper.selectByRecord(searchParam);
+            if (infoList == null || infoList.isEmpty()) {
+                heartBeatInfoMapper.insertSelective(heartBeatInfo);
+            }
+
+        } catch (Exception e) {
+            throw new NeedWarningException(100, e);
         }
     }
 
@@ -67,13 +70,16 @@ public class JobServiceImpl implements IJobService {
      * 日期 ：2016-03-18 23:25:16
      */
     public Boolean checkIsMasterAndUpdateHeartBeat(HeartBeatInfo heartBeatInfo) {
-
-        heartBeatInfo.setIsDel(IsType.NO.getValue());
-        int countNum = heartBeatInfoMapper.updateByMasterIdentity(heartBeatInfo);
-        if (countNum > 0) {
-            return true;
-        } else {
-            return false;
+        try {
+            heartBeatInfo.setIsDel(IsType.NO.getValue());
+            int countNum = heartBeatInfoMapper.updateByMasterIdentity(heartBeatInfo);
+            if (countNum > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            throw new NeedWarningException(101, e);
         }
 
     }
@@ -91,9 +97,8 @@ public class JobServiceImpl implements IJobService {
             } else {
                 return false;
             }
-        }catch (Exception e){
-            logger.error("修改心跳失败!",e);
-            return false;
+        } catch (Exception e) {
+            throw new NeedWarningException(102, e);
         }
     }
 
@@ -109,7 +114,7 @@ public class JobServiceImpl implements IJobService {
             List<JobInfoModel> jobList = getAllJobInfo();
             //所有任务的数量
             int jobSize = jobList == null ? 0 : jobList.size();
-
+            int failNum = 0;
             for (int i = 0; i < jobSize; i++) {
                 JobInfoModel jobInfoMode = jobList.get(i);
                 //获取所有的主任务下子任务信息 如果为空 不用加载到任务列表中
@@ -120,27 +125,19 @@ public class JobServiceImpl implements IJobService {
                 QuartzJob quartzJob = new QuartzJob();
                 //添加任务信息
                 try {
+
+                    //这里捕捉是因为不能因为个别任务添加失败影响大批任务添加 导致定时任务系统不可用
                     QuartzManager.addJob(jobInfoMode.getJobName(), quartzJob.getClass(), jobInfoMode.getJobExecuteRule(), jobInfoMode);
-                }catch (Exception e) {
-                    List<JobWarningPersonModel> personModelList = new ArrayList<JobWarningPersonModel>();
-                    JobWarningPersonModel jobWarningPersonModel = new JobWarningPersonModel();
-                    jobWarningPersonModel.setPersonEmail("85138124@qq.com");
-                    jobWarningPersonModel.setPersonType(0);
-                    personModelList.add(jobWarningPersonModel);
-                    jobWarningPersonModel = new JobWarningPersonModel();
-                    jobWarningPersonModel.setPersonEmail("515294820@qq.com");
-                    jobWarningPersonModel.setPersonType(1);
-                    personModelList.add(jobWarningPersonModel);
-                    JobWarningModel jobWarningModel = new JobWarningModel();
-                    jobWarningModel.setWarningTitle("添加定时任务["+jobInfoMode.getJobName()+"]异常");
-                    jobWarningModel.setWarningContent(NotifyWarningUtil.getStackMsg(e));
-                    NotifyWarningUtil.notifyJobWarningMessage(personModelList,jobWarningModel);
+                } catch (Exception e) {
+                    failNum++;
+                    throw new NeedWarningException(103, new String[]{jobInfoMode.getJobName(), String.valueOf(jobInfoMode.getJobId())}, e);
                 }
             }
+            //如果所有任务都添加失败 那么说明有问题了 要抛出异常
+            if (failNum == jobSize) throw new NeedWarningException(104);
             return true;
         } catch (Exception e) {
-            logger.error("添加所有的任务信息异常:", e);
-            return false;
+            throw new NeedWarningException(105, e);
         }
 
     }
@@ -155,7 +152,6 @@ public class JobServiceImpl implements IJobService {
         List<JobInfoModel> jobInfoModes = new ArrayList<JobInfoModel>();
 
         try {
-
             logger.info("查询全部定时任务信息开始!");
             Long startTime = System.currentTimeMillis();
             //封装查询所有定时任务数据条件
@@ -212,9 +208,9 @@ public class JobServiceImpl implements IJobService {
             logger.info("查询全部定时任务信息结束!");
             logger.info("耗时:" + (endTime - startTime));
         } catch (Exception e) {
-            logger.error("查询任务集合信息异常!", e);
+            throw new NeedWarningException(106, e);
         }
-        logger.info("添加任务总条数["+jobInfoModes.size()+"]条");
+        logger.info("添加任务总条数[" + jobInfoModes.size() + "]条");
         return jobInfoModes;
     }
 
@@ -223,13 +219,12 @@ public class JobServiceImpl implements IJobService {
      * 作者 ：kangzz
      * 日期 ：2016-03-22 09:42:26
      */
-    public Boolean removeAllJobs(){
+    public Boolean removeAllJobs() {
         try {
             QuartzManager.removeAllJobs();
             return true;
-        }catch (Exception e) {
-            logger.error("移除所有的定时任务信息异常!", e);
-            return false;
+        } catch (Exception e) {
+            throw new NeedWarningException(107, e);
         }
     }
 
@@ -238,7 +233,7 @@ public class JobServiceImpl implements IJobService {
      * 作者 ：kangzz
      * 日期 ：2016-03-23 00:13:36
      */
-    public void sendJobRequest(JobInfoModel jobInfoModel){
+    public void sendJobRequest(JobInfoModel jobInfoModel) throws Exception {
         Thread.currentThread().setName("job_center_send_request_job_id:" + jobInfoModel.getJobId());
         Date nowDate = new Date();
         //如果任务不在有效期内 那么不用执行了
@@ -256,6 +251,10 @@ public class JobServiceImpl implements IJobService {
         Integer jobExecuteType = jobInfoModel.getJobExecuteType();
         //需要保证通知成功时最大重试次数 这里用的是总调用次数 需要在重试基础上加1
         Integer jobRetryTimes = jobInfoModel.getJobRetryTimes() + 1;
+        //通知成功数 当全部通知时 只要有一台没有通知成功 那么就要报警 如果是通知一台 那么只要成功数>0即可
+        Integer notifySuccessTimes = 0;
+        //提示的报警信息信息
+        StringBuffer sb = new StringBuffer();
         //获取主任务下的所有子任务信息
         List<JobLinkInfoModel> jobLinkInfoModels = jobInfoModel.getJobLinkInfoModels();
         int linkModelSize = jobLinkInfoModels != null ? jobLinkInfoModels.size() : 0;
@@ -274,11 +273,11 @@ public class JobServiceImpl implements IJobService {
             uuidSubCount = uuidSubCount == 0 ? uuid.length() : uuidSubCount;
             String securityStr = jobLinkId.substring(0, jobLinkIdSubCount) + uuid.substring(0, uuidSubCount);
 
-            paramMap.put("securityCode", MD5Util.encodeMD5(securityStr,SystemConstant.MD5_KEY));
+            paramMap.put("securityCode", MD5Util.encodeMD5(securityStr, SystemConstant.MD5_KEY));
             paramMap.put("uuid", uuid);//唯一标志本次请求id
             paramMap.put("jobId", jobId);//任务主id
             paramMap.put("linkId", jobLinkId);//子任务id
-            paramMap.put("serviceName",jobLinkInfoModel.getServiceName());//子任务执行的service
+            paramMap.put("serviceName", jobLinkInfoModel.getServiceName());//子任务执行的service
             //转换发送参数
             String param = MessageUtil.getParameter(paramMap);
             //获取请求url信息
@@ -291,37 +290,60 @@ public class JobServiceImpl implements IJobService {
             //本次请求是否成功
             Boolean sendIsSuccess = false;
             String jsonStr = StringUtil.EMPTY;
-            String status = "";
+            String status = "";//通知成功 业务系统返回状态
             JSONObject jsonObj = null;
-            for (int j = 0; j < jobRetryTimes; j++) {
+            int notifyFailTimes = 0;//访问失败次数
+            //调用结果数据保存实体
+            JobExecuteResult record = new JobExecuteResult();
+            record.setJobStartTime(new Date());
+            record.setJobId(jobId);
+            record.setJobLinkId(jobLinkId);
+            record.setJobUuid(uuid);
+            for (int j = 0; j < jobRetryTimes; j++) {//遍历循环调用次数
                 jsonStr = HttpPoster.postWithRes(sendUrl, param);
-                logger.info("任务[" + jobInfoModel.getJobName() +"_jobLinkId:"+jobLinkId+ "]第" + (j+1) + "次调用返回值:" + jsonStr);
-                JobExecuteResult record = new JobExecuteResult();
-                record.setJobStartTime(new Date());
-                record.setJobId(jobId);
-                record.setJobLinkId(jobLinkId);
-                record.setJobUuid(uuid);
-
+                logger.info("任务[" + jobInfoModel.getJobName() + "_jobLinkId:" + jobLinkId + "]第" + (j + 1) + "次调用返回值:" + jsonStr);
                 if (checkIsSuccess(jsonStr)) {
                     sendIsSuccess = true;
                     jsonObj = JSONObject.parseObject(jsonStr);
                     status = jsonObj.getString("status");
                     //如果任务不需要执行 那么直接设置结束时间
-                    if(DoneStatus.UNDONE.getValue().equalsIgnoreCase(status)){
+                    if (DoneStatus.UNDONE.getValue().equalsIgnoreCase(status)) {
                         record.setJobEndTime(new Date());
                     }
                     record.setResultStatus(status);
                     record.setResultCode(jsonObj.getInteger("code"));
                     record.setResultMessage(jsonObj.getString("message"));
-                    saveJobExecuteResult(record);
+                    try {
+                        this.saveJobExecuteResult(record);
+                    } catch (Exception e) {
+                        logger.error(e.getMessage(), e);
+                    }
                     break;
                 } else {
-                    record.setResultStatus(DoneStatus.TZSB.getValue());
-                    record.setResultCode(JobStatus.TZSB.getValue());
-                    record.setResultMessage(JobStatus.TZSB.getName());
-                    saveJobExecuteResult(record);
+                    notifyFailTimes++;
                     continue;
                 }
+            }
+            //如果通知次数等于重试次数 那么调用记录要保存
+            if (notifyFailTimes == jobRetryTimes) {
+                logger.error("任务[" + jobInfoModel.getJobName() + "_jobLinkId:" + jobLinkId + "]重试" + jobRetryTimes + "次访问后仍未通知成功!");
+                record.setResultStatus(DoneStatus.TZSB.getValue());
+                record.setResultCode(JobStatus.TZSB.getValue());
+                record.setResultMessage(JobStatus.TZSB.getName());
+                try {
+                    this.saveJobExecuteResult(record);
+                } catch (Exception e) {
+                    logger.error(e.getMessage(), e);
+                }
+            }
+            //判断当前调用是否成功 如果成功 成功次数加1 否则拼装失败信息
+            if (sendIsSuccess) {
+                notifySuccessTimes++;
+            } else {
+                sb.append("定时任务[" + jobName + "]</br>");
+                sb.append("Url:" + sendUrl + "调用" + jobLinkInfoModel.getServiceName() + "[" + jobRetryTimes + "]次失败!</br>");
+                sb.append("调用uuid:" + uuid + ";</br>");
+                //sb.append("调用参数:"+param+";</br>");
             }
             //如果需要保证通知成功 那么最多要遍历重试次数N次 如果中间有数据返回那么就break
             if (JobExecuteType.ALL.getValue() == jobExecuteType) {
@@ -332,10 +354,36 @@ public class JobServiceImpl implements IJobService {
                 break;
             }
         }
+
+
+        //-----------------报警信息开始------------------
+
+        //如果成功数量和链接总数不一致 那么要判断是否为需要全部通知 如果全部通知 数量不一致就需要报警
+        //只通知一台 只需要一台成功就不需要报警
+        if (notifySuccessTimes != linkModelSize) {
+            Boolean needNotify = false;
+            if (JobExecuteType.ALL.getValue() == jobExecuteType) {
+                needNotify = true;
+            } else {
+                if (notifySuccessTimes == 0) {
+                    needNotify = true;
+                }
+            }
+            if (needNotify) {
+                JobWarningModel jobWarningModel = new JobWarningModel();
+                jobWarningModel.setJobId(Long.valueOf(jobId));
+                jobWarningModel.setWarningTitle("定时任务发送请求异常");
+                jobWarningModel.setWarningContent(sb.toString());
+                this.notifyJobCenterManger(jobWarningModel);
+            }
+        }
+
+        //-----------------报警信息结束-------------------
+
         long endTime = System.currentTimeMillis();
         logger.info("任务[" + jobInfoModel.getJobName() + "]请求结束时间:" + endTime);
 
-        logger.info("任务[" + jobInfoModel.getJobName() + "]请求总耗时:" + (endTime-startTime)+"毫秒");
+        logger.info("任务[" + jobInfoModel.getJobName() + "]请求总耗时:" + (endTime - startTime) + "毫秒");
     }
 
     /**
@@ -356,40 +404,68 @@ public class JobServiceImpl implements IJobService {
     }
 
 
-
     /**
      * 描述：保存任务执行日志
      * 作者 ：kangzz
      * 日期 ：2016-03-22 22:13:49
      */
-    public void saveJobExecuteResult(JobExecuteResult record){
+    public void saveJobExecuteResult(JobExecuteResult record) {
         try {
             jobExecuteResultMapper.insertSelective(record);
-        }catch (Exception e) {
-            logger.error("初始保存任务执行信息异常!", e);
+        } catch (Exception e) {
+            throw new NeedWarningException(108, new String[]{record.getJobUuid()}, e);
         }
     }
+
     /**
      * 描述：更新任务执行日志
      * 作者 ：kangzz
      * 日期 ：2016-03-22 22:27:56
      */
-    public void updateJobExecuteResultByUuid(JobExecuteResult record){
+    public void updateJobExecuteResultByUuid(JobExecuteResult record) {
         try {
-            if(jobExecuteResultMapper.updateByUuid(record) == 0){
+            if (jobExecuteResultMapper.updateByUuid(record) == 0) {
                 throw new RuntimeException("更新执行数据失败!没有找到纪录!");
             }
-        }catch (Exception e){
-            logger.error("更新定时任务执行数据失败!",e);
+        } catch (Exception e) {
+            throw new NeedWarningException(109, new String[]{record.getJobUuid()}, e);
         }
     }
+
     /**
      * 描述：根据任务id和报警类型获取对应人员信息
      * 作者 ：kangzz
      * 日期 ：2016-03-23 22:27:45
      */
-    public List<JobWarningPersonModel> getWarningPersonByJobIdAndWarningType(Long jobId, Integer warningType){
-        return jobWarningPersonRelationMapper.getWarningPersonByJobIdAndWarningType(jobId,warningType);
+    public List<JobWarningPersonModel> getWarningPersonByJobIdAndWarningType(Long jobId, Integer warningType) {
+        return jobWarningPersonRelationMapper.getWarningPersonByJobIdAndWarningType(jobId, warningType);
     }
+
+    /**
+     * 描述：为定时任务系统管理员报警
+     * 作者 ：kangzz
+     * 日期 ：2016-03-24 22:35:25
+     */
+    public void notifyJobCenterManger(JobWarningModel jobWarningModel) {
+        try {
+            NotifyWarningUtil.notifyJobWarningMessage(null, jobWarningModel);
+        } catch (Exception e) {
+            logger.error("通知系统管理员失败!!!!", e);
+        }
+    }
+
+    /**
+     * 描述：为具体定时任务负责人报警
+     * 作者 ：kangzz
+     * 日期 ：2016-03-24 22:35:25
+     */
+    public void notifyJobOwner(JobWarningModel jobWarningModel) {
+        try {
+            NotifyWarningUtil.notifyJobWarningMessage(null, jobWarningModel);
+        } catch (Exception e) {
+            logger.error("通知任务具体负责人失败!!!!", e);
+        }
+    }
+
 
 }

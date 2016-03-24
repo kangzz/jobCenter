@@ -97,4 +97,19 @@ public class JobWarningPersonInfo {
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
     }
+
+    @Override
+    public String toString() {
+        return "JobWarningPersonInfo{" +
+                "id=" + id +
+                ", personName='" + personName + '\'' +
+                ", personEmail='" + personEmail + '\'' +
+                ", personPhone='" + personPhone + '\'' +
+                ", isDel=" + isDel +
+                ", createId='" + createId + '\'' +
+                ", createTime=" + createTime +
+                ", updateId='" + updateId + '\'' +
+                ", updateTime=" + updateTime +
+                '}';
+    }
 }

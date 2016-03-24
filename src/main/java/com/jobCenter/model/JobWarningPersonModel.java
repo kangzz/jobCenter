@@ -66,4 +66,16 @@ public class JobWarningPersonModel {
     public void setPersonPhone(String personPhone) {
         this.personPhone = personPhone;
     }
+
+    @Override
+    public String toString() {
+        return "JobWarningPersonModel{" +
+                "jobId=" + jobId +
+                ", warningType=" + warningType +
+                ", personType=" + personType +
+                ", personName='" + personName + '\'' +
+                ", personEmail='" + personEmail + '\'' +
+                ", personPhone='" + personPhone + '\'' +
+                '}';
+    }
 }

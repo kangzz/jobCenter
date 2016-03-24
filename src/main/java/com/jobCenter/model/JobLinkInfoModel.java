@@ -46,4 +46,14 @@ public class JobLinkInfoModel implements Serializable {
     public void setServiceName(String serviceName) {
         this.serviceName = serviceName;
     }
+
+    @Override
+    public String toString() {
+        return "JobLinkInfoModel{" +
+                "jobLinkId=" + jobLinkId +
+                ", jobId=" + jobId +
+                ", jobLink='" + jobLink + '\'' +
+                ", serviceName='" + serviceName + '\'' +
+                '}';
+    }
 }
