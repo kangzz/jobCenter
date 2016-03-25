@@ -40,4 +40,14 @@ public class JobWarningModel {
     public void setWarningContent(String warningContent) {
         this.warningContent = warningContent;
     }
+
+
+    @Override
+    public String toString() {
+        return "JobWarningModel{" +
+                ", jobId=" + jobId +
+                ", warningTitle='" + warningTitle + '\'' +
+                ", warningContent='" + warningContent + '\'' +
+                '}';
+    }
 }

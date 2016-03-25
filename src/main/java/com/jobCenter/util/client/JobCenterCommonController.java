@@ -48,6 +48,7 @@ public class JobCenterCommonController {
 		}
 		AbstractService abstractService = (AbstractService) SpringTool.getBean(serviceName);
 		abstractService.setJobId(jobId);
+		abstractService.setLinkId(linkId);
 		abstractService.setUuid(uuid);
 		abstractService.setJobName(jobName);
 		Thread t = new Thread(abstractService);

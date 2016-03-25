@@ -18,9 +18,10 @@ public abstract class AbstractService implements Runnable  {
 
     private static final Logger logger = Logger.getLogger(JobCenterCommonController.class);
 
-    private String uuid;
-    private String jobId;
-    private String jobName;
+    private String uuid;//本次调用uuid
+    private String jobId;//主任务id
+    private String linkId;//任务子id
+    private String jobName;//任务名称
 
     public String getUuid() {
         return uuid;
@@ -46,6 +47,14 @@ public abstract class AbstractService implements Runnable  {
         this.jobName = jobName;
     }
 
+    public String getLinkId() {
+        return linkId;
+    }
+
+    public void setLinkId(String linkId) {
+        this.linkId = linkId;
+    }
+
     /**
     * 描述：业务系统执行业务代码成功回调方法
     * 作者 ：kangzz
@@ -56,6 +65,7 @@ public abstract class AbstractService implements Runnable  {
             Map<String, Object> paramMap = new HashMap<String, Object>();
             paramMap.put("uuid", uuid);//唯一标志本次请求id
             paramMap.put("jobId",jobId);//任务id
+            paramMap.put("linkId",linkId);//子任务id
             paramMap.put("jobName",jobName);//任务名称
             paramMap.put("status", DoneStatus.ZZCG.getValue());//执行成功标志
             paramMap.put("code", JobStatus.ZXCG.getValue());//执行成功编码
@@ -86,6 +96,7 @@ public abstract class AbstractService implements Runnable  {
             Map<String, Object> paramMap = new HashMap<String, Object>();
             paramMap.put("uuid", uuid);//唯一标志本次请求id
             paramMap.put("jobId",jobId);//任务id
+            paramMap.put("linkId",linkId);//子任务id
             paramMap.put("jobName",jobName);//任务名称
             paramMap.put("status", DoneStatus.ZZSB.getValue());//任务执行失败
             paramMap.put("code", JobStatus.ZXSB.getValue());//失败错误码

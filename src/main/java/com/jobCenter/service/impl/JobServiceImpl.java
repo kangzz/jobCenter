@@ -454,6 +454,7 @@ public class JobServiceImpl implements JobService {
      */
     public void notifyJobOwner(JobWarningModel jobWarningModel) {
         try {
+            //根据任务id查询需要发送人员信息
             JobWarningPersonModel model = new JobWarningPersonModel();
             model.setJobId(jobWarningModel.getJobId());
             List<JobWarningPersonModel> list = jobWarningPersonInfoMapper.selectJobWarningPerson(model);
@@ -461,6 +462,15 @@ public class JobServiceImpl implements JobService {
         } catch (Exception e) {
             logger.error("通知任务具体负责人失败!!!!", e);
         }
+    }
+
+    /**
+     * 描述：根据子任务id查询子任务信息
+     * 作者 ：kangzz
+     * 日期 ：2016-03-25 18:09:30
+     */
+    public JobLinkInfo getJobLinkInfoById(String linkId){
+        return jobLinkInfoMapper.selectByPrimaryKey(linkId);
     }
 
 
