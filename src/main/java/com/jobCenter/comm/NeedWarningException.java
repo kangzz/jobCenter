@@ -6,7 +6,7 @@ import com.jobCenter.util.ErrorCodeMsgUtil;
 /**
  * 描述：需要报警的
  * 作者 ：kangzz
- * 日期 ：2016-03-24 09:27:44
+ * 日期 ：2016-03-24 19:27:44
  */
 public class NeedWarningException extends RuntimeException {
 

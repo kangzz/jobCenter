@@ -3,7 +3,9 @@ package com.jobCenter.comm;
 import com.jobCenter.util.SysPropUtil;
 
 /**
- * Created by kangzz on 16/3/23.
+ * 描述：常量信息
+ * 作者 ：kangzz
+ * 日期 ：2016-03-15 19:03:48
  */
 public class GlobalVariable {
 

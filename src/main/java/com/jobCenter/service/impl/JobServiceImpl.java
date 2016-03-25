@@ -272,6 +272,7 @@ public class JobServiceImpl implements JobService {
 
             paramMap.put("securityCode", MD5Util.encodeMD5(securityStr, SystemConstant.MD5_KEY));
             paramMap.put("uuid", uuid);//唯一标志本次请求id
+            paramMap.put("jobName",jobName);//任务名称
             paramMap.put("jobId", jobId);//任务主id
             paramMap.put("linkId", jobLinkId);//子任务id
             paramMap.put("serviceName", jobLinkInfoModel.getServiceName());//子任务执行的service

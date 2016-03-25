@@ -38,6 +38,7 @@ public class CallBackController {
 		try {
 			String uuid = request.getParameter("uuid");
 			String jobId = request.getParameter("jobId");
+			String jobName = request.getParameter("jobName");
 			String status = request.getParameter("status");
 			String code = request.getParameter("code");
 			String message = request.getParameter("message");
@@ -49,9 +50,12 @@ public class CallBackController {
 			record.setResultMessage(message);
 			jobService.updateJobExecuteResultByUuid(record);
 			//如果执行失败 那么报警
-			if(JobStatus.ZXCG.getValue() != Integer.valueOf(code)){
+			if(JobStatus.ZXCG.getValue() == Integer.valueOf(code)){
 				JobWarningModel jobWarningModel = new JobWarningModel();
 				jobWarningModel.setJobId(Long.valueOf(jobId));
+				jobWarningModel.setWarningTitle("定时任务["+jobName+"]执行失败");
+				jobWarningModel.setWarningContent(jobName+"..jobId:"+"["+jobId+"],失败原因:"+message+"</br>" +
+						"UUID:"+uuid);
 				jobService.notifyJobOwner(jobWarningModel);
 			}
 		}catch (Exception e){

@@ -29,6 +29,7 @@ public class JobCenterCommonController {
 		String serviceName = request.getParameter("serviceName");
 		String uuid = request.getParameter("uuid");
 		String jobId = request.getParameter("jobId");
+		String jobName = request.getParameter("jobName");
 		String securityCode = request.getParameter("securityCode");
 		String linkId = request.getParameter("linkId");
 		Thread.currentThread().setName(uuid);
@@ -48,6 +49,7 @@ public class JobCenterCommonController {
 		AbstractService abstractService = (AbstractService) SpringTool.getBean(serviceName);
 		abstractService.setJobId(jobId);
 		abstractService.setUuid(uuid);
+		abstractService.setJobName(jobName);
 		Thread t = new Thread(abstractService);
 		t.setName(uuid);
 		cache.put(serviceName,t);

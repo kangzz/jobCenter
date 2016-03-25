@@ -20,6 +20,7 @@ public abstract class AbstractService implements Runnable  {
 
     private String uuid;
     private String jobId;
+    private String jobName;
 
     public String getUuid() {
         return uuid;
@@ -37,6 +38,14 @@ public abstract class AbstractService implements Runnable  {
         this.jobId = jobId;
     }
 
+    public String getJobName() {
+        return jobName;
+    }
+
+    public void setJobName(String jobName) {
+        this.jobName = jobName;
+    }
+
     /**
     * 描述：业务系统执行业务代码成功回调方法
     * 作者 ：kangzz
@@ -46,6 +55,8 @@ public abstract class AbstractService implements Runnable  {
         try {
             Map<String, Object> paramMap = new HashMap<String, Object>();
             paramMap.put("uuid", uuid);//唯一标志本次请求id
+            paramMap.put("jobId",jobId);//任务id
+            paramMap.put("jobName",jobName);//任务名称
             paramMap.put("status", DoneStatus.ZZCG.getValue());//执行成功标志
             paramMap.put("code", JobStatus.ZXCG.getValue());//执行成功编码
             paramMap.put("message", JobStatus.ZXCG.getName());//执行成功信息
@@ -74,6 +85,8 @@ public abstract class AbstractService implements Runnable  {
         try {
             Map<String, Object> paramMap = new HashMap<String, Object>();
             paramMap.put("uuid", uuid);//唯一标志本次请求id
+            paramMap.put("jobId",jobId);//任务id
+            paramMap.put("jobName",jobName);//任务名称
             paramMap.put("status", DoneStatus.ZZSB.getValue());//任务执行失败
             paramMap.put("code", JobStatus.ZXSB.getValue());//失败错误码
             paramMap.put("message", JobStatus.ZXSB.getName());//失败错误原因
