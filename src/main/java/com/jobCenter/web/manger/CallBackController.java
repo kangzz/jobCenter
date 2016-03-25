@@ -2,6 +2,8 @@ package com.jobCenter.web.manger;
 
 import com.alibaba.fastjson.JSONObject;
 import com.jobCenter.domain.JobExecuteResult;
+import com.jobCenter.enums.JobStatus;
+import com.jobCenter.model.JobWarningModel;
 import com.jobCenter.service.JobService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +37,7 @@ public class CallBackController {
 	public void callBack(HttpServletRequest request, HttpServletResponse response) {
 		try {
 			String uuid = request.getParameter("uuid");
+			String jobId = request.getParameter("jobId");
 			String status = request.getParameter("status");
 			String code = request.getParameter("code");
 			String message = request.getParameter("message");
@@ -44,12 +47,17 @@ public class CallBackController {
 			record.setResultCode(Integer.valueOf(code));
 			record.setResultStatus(status);
 			record.setResultMessage(message);
-
 			jobService.updateJobExecuteResultByUuid(record);
-			printResult(response, "success", 0, "成功");
+			//如果执行失败 那么报警
+			if(JobStatus.ZXCG.getValue() != Integer.valueOf(code)){
+				JobWarningModel jobWarningModel = new JobWarningModel();
+				jobWarningModel.setJobId(Long.valueOf(jobId));
+				jobService.notifyJobOwner(jobWarningModel);
+			}
 		}catch (Exception e){
 			logger.error("回调异常,",e);
 		}
+		printResult(response, "success", 0, "成功");
 	}
 	//封装返回数据
 	private synchronized void  printResult(HttpServletResponse response , String status,int code,String message) {

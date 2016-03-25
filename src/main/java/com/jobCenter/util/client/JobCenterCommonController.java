@@ -35,14 +35,14 @@ public class JobCenterCommonController {
 		//安全码校验
 		if(!checkIsValidVisit(uuid,linkId,securityCode)){
 			logger.info("安全码校验失败!");
-			printResult(response,uuid,DoneStatus.TZCG.getValue(),JobStatus.JYSB.getValue(),JobStatus.JYSB.getName());
+			printResult(response,uuid,jobId,DoneStatus.TZCG.getValue(),JobStatus.JYSB.getValue(),JobStatus.JYSB.getName());
 			return;
 		}else{
 			logger.info("安全码校验成功!");
 		}
 		//校验房前serviceName是否有县城正在执行 如果正在执行 那么返回错误
 		if(cache.containsKey(serviceName) && cache.get(serviceName).isAlive()) {
-			printResult(response,uuid, DoneStatus.UNDONE.getValue(),JobStatus.ZZZX.getValue(),JobStatus.ZZZX.getName());
+			printResult(response,uuid,jobId,DoneStatus.UNDONE.getValue(),JobStatus.ZZZX.getValue(),JobStatus.ZZZX.getName());
 			return;
 		}
 		AbstractService abstractService = (AbstractService) SpringTool.getBean(serviceName);
@@ -52,14 +52,15 @@ public class JobCenterCommonController {
 		t.setName(uuid);
 		cache.put(serviceName,t);
 		t.start();
-		printResult(response,uuid,DoneStatus.TZCG.getValue(),JobStatus.TZCG.getValue(),JobStatus.TZCG.getName());
+		printResult(response,uuid,jobId,DoneStatus.TZCG.getValue(),JobStatus.TZCG.getValue(),JobStatus.TZCG.getName());
 	}
 
 	//封装返回数据
-	private void  printResult(HttpServletResponse response,String uuid, String status,int code,String message) {
+	private void  printResult(HttpServletResponse response,String uuid, String jobId,String status,int code,String message) {
 		try {
 			JSONObject errorJson = new JSONObject();
 			errorJson.put("uuid",uuid);
+			errorJson.put("jobId",jobId);
 			errorJson.put("status", status);
 			errorJson.put("code", code);
 			errorJson.put("message", message);

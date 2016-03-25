@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * 描述：定时任务报警人员信息
  * 作者 ：kangzz
- * 日期 ：2016-03-25 10:31:34
+ * 日期 ：2016-03-26 10:31:34
  */
 public interface JobWarningPersonInfoMapper {
     int deleteByPrimaryKey(Long id);

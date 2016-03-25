@@ -80,5 +80,11 @@ public interface JobService {
      * 日期 ：2016-03-24 22:35:25
      */
     void notifyJobCenterManger(JobWarningModel jobWarningModel);
+    /**
+     * 描述：为具体定时任务负责人报警
+     * 作者 ：kangzz
+     * 日期 ：2016-03-24 22:35:25
+     */
+    void notifyJobOwner(JobWarningModel jobWarningModel);
 }
 
