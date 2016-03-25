@@ -13,9 +13,7 @@ public class JobWarningPersonRelation {
 
     private Long personId;//人员id
 
-    private Integer warningType;//报警对象 0 定时任务系统 1 业务系统
-
-    private Integer personType;//当前任务报警人类型
+    private Integer personReceiveType;//当前任务报警人类型
 
     private Integer isDel;//是否删除
 
@@ -51,20 +49,12 @@ public class JobWarningPersonRelation {
         this.personId = personId;
     }
 
-    public Integer getWarningType() {
-        return warningType;
+    public Integer getPersonReceiveType() {
+        return personReceiveType;
     }
 
-    public void setWarningType(Integer warningType) {
-        this.warningType = warningType;
-    }
-
-    public Integer getPersonType() {
-        return personType;
-    }
-
-    public void setPersonType(Integer personType) {
-        this.personType = personType;
+    public void setPersonReceiveType(Integer personReceiveType) {
+        this.personReceiveType = personReceiveType;
     }
 
     public Integer getIsDel() {
@@ -113,8 +103,7 @@ public class JobWarningPersonRelation {
                 "id=" + id +
                 ", jobId=" + jobId +
                 ", personId=" + personId +
-                ", warningType=" + warningType +
-                ", personType=" + personType +
+                ", personReceiveType=" + personReceiveType +
                 ", isDel=" + isDel +
                 ", createId='" + createId + '\'' +
                 ", createTime=" + createTime +

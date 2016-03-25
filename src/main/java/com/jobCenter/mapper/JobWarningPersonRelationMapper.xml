@@ -5,8 +5,7 @@
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="job_id" property="jobId" jdbcType="BIGINT" />
     <result column="person_id" property="personId" jdbcType="BIGINT" />
-    <result column="warning_type" property="warningType" jdbcType="INTEGER" />
-    <result column="person_type" property="personType" jdbcType="INTEGER" />
+    <result column="person_receive_type" property="personReceiveType" jdbcType="INTEGER" />
     <result column="is_del" property="isDel" jdbcType="INTEGER" />
     <result column="create_id" property="createId" jdbcType="VARCHAR" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
@@ -14,8 +13,8 @@
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, job_id, person_id, warning_type, person_type, is_del, create_id, create_time, 
-    update_id, update_time
+    id, job_id, person_id, person_receive_type, is_del, create_id, create_time, update_id, 
+    update_time
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -29,13 +28,13 @@
   </delete>
   <insert id="insert" parameterType="com.jobCenter.domain.JobWarningPersonRelation" >
     insert into job_warning_person_relation (id, job_id, person_id, 
-      warning_type, person_type, is_del, 
-      create_id, create_time, update_id, 
-      update_time)
+      person_receive_type, is_del, create_id, 
+      create_time, update_id, update_time
+      )
     values (#{id,jdbcType=BIGINT}, #{jobId,jdbcType=BIGINT}, #{personId,jdbcType=BIGINT}, 
-      #{warningType,jdbcType=INTEGER}, #{personType,jdbcType=INTEGER}, #{isDel,jdbcType=INTEGER}, 
-      #{createId,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateId,jdbcType=VARCHAR}, 
-      #{updateTime,jdbcType=TIMESTAMP})
+      #{personReceiveType,jdbcType=INTEGER}, #{isDel,jdbcType=INTEGER}, #{createId,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateId,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.jobCenter.domain.JobWarningPersonRelation" >
     insert into job_warning_person_relation
@@ -49,11 +48,8 @@
       <if test="personId != null" >
         person_id,
       </if>
-      <if test="warningType != null" >
-        warning_type,
-      </if>
-      <if test="personType != null" >
-        person_type,
+      <if test="personReceiveType != null" >
+        person_receive_type,
       </if>
       <if test="isDel != null" >
         is_del,
@@ -81,11 +77,8 @@
       <if test="personId != null" >
         #{personId,jdbcType=BIGINT},
       </if>
-      <if test="warningType != null" >
-        #{warningType,jdbcType=INTEGER},
-      </if>
-      <if test="personType != null" >
-        #{personType,jdbcType=INTEGER},
+      <if test="personReceiveType != null" >
+        #{personReceiveType,jdbcType=INTEGER},
       </if>
       <if test="isDel != null" >
         #{isDel,jdbcType=INTEGER},
@@ -113,11 +106,8 @@
       <if test="personId != null" >
         person_id = #{personId,jdbcType=BIGINT},
       </if>
-      <if test="warningType != null" >
-        warning_type = #{warningType,jdbcType=INTEGER},
-      </if>
-      <if test="personType != null" >
-        person_type = #{personType,jdbcType=INTEGER},
+      <if test="personReceiveType != null" >
+        person_receive_type = #{personReceiveType,jdbcType=INTEGER},
       </if>
       <if test="isDel != null" >
         is_del = #{isDel,jdbcType=INTEGER},
@@ -141,8 +131,7 @@
     update job_warning_person_relation
     set job_id = #{jobId,jdbcType=BIGINT},
       person_id = #{personId,jdbcType=BIGINT},
-      warning_type = #{warningType,jdbcType=INTEGER},
-      person_type = #{personType,jdbcType=INTEGER},
+      person_receive_type = #{personReceiveType,jdbcType=INTEGER},
       is_del = #{isDel,jdbcType=INTEGER},
       create_id = #{createId,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -151,14 +140,4 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
 
-  <select id="getWarningPersonByJobIdAndWarningType" resultType="com.jobCenter.model.JobWarningPersonModel">
-    select t.job_id as jobId,t.warning_type as warningType,
-    t.person_type as personType,t1.person_name as personName,
-    t1.person_email as personEmail,t1.person_phone as personPhone
-    from job_warning_person_relation t
-    join job_warning_person_info t1
-    on t.person_id = t1.id
-    and t.is_del = 0 and t1.is_del = 0
-    and t.job_id = #{jobId,jdbcType=BIGINT} and t.warning_type = #{warningType,jdbcType=INTEGER}
-  </select>
 </mapper>

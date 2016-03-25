@@ -9,9 +9,9 @@ public class JobWarningPersonModel {
 
     private Long jobId;//任务id
 
-    private Integer warningType;//报警类型 0 定时任务服务器 1 业务服务器
+    private Integer personReceiveType;//报警人类型 主要人员 还是次要人员
 
-    private Integer personType;//报警人类型
+    private Integer personType;//人员类型 业务系统 任务系统
 
     private String personName;//报警人姓名
 
@@ -25,22 +25,6 @@ public class JobWarningPersonModel {
 
     public void setJobId(Long jobId) {
         this.jobId = jobId;
-    }
-
-    public Integer getWarningType() {
-        return warningType;
-    }
-
-    public void setWarningType(Integer warningType) {
-        this.warningType = warningType;
-    }
-
-    public Integer getPersonType() {
-        return personType;
-    }
-
-    public void setPersonType(Integer personType) {
-        this.personType = personType;
     }
 
     public String getPersonName() {
@@ -67,11 +51,27 @@ public class JobWarningPersonModel {
         this.personPhone = personPhone;
     }
 
+    public Integer getPersonReceiveType() {
+        return personReceiveType;
+    }
+
+    public void setPersonReceiveType(Integer personReceiveType) {
+        this.personReceiveType = personReceiveType;
+    }
+
+    public Integer getPersonType() {
+        return personType;
+    }
+
+    public void setPersonType(Integer personType) {
+        this.personType = personType;
+    }
+
     @Override
     public String toString() {
         return "JobWarningPersonModel{" +
                 "jobId=" + jobId +
-                ", warningType=" + warningType +
+                ", personReceiveType=" + personReceiveType +
                 ", personType=" + personType +
                 ", personName='" + personName + '\'' +
                 ", personEmail='" + personEmail + '\'' +

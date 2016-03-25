@@ -10,6 +10,8 @@ import java.util.Date;
 public class JobWarningPersonInfo {
     private Long id;//报警人id
 
+    private Integer personType;//人员类型 0 定时任务系统 1 业务系统
+
     private String personName;//报警人姓名
 
     private String personEmail;//报警人邮箱
@@ -98,10 +100,18 @@ public class JobWarningPersonInfo {
         this.updateTime = updateTime;
     }
 
+    public Integer getPersonType() {
+        return personType;
+    }
+
+    public void setPersonType(Integer personType) {
+        this.personType = personType;
+    }
     @Override
     public String toString() {
         return "JobWarningPersonInfo{" +
                 "id=" + id +
+                ", personType=" + personType +
                 ", personName='" + personName + '\'' +
                 ", personEmail='" + personEmail + '\'' +
                 ", personPhone='" + personPhone + '\'' +

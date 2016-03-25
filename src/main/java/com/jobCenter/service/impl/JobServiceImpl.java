@@ -7,10 +7,7 @@ import com.jobCenter.domain.HeartBeatInfo;
 import com.jobCenter.domain.JobExecuteResult;
 import com.jobCenter.domain.JobInfo;
 import com.jobCenter.domain.JobLinkInfo;
-import com.jobCenter.enums.DoneStatus;
-import com.jobCenter.enums.IsType;
-import com.jobCenter.enums.JobExecuteType;
-import com.jobCenter.enums.JobStatus;
+import com.jobCenter.enums.*;
 import com.jobCenter.job.QuartzJob;
 import com.jobCenter.job.QuartzManager;
 import com.jobCenter.mapper.*;
@@ -40,7 +37,7 @@ public class JobServiceImpl implements JobService {
     @Autowired
     private JobExecuteResultMapper jobExecuteResultMapper;
     @Autowired
-    private JobWarningPersonRelationMapper jobWarningPersonRelationMapper;
+    private JobWarningPersonInfoMapper jobWarningPersonInfoMapper;
 
     private final static Logger logger = Logger.getLogger(JobServiceImpl.class);
 
@@ -374,7 +371,8 @@ public class JobServiceImpl implements JobService {
                 jobWarningModel.setJobId(Long.valueOf(jobId));
                 jobWarningModel.setWarningTitle("定时任务发送请求异常");
                 jobWarningModel.setWarningContent(sb.toString());
-                this.notifyJobCenterManger(jobWarningModel);
+                //this.notifyJobCenterManger(jobWarningModel);
+                this.notifyJobOwner(jobWarningModel);
             }
         }
 
@@ -433,22 +431,16 @@ public class JobServiceImpl implements JobService {
     }
 
     /**
-     * 描述：根据任务id和报警类型获取对应人员信息
-     * 作者 ：kangzz
-     * 日期 ：2016-03-23 22:27:45
-     */
-    public List<JobWarningPersonModel> getWarningPersonByJobIdAndWarningType(Long jobId, Integer warningType) {
-        return jobWarningPersonRelationMapper.getWarningPersonByJobIdAndWarningType(jobId, warningType);
-    }
-
-    /**
      * 描述：为定时任务系统管理员报警
      * 作者 ：kangzz
      * 日期 ：2016-03-24 22:35:25
      */
     public void notifyJobCenterManger(JobWarningModel jobWarningModel) {
         try {
-            NotifyWarningUtil.notifyJobWarningMessage(null, jobWarningModel);
+            JobWarningPersonModel model = new JobWarningPersonModel();
+            model.setPersonType(JobWarningPersonType.RWXT.getValue());
+            List<JobWarningPersonModel> list = jobWarningPersonInfoMapper.selectJobWarningPerson(model);
+            NotifyWarningUtil.notifyJobWarningMessage(list, jobWarningModel);
         } catch (Exception e) {
             logger.error("通知系统管理员失败!!!!", e);
         }
@@ -461,7 +453,10 @@ public class JobServiceImpl implements JobService {
      */
     public void notifyJobOwner(JobWarningModel jobWarningModel) {
         try {
-            NotifyWarningUtil.notifyJobWarningMessage(null, jobWarningModel);
+            JobWarningPersonModel model = new JobWarningPersonModel();
+            model.setJobId(jobWarningModel.getJobId());
+            List<JobWarningPersonModel> list = jobWarningPersonInfoMapper.selectJobWarningPerson(model);
+            NotifyWarningUtil.notifyJobWarningMessage(list, jobWarningModel);
         } catch (Exception e) {
             logger.error("通知任务具体负责人失败!!!!", e);
         }

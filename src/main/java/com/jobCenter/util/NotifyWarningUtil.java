@@ -1,6 +1,7 @@
 package com.jobCenter.util;
 
 
+import com.jobCenter.enums.JobWarningPersonReceiveType;
 import com.jobCenter.enums.JobWarningPersonType;
 import com.jobCenter.model.JobWarningModel;
 import com.jobCenter.model.JobWarningPersonModel;
@@ -30,15 +31,13 @@ public class NotifyWarningUtil {
             for (int i = 0; i <personModelList.size(); i++) {
                 JobWarningPersonModel jobWarningPersonModel = personModelList.get(i);
                 String personEmail = jobWarningPersonModel.getPersonEmail();
-                if(JobWarningPersonType.ZYRY.getValue() == jobWarningPersonModel.getPersonType()){
+                if(JobWarningPersonReceiveType.ZYRY.getValue() == jobWarningPersonModel.getPersonReceiveType()){
                     toAddressList.add(personEmail);
                 }else{
                     receiveAddress.add(personEmail);
                 }
             }
         }
-        toAddressList.add("85138124@qq.com");
-        receiveAddress.add("515294820@qq.com");
         Boolean ret = MailUtils.sendHtmlEmail(toAddressList, jobWarningModel.getWarningTitle(), jobWarningModel.getWarningContent(), receiveAddress);
         return ret;
     }

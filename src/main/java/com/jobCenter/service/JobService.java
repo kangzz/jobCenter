@@ -75,12 +75,6 @@ public interface JobService {
      */
     void updateJobExecuteResultByUuid(JobExecuteResult record) throws Exception;
     /**
-     * 描述：根据任务id和报警类型获取对应人员信息
-     * 作者 ：kangzz
-     * 日期 ：2016-03-23 22:27:45
-     */
-    List<JobWarningPersonModel> getWarningPersonByJobIdAndWarningType(Long jobId, Integer warningType);
-    /**
      * 描述：为定时任务系统管理员报警
      * 作者 ：kangzz
      * 日期 ：2016-03-24 22:35:25
