@@ -25,7 +25,7 @@ public class JobServiceTest3 extends AbstractService {
         }
         doSomeThing();
 
-        failCallBackToJobCenter(1,"test3测试失败返回!");
+        failCallBackToJobCenter("test3测试失败返回!");
         //回调
         //callback(jobId,uuid,"true");
     }

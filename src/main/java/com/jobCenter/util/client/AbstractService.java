@@ -67,7 +67,7 @@ public abstract class AbstractService implements Runnable  {
             paramMap.put("jobId",jobId);//任务id
             paramMap.put("linkId",linkId);//子任务id
             paramMap.put("jobName",jobName);//任务名称
-            paramMap.put("status", DoneStatus.ZZCG.getValue());//执行成功标志
+            paramMap.put("status", DoneStatus.ZXCG.getValue());//执行成功标志
             paramMap.put("code", JobStatus.ZXCG.getValue());//执行成功编码
             paramMap.put("message", JobStatus.ZXCG.getName());//执行成功信息
             //转换发送参数
@@ -91,16 +91,16 @@ public abstract class AbstractService implements Runnable  {
      * 作者 ：kangzz
      * 日期 ：2016-03-22 23:12:23
      */
-    public synchronized void failCallBackToJobCenter(int code, String message) {
+    public synchronized void failCallBackToJobCenter(String errorMessage) {
         try {
             Map<String, Object> paramMap = new HashMap<String, Object>();
             paramMap.put("uuid", uuid);//唯一标志本次请求id
             paramMap.put("jobId",jobId);//任务id
             paramMap.put("linkId",linkId);//子任务id
             paramMap.put("jobName",jobName);//任务名称
-            paramMap.put("status", DoneStatus.ZZSB.getValue());//任务执行失败
+            paramMap.put("status", DoneStatus.ZXSB.getValue());//任务执行失败
             paramMap.put("code", JobStatus.ZXSB.getValue());//失败错误码
-            paramMap.put("message", JobStatus.ZXSB.getName());//失败错误原因
+            paramMap.put("message", errorMessage);//失败错误原因
             //转换发送参数
             String param = MessageUtil.getParameter(paramMap);
             //获取请求url信息

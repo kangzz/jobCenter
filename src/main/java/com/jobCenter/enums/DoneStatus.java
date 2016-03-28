@@ -13,8 +13,8 @@ public enum DoneStatus {
 	TZCG("通知成功","connectSuccess"),
 	UNDONE("正在执行,不需要执行","unNeedDone"),
 	TZSB("通知失败", "connectFail"),
-	ZZCG("执行成功","doneSuccess"),
-	ZZSB("执行失败","doneFail");
+	ZXCG("执行成功","doneSuccess"),
+	ZXSB("执行失败","doneFail");
 	// 成员变量
 	private String name;
 	private String value;
