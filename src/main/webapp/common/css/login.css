@@ -1,0 +1,14 @@
+.loginBox{background:url(../images/login/bg.jpg) no-repeat center top; height: 647px;}
+
+.area{width: 1000px; margin:0 auto;}
+.logo{height: 30px; padding: 40px 0; font-size: 24px;}
+.loginBox .area{height: 640px; position: relative; font-size: 14px;}
+.loginCon{background:url(../images/login/opacity.png); width: 320px; height: 320px; position: absolute; right: 0; top:240px; color: #fff;}
+.loginCon h2{color: #fff; font-size: 16px; font-weight: bold;}
+.loginCon .con{padding: 20px 20px 0px 20px;}
+.loginCon .inputBox{margin-top: 20px; position: relative;}
+.loginCon .inputBox input{width: 260px; height: 40px; line-height: 40px; background: #fff; padding:0 10px;}
+
+.loginCon .login_btn{width: 250px; background: #ffa000; color: #fff; height: 50px; margin-top: 20px; font-size: 18px; cursor: pointer;}
+.loginCon .inputBox .name{background: #fff url(../images/login/login_rt.gif) no-repeat 10px center; padding-left: 40px; width: 230px;}
+.loginCon .inputBox .password{background: #fff url(../images/login/login_luck.gif) no-repeat 10px center; padding-left: 40px; width: 230px;}
