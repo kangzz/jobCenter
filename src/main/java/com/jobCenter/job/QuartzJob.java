@@ -9,7 +9,6 @@
  */
 package com.jobCenter.job;
 
-import com.jobCenter.comm.NeedWarningException;
 import com.jobCenter.model.JobInfoModel;
 import com.jobCenter.model.JobWarningModel;
 import com.jobCenter.service.JobService;
@@ -19,6 +18,7 @@ import org.apache.log4j.Logger;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
+
 
 /**
  * 描述：任务执行类
@@ -42,7 +42,7 @@ public class QuartzJob implements Job {
         try {
             jobService.sendJobRequest((JobInfoModel) arg0.getJobDetail().getJobDataMap().get("jobInfoMode"));
         } catch (Exception e) {
-            logger.error("定时任务发送请求异常",e);
+            logger.error("定时任务发送请求异常", e);
             JobWarningModel jobWarningModel = new JobWarningModel();
             jobWarningModel.setWarningTitle("定时任务发送请求异常");
             jobWarningModel.setWarningContent(NotifyWarningUtil.getStackMsg(e));
