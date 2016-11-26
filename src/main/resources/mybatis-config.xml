@@ -16,4 +16,7 @@
 		<mapper resource="com/jobCenter/mapper/UserMapper.xml"/>
 		&lt;!&ndash; <mapper resource="com/springmvc/mybatis/mapper/UserMSMapper.xml"/> &ndash;&gt;
 	</mappers>-->
+	<settings>
+		<setting name="logImpl" value="STDOUT_LOGGING"/>
+	</settings>
 </configuration>

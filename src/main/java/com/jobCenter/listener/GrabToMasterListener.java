@@ -6,7 +6,6 @@ import com.jobCenter.enums.HeartType;
 import com.jobCenter.enums.IsType;
 import com.jobCenter.service.JobService;
 import com.jobCenter.util.SpringTool;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletContextEvent;
@@ -33,7 +32,7 @@ public class GrabToMasterListener implements ServletContextListener {
         String str = null;
         if (str == null && myThread == null) {
             myThread = new GrabToMasterListenerThread();
-            myThread.start(); // servlet 上下文初始化时启动 socket
+            //myThread.start(); // servlet 上下文初始化时启动 socket
         }
     }
 }

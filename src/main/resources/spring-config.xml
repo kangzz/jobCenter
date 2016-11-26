@@ -150,7 +150,7 @@
     
     <aop:config>
         <aop:pointcut id="interceptorPoint"
-            expression="execution(* service..*.*(..))" />
+            expression="execution(* com.jobCenter.service..*.*(..))" />
         <aop:advisor advice-ref="txAdvice"
             pointcut-ref="interceptorPoint" />        
     </aop:config>

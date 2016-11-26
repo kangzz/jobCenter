@@ -1,7 +1,5 @@
 package com.jobCenter.util.client;
 
-import com.jobCenter.enums.HeartType;
-import com.xiaoleilu.hutool.system.SystemUtil;
 
 /**
  * 描述：系统常量

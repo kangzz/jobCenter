@@ -59,4 +59,7 @@ public class GlobalVariable {
             e.printStackTrace();
         }
     }
+
+    //session中user信息Key
+    public static final String SESSION_CURRENT_USER_KEY = "CURRENT_USER";
 }

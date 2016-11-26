@@ -23,6 +23,8 @@ public class SystemConstant {
     //MD5加密key
     public static final String MD5_KEY = "748d5cb7c2c6824b";
     //MD5加密截取字符占比
-    public static  final int MD5_RATIO = 2;
+    public static final int MD5_RATIO = 2;
+
+
 
 }

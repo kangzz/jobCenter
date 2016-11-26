@@ -14,3 +14,19 @@ select * from job_link_infoCREATE TABLE `job_info` (
   `update_time` datetime NOT NULL COMMENT '修改时间',
   PRIMARY KEY (`job_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `user_info` (
+  `id` bigint(16) NOT NULL AUTO_INCREMENT,
+  `user_code` varchar(20)  NOT NULL COMMENT '用户编码',
+  `user_name` varchar(50)  NOT NULL COMMENT '用户名称',
+  `user_phone` varchar(50)  DEFAULT '' COMMENT '用户手机',
+  `user_mail` varchar(50) DEFAULT '' COMMENT '用户邮箱',
+  `user_pwd` varchar(50)  NOT NULL COMMENT '用户密码',
+  `is_del` int(2) NOT NULL DEFAULT '0' COMMENT '是否删除标识（0.为删除 1.已删除）',
+  `create_id`  varchar(20)  NULL DEFAULT '' COMMENT '创建id' ,
+  `create_time`  datetime NULL DEFAULT '2016-01-01 00:00:00' COMMENT '创建时间' ,
+  `last_modify_id`  varchar(20)  NULL DEFAULT '' COMMENT '最后修改人id' ,
+  `last_modify_time`  datetime NULL DEFAULT '2016-01-01 00:00:00' COMMENT '最后修改时间' ,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB COMMENT='用户信息表';
+Alter table user_info add unique(user_code);

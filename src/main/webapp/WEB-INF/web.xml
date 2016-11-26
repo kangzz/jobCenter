@@ -39,7 +39,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>springmvc</servlet-name>
-        <url-pattern>/</url-pattern>
+        <url-pattern>*.do</url-pattern>
     </servlet-mapping>
     <servlet>
         <servlet-name>DruidStatView</servlet-name>
@@ -95,11 +95,13 @@
         <filter-name>hiddenHttpMethodFilter</filter-name>
         <servlet-name>springmvc</servlet-name>
     </filter-mapping>
-
-
     <servlet>
         <servlet-name>springTool</servlet-name>
         <servlet-class>com.jobCenter.util.SystemServlet</servlet-class>
         <load-on-startup>20000</load-on-startup>
     </servlet>
+
+    <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+    </welcome-file-list>
 </web-app>
