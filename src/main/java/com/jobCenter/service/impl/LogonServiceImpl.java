@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -58,7 +59,12 @@ public class LogonServiceImpl implements LogonService {
      * 日期 ：2016-11-26 17:51:26
      */
     public List<MenuDto> findMenuTreeByUserId(Long userId){
-
-        return null;
+        List<MenuDto> list = new ArrayList<MenuDto>();
+        List<MenuDto> firstChildList = new ArrayList<MenuDto>();
+        MenuDto firstChild = new MenuDto(2,"baidu","www.baidu.com",null);
+        firstChildList.add(firstChild);
+        MenuDto first = new MenuDto(1,"baidu","",firstChildList);
+        list.add(first);
+        return list;
     }
 }

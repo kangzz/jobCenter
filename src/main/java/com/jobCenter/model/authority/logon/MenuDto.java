@@ -23,11 +23,12 @@ public class MenuDto {
 	private MenuDto(){
 		
 	}
-	public MenuDto(Integer id, String name, String href) {
-		super();
+
+	public MenuDto(Integer id, String name, String href, List<MenuDto> children) {
 		this.id = id;
 		this.name = name;
 		this.href = href;
+		this.children = children;
 	}
 
 	public String getName() {

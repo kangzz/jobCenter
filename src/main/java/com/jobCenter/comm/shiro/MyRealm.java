@@ -75,7 +75,6 @@ public class MyRealm  extends AuthorizingRealm {
             String role = (String) var3.next();
             simpleAuthorizationInfo.addRole(role);
         }
-        simpleAuthorizationInfo.addRole("123");
     }
     private void addPermissions(SimpleAuthorizationInfo simpleAuthorizationInfo, JSONArray permissions) {
         Iterator var3 = permissions.iterator();
@@ -83,6 +82,5 @@ public class MyRealm  extends AuthorizingRealm {
             String permission = (String) var3.next();
             simpleAuthorizationInfo.addStringPermission(permission);
         }
-        simpleAuthorizationInfo.addStringPermission("1234");
     }
 }

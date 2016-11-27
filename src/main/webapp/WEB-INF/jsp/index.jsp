@@ -25,7 +25,7 @@
                 </li>
 
                 <!-- 菜单 开始 -->
-                <c:forEach items="${memuList}" var="m1">
+                <c:forEach items="${menuList}" var="m1">
                 <li>
                     <c:choose>
                     <c:when test="${m1.href =='' }">

@@ -71,10 +71,10 @@ public class LogonController {
 	@RequestMapping("index.do")
 	public String index(HttpServletRequest request) {
 		Subject subject=SecurityUtils.getSubject();
+		Long userId = (Long) subject.getPrincipal();
 		Session session=subject.getSession();
 		UserAccount userAccount = UserUtil.getCurrentUser();
 		if(userAccount == null) {
-			Long userId = (Long) subject.getPrincipal();
 			UserInfo userInfo = logonService.getUserInfoById(userId);
 			userAccount =
 					new UserAccount(userInfo.getId(), userInfo.getUserName(), userInfo.getUserCode()
@@ -83,8 +83,7 @@ public class LogonController {
 			userAccount = UserUtil.getCurrentUser();
 			logger.info(userAccount.toString());
 		}
-		boolean has = subject.hasRole("123");
-		List<MenuDto> menuList = logonService.findMenuTreeByUserId(userAccount.getUserId());
+		List<MenuDto> menuList = logonService.findMenuTreeByUserId(userId);
 		request.setAttribute("menuList", menuList);
 		return "index";
 	}
