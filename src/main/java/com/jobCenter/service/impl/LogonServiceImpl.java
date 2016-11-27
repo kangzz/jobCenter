@@ -3,6 +3,7 @@ package com.jobCenter.service.impl;
 import com.jobCenter.domain.*;
 import com.jobCenter.enums.IsType;
 import com.jobCenter.mapper.*;
+import com.jobCenter.model.authority.logon.MenuDto;
 import com.jobCenter.service.LogonService;
 import com.jobCenter.util.MD5Util;
 import org.apache.log4j.Logger;
@@ -39,6 +40,25 @@ public class LogonServiceImpl implements LogonService {
         }else{
             throw new RuntimeException("密码错误!");
         }
+    }
+    public UserInfo getUserInfo(UserInfo userInfo){
+        userInfo.setIsDel(IsType.NO.getValue());
+        List<UserInfo> userInfoList = userInfoMapper.selectUserInfoByRecord(userInfo);
+        if(userInfoList == null || userInfoList.isEmpty()){
+            throw new RuntimeException("用户不存在!");
+        }
+        return userInfoList.get(0);
+    }
+    public UserInfo getUserInfoById(Long userId){
+        return userInfoMapper.selectByPrimaryKey(userId);
+    }
+    /**
+     * 描述：获取用户菜单权限
+     * 作者 ：kangzz
+     * 日期 ：2016-11-26 17:51:26
+     */
+    public List<MenuDto> findMenuTreeByUserId(Long userId){
 
+        return null;
     }
 }

@@ -111,6 +111,10 @@ public class JobServiceImpl implements JobService {
             List<JobInfoModel> jobList = getAllJobInfo();
             //所有任务的数量
             int jobSize = jobList == null ? 0 : jobList.size();
+            //如果任务列表为空 抛出异常
+            if(jobSize == 0){
+                throw new NeedWarningException(110);
+            }
             int failNum = 0;
             for (int i = 0; i < jobSize; i++) {
                 JobInfoModel jobInfoMode = jobList.get(i);

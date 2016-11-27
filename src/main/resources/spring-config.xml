@@ -15,7 +15,8 @@
 	                   http://www.springframework.org/schema/aop/spring-aop.xsd
            http://www.springframework.org/schema/task  
 		   http://www.springframework.org/schema/task/spring-task-3.0.xsd">
-		   
+
+
 <!--                        注解管理 start                     -->
 	
 	<!-- 自动扫描 -->  
@@ -30,13 +31,15 @@
 <!--                      加载配置文件 start                    -->
 	
 	<!-- 方式1 -->
-	<!-- <context:property-placeholder location="classpath:db.properties"/> -->
-	<!-- 方式2 -->
+	<context:property-placeholder location="classpath:/db.${env}.properties,classpath:/system.${env}.properties"/>
+	<!-- 方式2
 	<bean id="propertyConfigurer"  
         class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">  
-        <property name="location" value="classpath:db.properties" />  
+        <property name="location" value="classpath:/db.${env}.properties,classpath:/system.${env}.properties" />
     </bean>
-    
+     -->
+
+	<import resource="spring-config-shiro.xml"/>
 <!--                      加载配置文件 end                      -->
 
 <!--                      配置数据源 start                      -->

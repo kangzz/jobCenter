@@ -162,15 +162,13 @@ public class SimpleMailSender {
                     mbp.setDataHandler(new DataHandler(fds)); //得到附件本身并至入BodyPart
                     try {
                         //处理附件中文乱码问题
-                        mbp.setFileName(MimeUtility.encodeText("手机险自助化报案流程.pdf"));
+                        mbp.setFileName(MimeUtility.encodeText(fileName));
                     } catch (UnsupportedEncodingException e) {
-                        // TODO Auto-generated catch block
                         e.printStackTrace();
                     }   //得到文件名同样至入BodyPart
                     mainPart.addBodyPart(mbp);
                 }
             }
-            System.out.println("用的是html这个方法");
             // 创建一个包含HTML内容的MimeBodyPart
             BodyPart html = new MimeBodyPart();
             // 设置HTML内容

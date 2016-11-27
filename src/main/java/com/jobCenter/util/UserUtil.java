@@ -3,6 +3,9 @@ package com.jobCenter.util;
 
 import com.jobCenter.comm.GlobalVariable;
 import com.jobCenter.model.authority.logon.UserAccount;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.session.Session;
+import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -23,8 +26,9 @@ public class UserUtil {
 	public static UserAccount getCurrentUser() {
 		UserAccount user = null ;
 		try {
-			user = (UserAccount) ((ServletRequestAttributes)
-					RequestContextHolder.getRequestAttributes()).getRequest().getSession().getAttribute(GlobalVariable.SESSION_CURRENT_USER_KEY) ;
+			Subject subject= SecurityUtils.getSubject();
+			Session session=subject.getSession();
+			user = (UserAccount) session.getAttribute(GlobalVariable.SESSION_CURRENT_USER_KEY) ;
 		} catch (Exception e) {
 			logger.error("Session中没有取出当前用户！" , e) ;
 		}

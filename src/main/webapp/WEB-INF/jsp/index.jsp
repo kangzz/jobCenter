@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>自如驿</title>
+    <title>定时任务管理中心</title>
     <%@include file="/WEB-INF/jsp/common/header.jsp" %>
 </head>
 
@@ -19,12 +19,12 @@
                         <span><img alt="image" class="img-circle" src="${path }/img/profile_small.jpg"/></span>
                         <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                                 <span class="clear"/>
-                               <span class="block m-t-xs"><strong class="font-bold">自如驿</strong></span>
+                               <span class="block m-t-xs"><strong class="font-bold">定时任务管理中心</strong></span>
                         </a>
                     </div>
                 </li>
 
-                <!-- 自如驿菜单 开始 -->
+                <!-- 菜单 开始 -->
                 <c:forEach items="${memuList}" var="m1">
                 <li>
                     <c:choose>
@@ -53,7 +53,7 @@
                 </li>
                 </c:forEach>
             </ul>
-                <!-- 自如驿菜单 结束 -->
+                <!-- 菜单 结束 -->
         </div>
     </nav>
     <!--左侧导航结束-->
@@ -117,7 +117,7 @@
                 </ul>
             </div>
             <%--<a href="javascript:exit();" class="roll-nav roll-right J_tabExit" ><i class="fa fa fa-sign-out"></i> 退出</a>--%>
-            <a href="${path}/security/exit.action" class="roll-nav roll-right J_tabExit"><i class="fa fa fa-sign-out"></i> 退出</a>
+            <a href="${path}/logout.do" class="roll-nav roll-right J_tabExit"><i class="fa fa fa-sign-out"></i> 退出</a>
         </div>
         <div class="row J_mainContent" id="content-main">
             <iframe class="J_iframe" name="iframe0" width="100%" height="100%" src="${path}/security/toWorkbench.action?v=4.0" frameborder="0" data-id="index_v1.html" seamless>

@@ -34,8 +34,10 @@ public class ExceptionLog implements ThrowsAdvice {
                               RuntimeException  throwable) {
 
         logger.error("产生异常的方法名称：  " + method.getName());
-        for(Object o:args){
-            logger.error("方法的参数：   " + o.toString());
+        if(method.getName()!=null && !"login".equals(method.getName())){
+            for(Object o:args){
+                logger.error("方法的参数：   " + o.toString());
+            }
         }
         logger.error("代理对象：   " + target.getClass().getName());
         logger.error("抛出的异常:    " + throwable.getMessage()+">>>>>>>"

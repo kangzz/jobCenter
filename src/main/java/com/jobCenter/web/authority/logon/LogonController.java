@@ -2,12 +2,17 @@ package com.jobCenter.web.authority.logon;
 
 import com.jobCenter.comm.GlobalVariable;
 import com.jobCenter.domain.UserInfo;
-import com.jobCenter.enums.IsType;
+import com.jobCenter.model.authority.logon.MenuDto;
 import com.jobCenter.model.authority.logon.UserAccount;
 import com.jobCenter.service.LogonService;
+import com.jobCenter.util.MD5Util;
 import com.jobCenter.util.StringUtil;
 import com.jobCenter.util.UserUtil;
 import org.apache.log4j.Logger;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.session.Session;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 /**
  * 描述：登录控制
@@ -34,9 +40,6 @@ public class LogonController {
 	 */
 	@RequestMapping(value = "login.do", method = {RequestMethod.GET, RequestMethod.POST})
 	public String login(HttpServletRequest request) {
-		if(UserUtil.getCurrentUser() != null){
-			return "redirect:/index.do";
-		}
 		String userCode = request.getParameter("userCode");
 		String userPwd = request.getParameter("userPwd");
 		if(StringUtil.isBlank(userCode) || StringUtil.isBlank(userPwd)){
@@ -44,92 +47,53 @@ public class LogonController {
 			return "login";
 		}
 		try{
-			UserInfo userInfo = logonService.checkLogon(userCode,userPwd);
-			UserAccount userAccount =
-					new UserAccount(userInfo.getId(),userInfo.getUserName(),userInfo.getUserCode()
-							,userInfo.getUserPhone(),userInfo.getUserMail());
-			request.getSession().setAttribute(GlobalVariable.SESSION_CURRENT_USER_KEY, userAccount);
-			return "redirect:/index.do";
-		}catch (Exception e){
-			logger.error(e.getMessage(),e);
+			UserInfo userInfoQuery = new UserInfo();
+			userInfoQuery.setUserCode(userCode);
+			UserInfo userInfo = logonService.getUserInfo(userInfoQuery);
+			UsernamePasswordToken token = new UsernamePasswordToken(userInfo.getId()+"", MD5Util.encodeMD5(userPwd,""));
+			Subject currentUser = SecurityUtils.getSubject();
+			if (!currentUser.isAuthenticated()){
+				//使用shiro来验证
+				token.setRememberMe(true);
+				currentUser.login(token);//验证角色和权限
+			}
+		}catch(Exception ex){
+			logger.error("",ex);
 			return "login";
 		}
+		return "redirect:/index.do";
 	}
-
 	/**
-	 * 
-	 * 登录成功跳转此页面
-	 *
-	 * @author zhangshaobin
-	 * @created 2013-1-29 下午1:21:14
-	 *
+	 * 描述：登录成功跳转首页
+	 * 作者 ：kangzz
+	 * 日期 ：2016-11-26 17:52:42
 	 */
 	@RequestMapping("index.do")
-	public String index() {
+	public String index(HttpServletRequest request) {
+		Subject subject=SecurityUtils.getSubject();
+		Session session=subject.getSession();
 		UserAccount userAccount = UserUtil.getCurrentUser();
-
-
+		if(userAccount == null) {
+			Long userId = (Long) subject.getPrincipal();
+			UserInfo userInfo = logonService.getUserInfoById(userId);
+			userAccount =
+					new UserAccount(userInfo.getId(), userInfo.getUserName(), userInfo.getUserCode()
+							, userInfo.getUserPhone(), userInfo.getUserMail());
+			session.setAttribute(GlobalVariable.SESSION_CURRENT_USER_KEY, userAccount);
+			userAccount = UserUtil.getCurrentUser();
+			logger.info(userAccount.toString());
+		}
+		boolean has = subject.hasRole("123");
+		List<MenuDto> menuList = logonService.findMenuTreeByUserId(userAccount.getUserId());
+		request.setAttribute("menuList", menuList);
 		return "index";
 	}
-
 	/**
-	 * 
-	 * 跳转到头部
-	 *
-	 * @author zhangshaobin
-	 * @created 2013-1-29 上午10:58:36
-	 *
-	 * @return
+	 * 描述：退出
+	 * 作者 ：kangzz
+	 * 日期 ：2016-11-26 17:52:58
 	 */
-	@RequestMapping("header")
-	public String header(HttpSession session) {
-		return "/include/header";
-	}
-
-	/**
-	 * 
-	 * 跳转到左边菜单
-	 *
-	 * @author zhangshaobin
-	 * @created 2013-1-29 上午10:58:36
-	 *
-	 * @return
-	 */
-	@RequestMapping("leftside")
-	public String leftSide(HttpServletRequest request, HttpSession session) {
-		String pId = request.getParameter("projectid");
-		if (pId == null) {
-
-		}
-		request.setAttribute("pId", pId);
-		return "/include/leftside";
-	}
-
-	/**
-	 * 
-	 * 跳转到
-	 *
-	 * @author zhangshaobin
-	 * @created 2013-1-29 上午10:58:36
-	 *
-	 * @return
-	 */
-	@RequestMapping("container")
-	public String container() {
-		return "/include/container";
-	}
-
-	/**
-	 * 
-	 * 退出
-	 *
-	 * @author zhangshaobin
-	 * @created 2013-2-2 下午5:47:57
-	 *
-	 * @param session
-	 * @return
-	 */
-	@RequestMapping(value = "logout")
+	@RequestMapping(value = "logout.do")
 	public String logout(HttpSession session) {
 		// session失效
 		session.invalidate();
