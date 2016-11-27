@@ -9,9 +9,9 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * 描述：业务系统执行定时任务
+ * 描述：定时任务报表
  * 作者 ：kangzz
- * 日期 ：2016-03-22 22:32:06
+ * 日期 ：2016-11-27 22:18:50
  */
 @Controller
 @RequestMapping(value="/jobReport")
