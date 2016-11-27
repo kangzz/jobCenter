@@ -40,6 +40,11 @@ public class LogonController {
 	 */
 	@RequestMapping(value = "login.do", method = {RequestMethod.GET, RequestMethod.POST})
 	public String login(HttpServletRequest request) {
+
+		Subject subject=SecurityUtils.getSubject();
+		if(subject.isAuthenticated()){
+			return "redirect:/index.do";
+		}
 		String userCode = request.getParameter("userCode");
 		String userPwd = request.getParameter("userPwd");
 		if(StringUtil.isBlank(userCode) || StringUtil.isBlank(userPwd)){
@@ -94,7 +99,6 @@ public class LogonController {
 	 */
 	@RequestMapping(value = "logout.do")
 	public String logout(HttpSession session) {
-		// session失效
 		session.invalidate();
 		return "login";
 	}

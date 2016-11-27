@@ -32,7 +32,12 @@
         </property>
         <property name="filterChainDefinitions">
             <value>
-                /*/hireNewSign/createHtmlHireContract = anon
+                /css/* = anon
+                /docs/* = anon
+                /fonts/* = anon
+                /img/* = anon
+                /js/* = anon
+                /plugins/* = anon
                 /login.do = anon
                 /logout.do = shiroLogout
                 /** = authc

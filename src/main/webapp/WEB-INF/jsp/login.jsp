@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>自如驿</title>
+    <title>定时任务管理中心</title>
 	<%@include file="/WEB-INF/jsp/common/header.jsp"%>
     <link href="${path}/css/font-awesome.css?v=4.4.0" rel="stylesheet">
     <link href="${path}/css/animate.css" rel="stylesheet">

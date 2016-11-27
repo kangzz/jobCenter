@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.jobCenter.domain.UserInfo;
 import com.jobCenter.service.LogonService;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
@@ -33,9 +34,10 @@ public class MyRealm  extends AuthorizingRealm {
             UserInfo userInfoQuery = new UserInfo();
             userInfoQuery.setId(Long.valueOf(userId));
             UserInfo userInfo = logonService.getUserInfo(userInfoQuery);
-            return new SimpleAuthenticationInfo(userInfo.getId(), userInfo.getUserPwd(), getName());
+            AuthenticationInfo authenticationInfo = new SimpleAuthenticationInfo(userInfo.getId(), userInfo.getUserPwd(), getName());
+            return authenticationInfo;
         }catch (Exception e){
-            throw new AuthenticationException();
+            throw new AuthenticationException("登录失败!",e);
         }
     }
 

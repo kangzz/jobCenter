@@ -63,7 +63,7 @@
             <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
                 <div class="navbar-header"><a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
 
-                    <ul class="navbar-city-custom">
+                    <%--<ul class="navbar-city-custom">
 
                         <li><label class="control-label mtop">选择项目：</label></li>
                         <li>
@@ -80,7 +80,7 @@
                             </div>
                         </li>
 
-                    </ul>
+                    </ul>--%>
 
                 </div>
                 <ul class="nav navbar-top-links navbar-right">
@@ -97,7 +97,7 @@
             </button>
             <nav class="page-tabs J_menuTabs">
                 <div class="page-tabs-content">
-                    <a href="javascript:;" class="active J_menuTab" data-id="index_v1.html">管家工作台</a>
+                    <a href="javascript:;" class="active J_menuTab" data-id="index_v1.html">定时任务大盘</a>
                 </div>
             </nav>
             <button class="roll-nav roll-right J_tabRight"><i class="fa fa-forward"></i>
@@ -120,11 +120,11 @@
             <a href="${path}/logout.do" class="roll-nav roll-right J_tabExit"><i class="fa fa fa-sign-out"></i> 退出</a>
         </div>
         <div class="row J_mainContent" id="content-main">
-            <iframe class="J_iframe" name="iframe0" width="100%" height="100%" src="${path}/security/toWorkbench.action?v=4.0" frameborder="0" data-id="index_v1.html" seamless>
+            <iframe class="J_iframe" name="iframe0" width="100%" height="100%" src="${path}/jobReport/queryJobTotalInfo.do?v=4.0" frameborder="0" data-id="index_v1.html" seamless>
             </iframe>
         </div>
         <div class="footer">
-            <div class="pull-right">自如驿
+            <div class="pull-right">定时任务管理中心
             </div>
         </div>
     </div>
