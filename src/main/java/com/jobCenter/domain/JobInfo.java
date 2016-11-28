@@ -12,6 +12,8 @@ public class JobInfo {
 
     private String jobName;//定时任务名称
 
+    private String jobSystem;//定时任务归属系统
+
     private Integer jobExecuteType;//'定时任务执行类型。0 只执行一台 1 全部执行'
 
     private String jobExecuteRule;//'执行规则'
@@ -41,7 +43,7 @@ public class JobInfo {
     }
 
     public void setJobId(Integer jobId) {
-        this.jobId = jobId == null ? null : jobId;
+        this.jobId = jobId;
     }
 
     public String getJobName() {
@@ -49,7 +51,15 @@ public class JobInfo {
     }
 
     public void setJobName(String jobName) {
-        this.jobName = jobName == null ? null : jobName.trim();
+        this.jobName = jobName;
+    }
+
+    public String getJobSystem() {
+        return jobSystem;
+    }
+
+    public void setJobSystem(String jobSystem) {
+        this.jobSystem = jobSystem;
     }
 
     public Integer getJobExecuteType() {
@@ -65,7 +75,7 @@ public class JobInfo {
     }
 
     public void setJobExecuteRule(String jobExecuteRule) {
-        this.jobExecuteRule = jobExecuteRule == null ? null : jobExecuteRule.trim();
+        this.jobExecuteRule = jobExecuteRule;
     }
 
     public Integer getJobNotifySucc() {
@@ -74,6 +84,14 @@ public class JobInfo {
 
     public void setJobNotifySucc(Integer jobNotifySucc) {
         this.jobNotifySucc = jobNotifySucc;
+    }
+
+    public Integer getJobRetryTimes() {
+        return jobRetryTimes;
+    }
+
+    public void setJobRetryTimes(Integer jobRetryTimes) {
+        this.jobRetryTimes = jobRetryTimes;
     }
 
     public Date getJobStartTime() {
@@ -113,7 +131,7 @@ public class JobInfo {
     }
 
     public void setCreateId(String createId) {
-        this.createId = createId == null ? null : createId.trim();
+        this.createId = createId;
     }
 
     public Date getCreateTime() {
@@ -129,7 +147,7 @@ public class JobInfo {
     }
 
     public void setUpdateId(String updateId) {
-        this.updateId = updateId == null ? null : updateId.trim();
+        this.updateId = updateId;
     }
 
     public Date getUpdateTime() {
@@ -140,19 +158,12 @@ public class JobInfo {
         this.updateTime = updateTime;
     }
 
-    public Integer getJobRetryTimes() {
-        return jobRetryTimes;
-    }
-
-    public void setJobRetryTimes(Integer jobRetryTimes) {
-        this.jobRetryTimes = jobRetryTimes;
-    }
-
     @Override
     public String toString() {
         return "JobInfo{" +
                 "jobId=" + jobId +
                 ", jobName='" + jobName + '\'' +
+                ", jobSystem='" + jobSystem + '\'' +
                 ", jobExecuteType=" + jobExecuteType +
                 ", jobExecuteRule='" + jobExecuteRule + '\'' +
                 ", jobNotifySucc=" + jobNotifySucc +

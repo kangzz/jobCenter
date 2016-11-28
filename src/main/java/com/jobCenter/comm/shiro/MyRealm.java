@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.jobCenter.domain.UserInfo;
 import com.jobCenter.service.LogonService;
-import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
@@ -15,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.*;
 
 
-public class MyRealm  extends AuthorizingRealm {
+public class MyRealm extends AuthorizingRealm {
     // 设置realm的名称
     @Override
     public void setName(String name) {

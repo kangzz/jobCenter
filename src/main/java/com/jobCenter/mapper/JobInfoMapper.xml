@@ -4,6 +4,7 @@
   <resultMap id="BaseResultMap" type="com.jobCenter.domain.JobInfo" >
     <id column="job_id" property="jobId" jdbcType="INTEGER" />
     <result column="job_name" property="jobName" jdbcType="VARCHAR" />
+    <result column="job_system" property="jobSystem" jdbcType="VARCHAR" />
     <result column="job_execute_type" property="jobExecuteType" jdbcType="INTEGER" />
     <result column="job_execute_rule" property="jobExecuteRule" jdbcType="VARCHAR" />
     <result column="job_notify_succ" property="jobNotifySucc" jdbcType="INTEGER" />
@@ -18,7 +19,7 @@
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
-    job_id, job_name, job_execute_type, job_execute_rule, job_notify_succ, job_retry_times, job_start_time,
+    job_id, job_name, job_system, job_execute_type, job_execute_rule, job_notify_succ, job_retry_times, job_start_time,
     job_end_time, is_valid, is_del, create_id, create_time, update_id, update_time
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
@@ -32,12 +33,12 @@
     where job_id = #{jobId,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.jobCenter.domain.JobInfo" >
-    insert into job_info (job_id, job_name, job_execute_type,
+    insert into job_info (job_id, job_name, job_system, job_execute_type,
       job_execute_rule, job_notify_succ, job_retry_times, job_start_time,
       job_end_time, is_valid, is_del, 
       create_id, create_time, update_id, 
       update_time)
-    values (#{jobId,jdbcType=INTEGER}, #{jobName,jdbcType=VARCHAR}, #{jobExecuteType,jdbcType=INTEGER},
+    values (#{jobId,jdbcType=INTEGER}, #{jobName,jdbcType=VARCHAR}, #{jobSystem,jdbcType=VARCHAR}, #{jobExecuteType,jdbcType=INTEGER},
       #{jobExecuteRule,jdbcType=VARCHAR}, #{jobNotifySucc,jdbcType=INTEGER},#{jobRetryTimes,jdbcType=INTEGER}, #{jobStartTime,jdbcType=TIMESTAMP},
       #{jobEndTime,jdbcType=TIMESTAMP}, #{isValid,jdbcType=INTEGER}, #{isDel,jdbcType=INTEGER}, 
       #{createId,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateId,jdbcType=VARCHAR}, 
@@ -51,6 +52,9 @@
       </if>
       <if test="jobName != null" >
         job_name,
+      </if>
+      <if test="jobSystem != null" >
+        job_system,
       </if>
       <if test="jobExecuteType != null" >
         job_execute_type,
@@ -96,6 +100,9 @@
       <if test="jobName != null" >
         #{jobName,jdbcType=VARCHAR},
       </if>
+      <if test="jobSystem != null" >
+        #{jobSystem,jdbcType=VARCHAR},
+      </if>
       <if test="jobExecuteType != null" >
         #{jobExecuteType,jdbcType=INTEGER},
       </if>
@@ -140,6 +147,9 @@
       <if test="jobName != null" >
         job_name = #{jobName,jdbcType=VARCHAR},
       </if>
+      <if test="jobSystem != null" >
+        job_system = #{jobSystem,jdbcType=VARCHAR},
+      </if>
       <if test="jobExecuteType != null" >
         job_execute_type = #{jobExecuteType,jdbcType=INTEGER},
       </if>
@@ -182,6 +192,7 @@
   <update id="updateByPrimaryKey" parameterType="com.jobCenter.domain.JobInfo" >
     update job_info
     set job_name = #{jobName,jdbcType=VARCHAR},
+      job_system = #{jobSystem,jdbcType=VARCHAR},
       job_execute_type = #{jobExecuteType,jdbcType=INTEGER},
       job_execute_rule = #{jobExecuteRule,jdbcType=VARCHAR},
       job_notify_succ = #{jobNotifySucc,jdbcType=INTEGER},
@@ -204,6 +215,9 @@
       </if>
       <if test="jobName != null" >
         AND job_name = #{jobName,jdbcType=VARCHAR}
+      </if>
+      <if test="jobSystem != null" >
+        AND job_system = #{jobSystem,jdbcType=VARCHAR}
       </if>
       <if test="jobExecuteType != null" >
         AND job_execute_type = #{jobExecuteType,jdbcType=INTEGER}
@@ -251,4 +265,27 @@
     from job_info
     <include refid="whereSql"/>
   </select>
+
+  <sql id="searchParamWhereSql">
+    <trim prefix="WHERE" prefixOverrides="AND">
+      <if test="jobName != null" >
+        AND job_name = #{jobName,jdbcType=VARCHAR}
+      </if>
+      <if test="jobSystem != null" >
+        AND job_system = #{jobSystem,jdbcType=VARCHAR}
+      </if>
+      <if test="isValid != null" >
+        AND is_valid = #{isValid,jdbcType=INTEGER}
+      </if>
+    </trim>
+  </sql>
+
+  <!-- 根据实体查询数据 -->
+  <select id="queryJobListByJobInfoSearchParam" resultMap="BaseResultMap"  parameterType="com.jobCenter.model.JobInfoSearchParam" >
+    select
+    <include refid="Base_Column_List" />
+    from job_info
+    <include refid="searchParamWhereSql"/>
+  </select>
+
 </mapper>

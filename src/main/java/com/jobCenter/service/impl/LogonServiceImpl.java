@@ -61,9 +61,11 @@ public class LogonServiceImpl implements LogonService {
     public List<MenuDto> findMenuTreeByUserId(Long userId){
         List<MenuDto> list = new ArrayList<MenuDto>();
         List<MenuDto> firstChildList = new ArrayList<MenuDto>();
-        MenuDto firstChild = new MenuDto(2,"baidu","www.baidu.com",null);
-        firstChildList.add(firstChild);
-        MenuDto first = new MenuDto(1,"baidu","",firstChildList);
+        MenuDto firstChild1 = new MenuDto(2,"定时任务列表","/job/jobList.do",null);
+        MenuDto firstChild2 = new MenuDto(3,"定时任务列表2","/job/jobList2.do",null);
+        firstChildList.add(firstChild1);
+        firstChildList.add(firstChild2);
+        MenuDto first = new MenuDto(1,"定时任务管理","",firstChildList);
         list.add(first);
         return list;
     }
