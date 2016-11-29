@@ -1,9 +1,9 @@
 package com.jobCenter.service;
 
-import com.jobCenter.domain.JobInfo;
-import com.jobCenter.model.JobInfoSearchParam;
 
-import java.util.List;
+import com.jobCenter.model.param.JobInfoSearchParam;
+
+import java.util.Map;
 
 /**
  * 描述：操作任务信息接口
@@ -16,6 +16,6 @@ public interface JobInfoService {
      * 作者 ：kangzz
      * 日期 ：2016-11-28 21:27:58
      */
-    List<JobInfo> queryJobListByJobInfoSearchParam(JobInfoSearchParam jobInfoSearchParam);
+    Map<String,Object> queryJobListByJobInfoSearchParam(JobInfoSearchParam jobInfoSearchParam);
 }
 

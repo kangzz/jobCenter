@@ -18,6 +18,24 @@
     <result column="update_id" property="updateId" jdbcType="VARCHAR" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
+
+  <resultMap id="BaseResultListMap" type="com.jobCenter.model.dto.JobInfoDto" >
+    <id column="job_id" property="jobId" jdbcType="INTEGER" />
+    <result column="job_name" property="jobName" jdbcType="VARCHAR" />
+    <result column="job_system" property="jobSystem" jdbcType="VARCHAR" />
+    <result column="job_execute_type" property="jobExecuteType" jdbcType="INTEGER" />
+    <result column="job_execute_rule" property="jobExecuteRule" jdbcType="VARCHAR" />
+    <result column="job_notify_succ" property="jobNotifySucc" jdbcType="INTEGER" />
+    <result column="job_retry_times" property="jobRetryTimes" jdbcType="INTEGER" />
+    <result column="job_start_time" property="jobStartTime" jdbcType="TIMESTAMP" />
+    <result column="job_end_time" property="jobEndTime" jdbcType="TIMESTAMP" />
+    <result column="is_valid" property="isValid" jdbcType="INTEGER" />
+    <result column="is_del" property="isDel" jdbcType="INTEGER" />
+    <result column="create_id" property="createId" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_id" property="updateId" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
   <sql id="Base_Column_List" >
     job_id, job_name, job_system, job_execute_type, job_execute_rule, job_notify_succ, job_retry_times, job_start_time,
     job_end_time, is_valid, is_del, create_id, create_time, update_id, update_time
@@ -281,11 +299,21 @@
   </sql>
 
   <!-- 根据实体查询数据 -->
-  <select id="queryJobListByJobInfoSearchParam" resultMap="BaseResultMap"  parameterType="com.jobCenter.model.JobInfoSearchParam" >
+  <select id="queryJobListByJobInfoSearchParam" resultMap="BaseResultListMap"  parameterType="com.jobCenter.model.param.JobInfoSearchParam" >
     select
     <include refid="Base_Column_List" />
     from job_info
     <include refid="searchParamWhereSql"/>
+    order by update_time desc,create_time desc
+    <if test="startNum != null and pageSize !=null" >
+      LIMIT #{startNum,jdbcType=INTEGER}, #{pageSize,jdbcType=INTEGER}
+    </if>
   </select>
 
+  <select id="queryJobCountByJobInfoSearchParam" resultType="java.lang.Long"  parameterType="com.jobCenter.model.param.JobInfoSearchParam" >
+    select
+    count(0)
+    from job_info
+    <include refid="searchParamWhereSql"/>
+  </select>
 </mapper>

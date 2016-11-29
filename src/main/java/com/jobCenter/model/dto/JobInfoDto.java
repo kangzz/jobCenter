@@ -1,12 +1,13 @@
-package com.jobCenter.domain;
+package com.jobCenter.model.dto;
+
+import com.xiaoleilu.hutool.util.DateUtil;
 
 import java.util.Date;
+
 /**
- * 描述：定时任务主信息
- * 作者 ：kangzz
- * 日期 ：2016-03-19 21:57:09
+ * Created by kangzz on 16/11/29.
  */
-public class JobInfo {
+public class JobInfoDto{
 
     private Integer jobId;//定时任务信息主键
 
@@ -22,9 +23,9 @@ public class JobInfo {
 
     private Integer jobRetryTimes;//定时任务重试次数
 
-    private Date jobStartTime;//'任务生效时间'
+    private String jobStartTime;//'任务生效时间'
 
-    private Date jobEndTime;//'任务失效时间'
+    private String jobEndTime;//'任务失效时间'
 
     private Integer isValid;//'是否生效 1是 0 否'
 
@@ -32,11 +33,11 @@ public class JobInfo {
 
     private String createId;//'创建人'
 
-    private Date createTime;//'创建时间'
+    private String createTime;//'创建时间'
 
     private String updateId;//'修改人'
 
-    private Date updateTime;//'修改时间'
+    private String updateTime;//'修改时间'
 
     public Integer getJobId() {
         return jobId;
@@ -94,20 +95,23 @@ public class JobInfo {
         this.jobRetryTimes = jobRetryTimes;
     }
 
-    public Date getJobStartTime() {
+    public String getJobStartTime() {
         return jobStartTime;
     }
 
     public void setJobStartTime(Date jobStartTime) {
-        this.jobStartTime = jobStartTime;
+        if (jobStartTime != null) {
+            this.jobStartTime = DateUtil.format(jobStartTime,DateUtil.NORM_DATETIME_PATTERN);
+        }
     }
-
-    public Date getJobEndTime() {
+    public String getJobEndTime() {
         return jobEndTime;
     }
 
     public void setJobEndTime(Date jobEndTime) {
-        this.jobEndTime = jobEndTime;
+        if (jobEndTime != null) {
+            this.jobEndTime = DateUtil.format(jobEndTime,DateUtil.NORM_DATETIME_PATTERN);
+        }
     }
 
     public Integer getIsValid() {
@@ -134,12 +138,14 @@ public class JobInfo {
         this.createId = createId;
     }
 
-    public Date getCreateTime() {
+    public String getCreateTime() {
         return createTime;
     }
 
     public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
+        if (createTime != null) {
+            this.createTime = DateUtil.format(createTime,DateUtil.NORM_DATETIME_PATTERN);
+        }
     }
 
     public String getUpdateId() {
@@ -150,18 +156,19 @@ public class JobInfo {
         this.updateId = updateId;
     }
 
-    public Date getUpdateTime() {
+    public String getUpdateTime() {
         return updateTime;
     }
 
     public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
+        if (updateTime != null) {
+            this.updateTime = DateUtil.format(updateTime,DateUtil.NORM_DATETIME_PATTERN);
+        }
     }
-
 
     @Override
     public String toString() {
-        return "JobInfo{" +
+        return "JobInfoDto{" +
                 "jobId=" + jobId +
                 ", jobName='" + jobName + '\'' +
                 ", jobSystem='" + jobSystem + '\'' +
@@ -169,14 +176,14 @@ public class JobInfo {
                 ", jobExecuteRule='" + jobExecuteRule + '\'' +
                 ", jobNotifySucc=" + jobNotifySucc +
                 ", jobRetryTimes=" + jobRetryTimes +
-                ", jobStartTime=" + jobStartTime +
-                ", jobEndTime=" + jobEndTime +
+                ", jobStartTime='" + jobStartTime + '\'' +
+                ", jobEndTime='" + jobEndTime + '\'' +
                 ", isValid=" + isValid +
                 ", isDel=" + isDel +
                 ", createId='" + createId + '\'' +
-                ", createTime=" + createTime +
+                ", createTime='" + createTime + '\'' +
                 ", updateId='" + updateId + '\'' +
-                ", updateTime=" + updateTime +
+                ", updateTime='" + updateTime + '\'' +
                 '}';
     }
 }
