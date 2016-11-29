@@ -31,18 +31,18 @@
 								</select>
 							</div>
 						</div>
+						--%>
 						<div class="col-sm-2">
 							<div class="input-group">
 								<span class="input-group-addon">城市：</span>
-								<select name="cityCode" id="cityCode" onchange="getAreaByCityCode();"
-										class="form-control">
-									<option value="">全部</option>
-									<c:forEach items="${cityList }" var="city" varStatus="vs">
-										<option value="${city.cityCode }">${city.cityName }</option>
+								<select name="isValid" id="isValid" class="form-control">
+									<c:forEach items="${IsMap}" var="isMapItem">
+										<option value="${isMapItem.key }">${isMapItem.value }</option>
 									</c:forEach>
 								</select>
 							</div>
 						</div>
+							<%--
 						<div class="col-sm-2">
 							<div class="input-group">
 								<span class="input-group-addon">区域：</span>
@@ -99,6 +99,7 @@
 						<div class="col-sm-1">
 							<button class="btn btn-primary" id="queryBtn" type="button" onclick="query();">查询</button>
 						</div>
+					</div>
 					</div>
 				</form>
 			</div>
@@ -167,7 +168,7 @@
 <script type="text/javascript">
 
 	var isSearchParams = false;
-	(function () {
+	/*(function () {
 		//时间插件
 		var startCreateTime = {
 			elem: '#startCreateTime', format: 'YYYY-MM-DD', max: '2099-06-16', istime: false, istoday: true,
@@ -224,7 +225,7 @@
 		}, function () {
 			// parent.layer.msg('奇葩么么哒', {shift: 6});
 		});
-	}
+	}*/
 
 	// 带条件查询
 	function query() {
@@ -232,7 +233,7 @@
 		$("#projectTableColumns").bootstrapTable('refresh',{silent: true});  //指定查询参数重新查询
 	}
 
-
+/*
 	// 跳转到修改页面
 	function toUpdateProject(id) {
 		parent.addMenuItem("${path}/project/toUpdateProject.action?id=" + id, "updateProject", "修改项目页");
@@ -423,7 +424,7 @@
 
 		});
 	}
-
+	 */
 	function serialNumber(value, row, index){
 		var options = $("#projectTableColumns").bootstrapTable('getOptions');
 		return (options.pageNumber-1) * options.pageSize + index+1;
@@ -448,7 +449,7 @@
 
 
 
-	function projectImgFormatter(value, row, index){
+	/*function projectImgFormatter(value, row, index){
 		var projectId = row.id;
 		var str = "";
 		str = str + "<a href=\"#\" onclick=\"showHouseTypeImages('"+projectId+"');\">项目图片</a>";
@@ -477,5 +478,5 @@
 		}
 
 		return str;
-	}
+	}*/
 </script>

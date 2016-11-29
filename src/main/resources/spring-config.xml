@@ -16,7 +16,7 @@
            http://www.springframework.org/schema/task  
 		   http://www.springframework.org/schema/task/spring-task-3.0.xsd">
 
-
+	<aop:aspectj-autoproxy proxy-target-class="true"></aop:aspectj-autoproxy>
 <!--                        注解管理 start                     -->
 	
 	<!-- 自动扫描 -->  
@@ -181,4 +181,5 @@
 			</list>
 		</property>
 	</bean>
+
 </beans>

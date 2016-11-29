@@ -1,12 +1,14 @@
 package com.jobCenter.model.param;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * 描述：定时任务主信息
  * 作者 ：kangzz
  * 日期 ：2016-03-19 21:57:09
  */
 public class JobInfoSearchParam extends PageParam {
-
+    //@NotNull(message = "定时任务名称不能为空")
     private String jobName;//定时任务名称
 
     private String jobSystem;//定时任务归属系统
