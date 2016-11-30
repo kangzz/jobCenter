@@ -295,6 +295,18 @@
       <if test="isValid != null" >
         AND is_valid = #{isValid,jdbcType=INTEGER}
       </if>
+      <if test="startCreateTime != null" >
+        AND create_time >= #{startCreateTime,jdbcType=VARCHAR}
+      </if>
+      <if test="endCreateTime != null" >
+        AND #{endCreateTime,jdbcType=VARCHAR} >= create_time
+      </if>
+      <if test="jobStartTime != null" >
+        AND job_end_time >= #{jobStartTime,jdbcType=VARCHAR}
+      </if>
+      <if test="jobEndTime != null" >
+        AND #{jobEndTime,jdbcType=VARCHAR} >= job_end_time
+      </if>
     </trim>
   </sql>
 

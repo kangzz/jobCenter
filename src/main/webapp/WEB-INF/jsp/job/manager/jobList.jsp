@@ -30,6 +30,13 @@
 									   placeholder="请输入任务名称">
 							</div>
 						</div>
+						<div class="col-sm-4">
+							<div class="input-group">
+								<span class="input-group-addon">任务归属系统：</span>
+								<input type="text" id="jobSystem" maxlength="20" name="jobSystem" class="form-control"
+									   placeholder="请输入任务归属系统">
+							</div>
+						</div>
 						<div class="col-sm-2">
 							<div class="input-group">
 								<span class="input-group-addon">有效：</span>
@@ -41,7 +48,8 @@
 								</select>
 							</div>
 						</div>
-
+					</div>
+					<div class="row m-t">
 						<div class="col-sm-4">
 							<div class="input-group">
 								<span class="input-group-addon">创建时间：</span>
@@ -51,6 +59,19 @@
 								<input name="endCreateTime" id="endCreateTime" class="form-control col-sm-4" type="text"
 									   placeholder="请选择" readonly="readonly">
 							</div>
+						</div>
+						<div class="col-sm-4">
+							<div class="input-group">
+								<span class="input-group-addon">任务时间：</span>
+								<input name="jobStartTime" id="jobStartTime" class="form-control col-sm-4"
+									   type="text" placeholder="请选择" readonly="readonly">
+								<span class="input-group-addon">-</span>
+								<input name="jobEndTime" id="jobEndTime" class="form-control col-sm-4" type="text"
+									   placeholder="请选择" readonly="readonly">
+							</div>
+						</div>
+						<div class="col-sm-1">
+							<button class="btn btn-primary" id="queryBtn" type="button" onclick="query();">查询</button>
 						</div>
 							<%--
 						<div class="col-sm-2">
@@ -86,21 +107,7 @@
 									   class="form-control" id="endRentYears" name="endRentYears">
 								<span class="input-group-addon">年</span>
 							</div>
-						</div>
-					</div>--%>
-					<div class="row m-t">
-						<%--<div class="col-sm-4">
-							<div class="input-group">
-								<span class="input-group-addon">项目名称：</span>
-								<input type="text" id="projectName" maxlength="20" name="projectName"
-									   class="form-control"
-									   placeholder="请输入项目名称">
-							</div>
 						</div>--%>
-						<div class="col-sm-1">
-							<button class="btn btn-primary" id="queryBtn" type="button" onclick="query();">查询</button>
-						</div>
-					</div>
 					</div>
 				</form>
 			</div>
@@ -184,8 +191,23 @@
 				startCreateTime.max = datas; //结束日选好后，重置开始日的最大日期
 			}
 		};
+		var jobStartTime = {
+			elem: '#jobStartTime', format: 'YYYY-MM-DD', max: '2099-06-16', istime: false, istoday: true,
+			choose: function (datas) {
+				jobEndTime.min = datas; //开始日选好后，重置结束日的最小日期
+				jobEndTime.start = datas; //将结束日的初始值设定为开始日
+			}
+		};
+		var jobEndTime = {
+			elem: '#jobEndTime', format: 'YYYY-MM-DD', max: '2099-06-16', istime: false, istoday: true,
+			choose: function (datas) {
+				jobStartTime.max = datas; //结束日选好后，重置开始日的最大日期
+			}
+		};
 		laydate(startCreateTime);
 		laydate(endCreateTime);
+		laydate(jobStartTime);
+		laydate(jobEndTime);
 	})();
 	/*
 	// 跳转到新增项目页面

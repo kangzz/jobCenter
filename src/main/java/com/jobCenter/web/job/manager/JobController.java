@@ -53,13 +53,6 @@ public class JobController {
 	public Map<String, Object> getProjectList(HttpServletRequest request,
 			@Valid JobInfoSearchParam jobInfoSearchParam,
 			Errors errors){
-		try {
-			request.setCharacterEncoding("UTF-8");
-		} catch (Exception e) {
-			logger.error("getRequest 编码异常", e);
-		}
-		String aa = request.getCharacterEncoding();
-		String contractCode= request.getParameter("jobName");
 		if(errors.hasErrors()){
 			String errorMessage=errors.getFieldError().getDefaultMessage();
 			logger.info(errorMessage);
