@@ -1,5 +1,6 @@
 package com.jobCenter.model.dto;
 
+import com.jobCenter.enums.IsType;
 import com.xiaoleilu.hutool.util.DateUtil;
 
 import java.util.Date;
@@ -27,7 +28,7 @@ public class JobInfoDto{
 
     private String jobEndTime;//'任务失效时间'
 
-    private Integer isValid;//'是否生效 1是 0 否'
+    private String isValid;//'是否生效 1是 0 否'
 
     private Integer isDel;//'是否删除 1 是 0 否'
 
@@ -102,6 +103,8 @@ public class JobInfoDto{
     public void setJobStartTime(Date jobStartTime) {
         if (jobStartTime != null) {
             this.jobStartTime = DateUtil.format(jobStartTime,DateUtil.NORM_DATETIME_PATTERN);
+        }else {
+            this.jobStartTime = null;
         }
     }
     public String getJobEndTime() {
@@ -111,15 +114,17 @@ public class JobInfoDto{
     public void setJobEndTime(Date jobEndTime) {
         if (jobEndTime != null) {
             this.jobEndTime = DateUtil.format(jobEndTime,DateUtil.NORM_DATETIME_PATTERN);
+        }else {
+            this.jobEndTime = null;
         }
     }
 
-    public Integer getIsValid() {
+    public String getIsValid() {
         return isValid;
     }
 
     public void setIsValid(Integer isValid) {
-        this.isValid = isValid;
+        this.isValid = isValid != null && isValid == IsType.YES.getValue() ? IsType.YES.getName() : IsType.NO.getName();
     }
 
     public Integer getIsDel() {

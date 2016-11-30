@@ -1,7 +1,9 @@
 package com.jobCenter.web.job.manager;
 
 import com.jobCenter.enums.IsType;
+import com.jobCenter.model.param.HeartBeatInfoParam;
 import com.jobCenter.model.param.JobInfoSearchParam;
+import com.jobCenter.service.HeartBeatService;
 import com.jobCenter.service.JobInfoService;
 import com.jobCenter.service.JobService;
 import com.jobCenter.util.StringUtil;
@@ -31,6 +33,8 @@ public class JobController {
 	private final static Logger logger = Logger.getLogger(JobController.class);
 	@Autowired
 	private JobInfoService jobInfoService;
+	@Autowired
+	private HeartBeatService heartBeatService;
 
 
 	/**
@@ -58,5 +62,30 @@ public class JobController {
 			logger.info(errorMessage);
 		}
 		return jobInfoService.queryJobListByJobInfoSearchParam(jobInfoSearchParam);
+	}
+
+	/**
+	 * 描述：查询心跳数据
+	 * 作者 ：kangzz
+	 * 日期 ：2016-11-30 21:10:23
+	 */
+	@RequestMapping(value = "/heartBeatList.do", method = {RequestMethod.GET, RequestMethod.POST})
+	public ModelAndView heartBeatList(HttpServletRequest request, ModelMap modelMap) {
+		return new ModelAndView("/job/manager/heartBeatList", modelMap);
+	}
+	/**
+	 * 描述：获取定时任务列表
+	 * 作者 ：kangzz
+	 * 日期 ：2016-11-28 22:58:16
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/queryHeartBeatList.do", method = {RequestMethod.GET, RequestMethod.POST})
+	public Map<String, Object> queryHeartBeatList(HttpServletRequest request, HeartBeatInfoParam heartBeatInfoParam){
+		try{
+			return heartBeatService.queryHeartBeatServiceToPage(heartBeatInfoParam);
+		}catch (Exception e){
+			e.printStackTrace();
+			return null;
+		}
 	}
 }

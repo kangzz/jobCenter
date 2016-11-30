@@ -1,6 +1,8 @@
 package com.jobCenter.mapper;
 
 import com.jobCenter.domain.HeartBeatInfo;
+import com.jobCenter.model.dto.HeartBeatInfoDto;
+import com.jobCenter.model.param.HeartBeatInfoParam;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -39,4 +41,7 @@ public interface HeartBeatInfoMapper {
      * 日期 ：2016-03-19 01:17:04
      */
     int updateByOutTime(HeartBeatInfo record);
+
+    List<HeartBeatInfoDto> queryHeartBeatServiceToPage(HeartBeatInfoParam heartBeatInfoParam);
+    long queryTotalHeartBeatServiceToPage(HeartBeatInfoParam heartBeatInfoParam);
 }

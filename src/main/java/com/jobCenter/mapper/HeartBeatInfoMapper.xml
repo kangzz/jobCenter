@@ -9,6 +9,17 @@
         <result column="heart_max_val" property="heartMaxVal" jdbcType="INTEGER"/>
         <result column="is_del" property="isDel" jdbcType="INTEGER"/>
     </resultMap>
+
+    <resultMap id="BaseResultListMap" type="com.jobCenter.model.dto.HeartBeatInfoDto">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="master_identity" property="masterIdentity" jdbcType="VARCHAR"/>
+        <result column="heart_type" property="heartType" jdbcType="VARCHAR"/>
+        <result column="heart_beat_time" property="heartBeatTime" jdbcType="TIMESTAMP"/>
+        <result column="heart_max_val" property="heartMaxVal" jdbcType="INTEGER"/>
+        <result column="is_del" property="isDel" jdbcType="INTEGER"/>
+    </resultMap>
+
+
     <sql id="Base_Column_List">
     id, master_identity, heart_type, heart_beat_time, heart_max_val, is_del
   </sql>
@@ -150,6 +161,49 @@
     and heart_type = #{heartType,jdbcType=VARCHAR}
     and is_del = 0
   </update>
+
+    <sql id="searchParamWhereSql">
+        <trim prefix="WHERE" prefixOverrides="AND">
+                AND is_del = 0
+            <if test="id != null" >
+                AND id = #{jobId,jdbcType=INTEGER}
+            </if>
+            <if test="masterIdentity != null">
+                AND master_identity = #{masterIdentity,jdbcType=VARCHAR}
+            </if>
+            <if test="heartType != null">
+                AND heart_type = #{heartType,jdbcType=VARCHAR}
+            </if>
+            <if test="heartBeatTime != null">
+                AND heart_beat_time = #{heartBeatTime,jdbcType=VARCHAR}
+            </if>
+            <if test="heartMaxVal != null">
+                AND heart_max_val = #{heartMaxVal,jdbcType=INTEGER}
+            </if>
+            <if test="isDel != null">
+                AND is_del = #{isDel,jdbcType=INTEGER}
+            </if>
+        </trim>
+    </sql>
+
+    <!-- 根据实体查询数据 -->
+    <select id="queryHeartBeatServiceToPage" resultMap="BaseResultListMap"  parameterType="com.jobCenter.model.param.HeartBeatInfoParam" >
+        select
+        <include refid="Base_Column_List" />
+        from heart_beat_Info
+        <include refid="searchParamWhereSql"/>
+        order by id desc
+        <if test="startNum != null and pageSize !=null" >
+            LIMIT #{startNum,jdbcType=INTEGER}, #{pageSize,jdbcType=INTEGER}
+        </if>
+    </select>
+
+    <select id="queryTotalHeartBeatServiceToPage" resultType="java.lang.Long"  parameterType="com.jobCenter.model.param.HeartBeatInfoParam" >
+        select
+        count(0)
+        from heart_beat_Info
+        <include refid="searchParamWhereSql"/>
+    </select>
 
 
 </mapper>

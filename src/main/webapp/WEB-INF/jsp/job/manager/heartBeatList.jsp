@@ -4,7 +4,7 @@
 <html>
 <head>
 	<meta charset="UTF-8"/>
-	<title>房型页</title>
+	<title>心跳信息</title>
 	<%@include file="/WEB-INF/jsp/common/header.jsp"%>
 	<!-- Sweet Alert -->
 	<link href="${path}/css/plugins/sweetalert/sweetalert.css?v=2016051601" rel="stylesheet">
@@ -22,93 +22,6 @@
 			<!-- 普通查询条件 start -->
 			<div class="row row-lg">
 				<form id="searchForm" method="post">
-					<div class="row">
-						<div class="col-sm-4">
-							<div class="input-group">
-								<span class="input-group-addon">任务名称：</span>
-								<input type="text" id="jobName" maxlength="20" name="jobName" class="form-control"
-									   placeholder="请输入任务名称">
-							</div>
-						</div>
-						<div class="col-sm-4">
-							<div class="input-group">
-								<span class="input-group-addon">任务归属系统：</span>
-								<input type="text" id="jobSystem" maxlength="20" name="jobSystem" class="form-control"
-									   placeholder="请输入任务归属系统">
-							</div>
-						</div>
-						<div class="col-sm-2">
-							<div class="input-group">
-								<span class="input-group-addon">有效：</span>
-								<select name="isValid" id="isValid" class="form-control">
-									<option value="">请选择</option>
-									<c:forEach items="${IsMap}" var="isMapItem">
-										<option value="${isMapItem.key }">${isMapItem.value }</option>
-									</c:forEach>
-								</select>
-							</div>
-						</div>
-					</div>
-					<div class="row m-t">
-						<div class="col-sm-4">
-							<div class="input-group">
-								<span class="input-group-addon">创建时间：</span>
-								<input name="startCreateTime" id="startCreateTime" class="form-control col-sm-4"
-									   type="text" placeholder="请选择" readonly="readonly">
-								<span class="input-group-addon">-</span>
-								<input name="endCreateTime" id="endCreateTime" class="form-control col-sm-4" type="text"
-									   placeholder="请选择" readonly="readonly">
-							</div>
-						</div>
-						<div class="col-sm-4">
-							<div class="input-group">
-								<span class="input-group-addon">任务时间：</span>
-								<input name="jobStartTime" id="jobStartTime" class="form-control col-sm-4"
-									   type="text" placeholder="请选择" readonly="readonly">
-								<span class="input-group-addon">-</span>
-								<input name="jobEndTime" id="jobEndTime" class="form-control col-sm-4" type="text"
-									   placeholder="请选择" readonly="readonly">
-							</div>
-						</div>
-						<div class="col-sm-1">
-							<button class="btn btn-primary" id="queryBtn" type="button" onclick="query();">查询</button>
-						</div>
-							<%--
-						<div class="col-sm-2">
-							<div class="input-group">
-								<span class="input-group-addon">区域：</span>
-								<select name="areaName" id="areaName" class="form-control">
-									<option value="">请选择</option>
-								</select>
-							</div>
-						</div>
-
-
-					</div>
-					<div class="row m-t">
-						<div class="col-sm-4">
-							<div class="input-group">
-								<span class="input-group-addon">房间数：</span>
-								<input type="text" onkeyup="value=value.replace(/[^\d]/g,'')" maxlength="3"
-									   class="form-control" id="startRoomTotalcount" name="startRoomTotalcount">
-								<span class="input-group-addon">-</span>
-								<input type="text" onkeyup="value=value.replace(/[^\d]/g,'')" maxlength="3"
-									   class="form-control" id="endRoomTotalcount" name="endRoomTotalcount">
-								<span class="input-group-addon">间</span>
-							</div>
-						</div>
-						<div class="col-sm-4">
-							<div class="input-group">
-								<span class="input-group-addon">租赁年限：</span>
-								<input type="text" onkeyup="value=value.replace(/[^\d]/g,'')" maxlength="3"
-									   class="form-control" id="startRentYears" name="startRentYears">
-								<span class="input-group-addon">-</span>
-								<input type="text" onkeyup="value=value.replace(/[^\d]/g,'')" maxlength="3"
-									   class="form-control" id="endRentYears" name="endRentYears">
-								<span class="input-group-addon">年</span>
-							</div>
-						</div>--%>
-					</div>
 				</form>
 			</div>
 
@@ -117,14 +30,9 @@
 			<div class="row row-lg">
 				<div class="col-sm-12">
 					<div class="example">
-						<div class="hidden-xs" id="projectTableToolbar" role="group">
-							<button type="button" class="btn btn-primary" onclick="addProject();">
-								新增项目
-							</button>
-						</div>
 						<table id="projectTableColumns"
 							   data-toggle="table"
-							   data-url="${path}/job/queryJobList.do"
+							   data-url="${path}/job/queryHeartBeatList.do"
 							   data-height="508"
 							   data-mobile-responsive="true"
 							   data-classes="table table-hover table-condensed"
@@ -144,14 +52,10 @@
 							<thead>
 							<tr>
 								<th data-formatter="serialNumber" data-align="center">序号</th>
-								<th data-field="jobName" data-align="center">任务名称</th>
-								<th data-field="jobSystem" data-align="center">任务归属系统</th>
-								<th data-field="jobExecuteRule" data-align="center">执行规则</th>
-								<th data-field="jobStartTime" data-align="center">任务开始日期</th>
-								<th data-field="jobEndTime" data-align="center">任务结束日期</th>
-								<th data-field="isValid" data-align="center">是否有效</th>
-								<%--<th data-formatter="projectImgFormatter"  data-align="center">项目图片</th>
-								<th data-formatter="operateFormatter" data-align="center">操作</th>--%>
+								<th data-field="masterIdentity" data-align="center">心跳标志</th>
+								<th data-field="heartType" data-align="center">心跳类型</th>
+								<th data-field="heartBeatTime" data-align="center">最后心跳时间</th>
+								<th data-field="heartMaxVal" data-align="center">最大心跳间隔(s)</th>
 							</tr>
 							</thead>
 						</table>
