@@ -99,7 +99,7 @@ $(function () {
     }
 
     //通过遍历给菜单项加上data-index属性
-    $(".J_menuItem").each(function (index) {
+	    $(".J_menuItem").each(function (index) {
         if (!$(this).attr('data-index')) {
             $(this).attr('data-index', index);
         }
@@ -127,6 +127,17 @@ $(function () {
                         }
                     });
                 }
+
+                /*重新加载当前页面*/
+                var target = $('.J_iframe[data-id="' + dataUrl + '"]');
+                var url = target.attr('src');
+                //显示loading提示
+                var loading = layer.load();
+                target.attr('src', url).load(function () {
+                    //关闭loading提示
+                    layer.close(loading);
+                });
+
                 flag = false;
                 return false;
             }
@@ -278,12 +289,12 @@ $(function () {
     function refreshTab() {
         var target = $('.J_iframe[data-id="' + $(this).data('id') + '"]');
         var url = target.attr('src');
-//        //显示loading提示
-//        var loading = layer.load();
-//        target.attr('src', url).load(function () {
-//            //关闭loading提示
-//            layer.close(loading);
-//        });
+       //显示loading提示
+       var loading = layer.load();
+       target.attr('src', url).load(function () {
+           //关闭loading提示
+           layer.close(loading);
+       });
     }
 
     $('.J_menuTabs').on('dblclick', '.J_menuTab', refreshTab);

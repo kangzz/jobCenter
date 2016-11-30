@@ -43,6 +43,7 @@ public class CommonControllerInterceptor extends HandlerInterceptorAdapter {
 	@Override
 	public boolean preHandle(HttpServletRequest request,
 							 HttpServletResponse response, Object handler) throws Exception {
+		String  aa = request.getCharacterEncoding();
 		//设置请求唯一值
 		String uuid = request.getParameter("uuid");
 		if (!StringUtil.isBlank(uuid)) {
@@ -90,7 +91,7 @@ public class CommonControllerInterceptor extends HandlerInterceptorAdapter {
     public void postHandle(HttpServletRequest request,
 						   HttpServletResponse response, Object handler,
 						   ModelAndView modelAndView) throws Exception {
-        super.postHandle(request, response, handler, modelAndView);
+		super.postHandle(request, response, handler, modelAndView);
     }
 
 

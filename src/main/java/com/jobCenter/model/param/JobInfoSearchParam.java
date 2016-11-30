@@ -1,6 +1,6 @@
 package com.jobCenter.model.param;
 
-import javax.validation.constraints.NotNull;
+import com.jobCenter.util.StringUtil;
 
 /**
  * 描述：定时任务主信息
@@ -20,6 +20,9 @@ public class JobInfoSearchParam extends PageParam {
     }
 
     public void setJobName(String jobName) {
+        if(StringUtil.isBlank(jobName)){
+            jobName = null;
+        }
         this.jobName = jobName;
     }
 
@@ -28,6 +31,9 @@ public class JobInfoSearchParam extends PageParam {
     }
 
     public void setJobSystem(String jobSystem) {
+        if(StringUtil.isBlank(jobSystem)){
+            jobSystem = null;
+        }
         this.jobSystem = jobSystem;
     }
 

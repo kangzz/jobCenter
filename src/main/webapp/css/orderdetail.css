@@ -1,0 +1,177 @@
+/* 订单详情页面的css */
+.apanel-body {
+    padding: 0;
+}
+
+.apanel-default>.apanel-heading {
+    color: #fff;
+    background-color: #555;
+    border-color: #ddd;
+}
+
+.abox {
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    border: 1px solid #ddd;
+    color: #fff;
+    cursor: pointer;
+    position: relative;
+}
+
+.abox .acheck-bg {
+    display: block;
+    height: 20px;
+    width: 20px;
+    border: 10px solid #0000ff;
+    border-bottom-color: transparent;
+    border-right-color: transparent;
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 5;
+    display: none;
+}
+
+.abox .acheck-bg i.fa {
+    position: absolute;
+    left: -10px;
+    top: -10px;
+    z-index: 10;
+    color: #fff;
+}
+.acol-sm-12 {
+    position: relative;
+    min-height: 1px;
+    padding-right: 5px;
+    padding-left: 5px;
+}
+
+.apanel-body .col-sm-6,
+.apanel-body .col-sm-12 {
+    padding: 0;
+}
+
+.arow {
+    margin-right: 0px;
+    margin-left: 0px;
+}
+
+.apanel {
+    border: none;
+}
+
+#toast-container {
+    position: fixed;
+    z-index: 198910151;
+    /*overrides*/
+
+}
+.o-font{
+    font-weight: bold;font-size: 16px;color: red;
+    float: right;
+    margin-right: 20px;
+}
+.fancybox-overlay {
+    z-index: 198910180;
+}
+/*不可用*/
+.abox-default {
+    background: #777;
+}
+/*可使用*/
+.abox-primary {
+    background: #1ab394;
+}
+/*待保洁*/
+.abox-success {
+    background: #1c84c6;
+}
+/*使用中*/
+.abox-info {
+    background: #23c6c8;
+}
+/*维修中*/
+.abox-warning {
+    background: #f8ac59;
+}
+/*已锁定*/
+.abox-danger {
+    background: #ed5565;
+}
+
+.bedForm .input-sm{
+    padding: 6px 5px;
+}
+
+/*入住人附件显示删除按钮 start*/
+#stayPersonImg .file-panel span {
+    width: 24px;
+    height: 24px;
+    display: inline;
+    float: right;
+    text-indent: -9999px;
+    overflow: hidden;
+    background: url(./plugins/webuploader/icons.png) no-repeat;
+    margin: 5px 1px 1px;
+    cursor: pointer;
+}
+
+#stayPersonImg .file-panel {
+    position: absolute;
+    background: rgba( 0, 0, 0, 0.5 );
+    width: 165px;
+    height:0px;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    z-index: 300;
+}
+
+#stayPersonImg .file-panel span.cancel {
+    background-position: -48px -24px;
+}
+#stayPersonImg .file-panel span.cancel:hover {
+    background-position: -48px 0;
+}
+#stayPersonImg .imgList{
+    width: 24%;
+    max-width: 165px;
+    float: left;
+    position: relative;
+    margin-left: 5px;
+}
+#stayPersonImg .imgList .fancybox img{
+    width: 100%;
+}
+/*入住人附件显示删除按钮 end*/
+
+
+/*优惠券 S css*/
+.order-coupon{
+    float: right;
+    margin-top: -15px;
+}
+.order-coupon>a{
+    font-size: 13px;
+}
+.order-coupon > a:hover{
+    color: #c9302c;
+}
+.order-coupon:hover .dropdown-menu {
+    display: block;
+    left: auto;
+}
+.order-coupon .dropdown-menu {
+    top:0px;
+    right: 15px;
+    padding: 8px 14px;
+    background-color: #f8f8f8;
+}
+/*优惠券 E css*/
+
+/*赔付 S css*/
+#payoutInfoForm .payout-file{
+    font: 14px bold;
+}
+/*赔付 E css*/

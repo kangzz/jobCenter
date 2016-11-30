@@ -58,7 +58,8 @@ public class JobController {
 		} catch (Exception e) {
 			logger.error("getRequest 编码异常", e);
 		}
-		String contractCode= request.getParameter("isValid");
+		String aa = request.getCharacterEncoding();
+		String contractCode= request.getParameter("jobName");
 		if(errors.hasErrors()){
 			String errorMessage=errors.getFieldError().getDefaultMessage();
 			logger.info(errorMessage);

@@ -1,7 +1,9 @@
-<%@ page language="java" pageEncoding="UTF-8"%>
+<%@ page language="java" pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %>
+
 <!DOCTYPE html>
 <html>
 <head>
+	<meta charset="UTF-8"/>
 	<title>房型页</title>
 	<%@include file="/WEB-INF/jsp/common/header.jsp"%>
 	<!-- Sweet Alert -->
@@ -21,33 +23,21 @@
 			<div class="row row-lg">
 				<form id="searchForm" method="post">
 					<div class="row">
-						<%--<div class="col-sm-2">
+						<div class="col-sm-4">
 							<div class="input-group">
-								<span class="input-group-addon">状态：</span>
-								<select name="status" id="status" class="form-control">
-									<option value="">全部</option>
-									<option value="1">可用</option>
-									<option value="0">已停用</option>
-								</select>
+								<span class="input-group-addon">任务名称：</span>
+								<input type="text" id="jobName" maxlength="20" name="jobName" class="form-control"
+									   placeholder="请输入任务名称">
 							</div>
 						</div>
-						--%>
 						<div class="col-sm-2">
 							<div class="input-group">
-								<span class="input-group-addon">城市：</span>
+								<span class="input-group-addon">有效：</span>
 								<select name="isValid" id="isValid" class="form-control">
+									<option value="">请选择</option>
 									<c:forEach items="${IsMap}" var="isMapItem">
 										<option value="${isMapItem.key }">${isMapItem.value }</option>
 									</c:forEach>
-								</select>
-							</div>
-						</div>
-							<%--
-						<div class="col-sm-2">
-							<div class="input-group">
-								<span class="input-group-addon">区域：</span>
-								<select name="areaName" id="areaName" class="form-control">
-									<option value="">请选择</option>
 								</select>
 							</div>
 						</div>
@@ -62,6 +52,17 @@
 									   placeholder="请选择" readonly="readonly">
 							</div>
 						</div>
+							<%--
+						<div class="col-sm-2">
+							<div class="input-group">
+								<span class="input-group-addon">区域：</span>
+								<select name="areaName" id="areaName" class="form-control">
+									<option value="">请选择</option>
+								</select>
+							</div>
+						</div>
+
+
 					</div>
 					<div class="row m-t">
 						<div class="col-sm-4">
@@ -168,7 +169,7 @@
 <script type="text/javascript">
 
 	var isSearchParams = false;
-	/*(function () {
+	(function () {
 		//时间插件
 		var startCreateTime = {
 			elem: '#startCreateTime', format: 'YYYY-MM-DD', max: '2099-06-16', istime: false, istoday: true,
@@ -186,7 +187,7 @@
 		laydate(startCreateTime);
 		laydate(endCreateTime);
 	})();
-
+	/*
 	// 跳转到新增项目页面
 	function addProject() {
 		parent.addMenuItem("${path}/project/toAddProject.action", "addProject", "新增项目页");
