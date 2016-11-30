@@ -38,15 +38,15 @@
     var contextPath = '${path}';        //基础url
     var winHeight = $(window).height(); //iframe子页窗口高度
 
-
-    //全局的ajax访问，处理ajax清求时sesion超时
     $.ajaxSetup({
-        contentType : "application/x-www-form-urlencoded;charset=utf-8",
-        complete : function(XMLHttpRequest, textStatus) {
-            var resText = XMLHttpRequest.responseText;
-            if (resText == "session_timeout") {
+        contentType:"application/x-www-form-urlencoded;charset=utf-8",
+        complete:function(XMLHttpRequest,textStatus){
+            //通过XMLHttpRequest取得响应头，sessionstatus，
+            var sessionStatus=XMLHttpRequest.getResponseHeader("sessionStatus");
+            if(sessionStatus=="session_timeout"){
+                //如果超时就处理 ，指定要跳转的页面
                 alert("登录超时，请重新登录!");
-                window.open('http://cas.ziroom.com/CAS/logout?service=${initParam.callbackUrl}','_top');
+                window.location = "<c:url value="${path}/login.do" />";
             }
         }
     });
