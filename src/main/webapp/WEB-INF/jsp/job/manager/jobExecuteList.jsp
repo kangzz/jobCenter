@@ -156,7 +156,7 @@
 <script type="text/javascript">
 
 	var isSearchParams = false;
-	/*(function () {
+	(function () {
 		//时间插件
 		var startCreateTime = {
 			elem: '#startCreateTime', format: 'YYYY-MM-DD', max: '2099-06-16', istime: false, istoday: true,
@@ -188,7 +188,7 @@
 		laydate(endCreateTime);
 		laydate(jobStartTime);
 		laydate(jobEndTime);
-	})();*/
+	})();
 
 	// 带条件查询
 	function query() {
