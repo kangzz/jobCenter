@@ -150,8 +150,8 @@
 								<th data-field="jobStartTime" data-align="center">任务开始日期</th>
 								<th data-field="jobEndTime" data-align="center">任务结束日期</th>
 								<th data-field="isValid" data-align="center">是否有效</th>
-								<%--<th data-formatter="projectImgFormatter"  data-align="center">项目图片</th>
-								<th data-formatter="operateFormatter" data-align="center">操作</th>--%>
+								<%--<th data-formatter="projectImgFormatter"  data-align="center">项目图片</th>--%>
+								<th data-formatter="operateFormatter" data-align="center">操作</th>
 							</tr>
 							</thead>
 						</table>
@@ -297,37 +297,7 @@
 		});
 	}
 
-	//不展示/展示项目
-	function showOrNot(id, isShow) {
-		var message = "";
-		if (parseInt(isShow) == 1) {
-			message = "您确认要在APP端展示？";
-		} else {
-			message = "您确认不在APP端展示？";
-		}
-		parent.layer.confirm(message, {
-			icon: 3,
-			btn: ['确认', '取消'], //按钮
-			shade: false //不显示遮罩
-		}, function () {
-			$.ajax({
-				url: "${path}/project/showOrNot.action",
-				dataType: "json",
-				data: {id: id, isShow: isShow},
-				type: "post",
-				success: function (result) {
-					if (result.data != null && parseInt(result.data.affect) > 0) {
-						parent.layer.msg("操作成功！", {icon: 1});
-						window.location.href = "${path}/project/toListProject.action";
-					} else {
-						parent.layer.alert("操作失败!", {icon: 2});
-					}
-				}
-			});
-		}, function () {
-			// parent.layer.msg('奇葩么么哒', {shift: 6});
-		});
-	}
+
 
 	// 根据城市获取区域列表
 	function getAreaByCityCode() {
@@ -422,33 +392,67 @@
 
 		});
 	}
-
-	function deleteProjectPic(imgBid, projectId) {
+	*/
+	function deleteJobInfoById(jobId) {
 		parent.layer.confirm('您确认要删除？', {
 			icon: 3,
 			btn: ['确认', '取消'], //按钮
 			shade: false //不显示遮罩
 		}, function () {
 			$.ajax({
-				url: "${path}/project/deleteProjectPic.action",
+				url: "${path}/job/deleteJobInfoById.do",
 				dataType: "json",
 				type: "get",
-				data: {'imgBid': imgBid, 'projectId': projectId},
+				data: {'jobId': jobId},
 				success: function (result) {
-					var coun = result.affect;
-					if (parseInt(coun) > 0) {
+					if (result.status != null && 'success' == result.status) {
 						parent.layer.msg("删除成功！", {icon: 1});
-						showHouseTypeImages(projectId);
+						query();
 					} else {
-						parent.layer.alert("删除图片图片！", {icon: 2})
+						parent.layer.alert(result.error_message, {icon: 2});
 					}
 				}
 			});
 		}, function () {
-
 		});
 	}
-	 */
+	//不展示/展示项目
+	function changeJobValidById(jobId, isValid) {
+		var message = "";
+		if (parseInt(isValid) == 1) {
+			message = "您确认要启用该任务？";
+		} else {
+			message = "您确认要停用该任务？";
+		}
+		parent.layer.confirm(message, {
+			icon: 3,
+			btn: ['确认', '取消'], //按钮
+			shade: false //不显示遮罩
+		}, function () {
+			$.ajax({
+				url: "${path}/job/changeJobValidById.do",
+				dataType: "json",
+				data: {jobId: jobId, isValid: isValid},
+				type: "post",
+				success: function (result) {
+					if (result.status != null && 'success' == result.status) {
+						parent.layer.msg("操作成功！", {icon: 1});
+						query();
+					} else {
+						parent.layer.alert(result.error_message, {icon: 2});
+					}
+				}
+			});
+		}, function () {
+			// parent.layer.msg('奇葩么么哒', {shift: 6});
+		});
+	}
+
+	function toUpdateJobInfo(jobId) {
+		parent.addMenuItem("${path}/job/toUpdateJobInfo.do?jobId=" + jobId, "updateJobInfo", "修改任务页");
+	}
+
+
 	function serialNumber(value, row, index){
 		var options = $("#jobTableColumns").bootstrapTable('getOptions');
 		return (options.pageNumber-1) * options.pageSize + index+1;
@@ -470,37 +474,17 @@
 		}
 
 	});
-
-
-
-	/*function projectImgFormatter(value, row, index){
-		var projectId = row.id;
-		var str = "";
-		str = str + "<a href=\"#\" onclick=\"showHouseTypeImages('"+projectId+"');\">项目图片</a>";
+	function operateFormatter(value, row, index){
+		var isValid = row.isValid;
+		var jobId = row.jobId;
+		var str ="";
+		str = str + "<a href=\"#\" onclick=\"deleteJobInfoById('"+jobId+"');\">删除</a>&nbsp;";
+		str = str + "<a href=\"#\" onclick=\"toUpdateJobInfo('"+jobId+"');\">修改</a>&nbsp;";
+		if(isValid == '是'){
+			str = str + "<a href=\"javascript:;\" onclick=\"changeJobValidById('"+jobId+"', '0');\">停用</a>&nbsp;";
+		}else{
+			str = str + "<a href=\"javascript:;\" onclick=\"changeJobValidById('"+jobId+"', '1');\">启用</a>&nbsp;";
+		}
 		return str;
 	}
-
-	function operateFormatter(value, row, index){
-
-		var isValid = row.isValid;
-		var isShow =  row.isShow;
-		var projectId = row.id;
-
-		var str ="";
-		str = str + "<a href=\"#\" onclick=\"deleteById('"+projectId+"');\">删除</a>&nbsp;";
-		str = str + "<a href=\"#\" onclick=\"toUpdateProject('"+projectId+"');\">修改</a>&nbsp;";
-		if(isValid == '1'){
-			str = str + "<a href=\"javascript:;\" onclick=\"validOrNot('"+projectId+"', '0');\">停用</a>&nbsp;";
-		}else{
-			str = str + "<a href=\"javascript:;\" onclick=\"validOrNot('"+projectId+"', '1');\">启用</a>&nbsp;";
-		}
-
-		if(isShow == '1'){
-			str = str + "<a href=\"javascript:;\" onclick=\"showOrNot('"+projectId+"', '0');\">不展示</a>&nbsp;";
-		}else{
-			str = str + "<a href=\"javascript:;\" onclick=\"showOrNot('"+projectId+"', '1');\">展示</a>&nbsp;";
-		}
-
-		return str;
-	}*/
 </script>

@@ -12,6 +12,7 @@ import com.jobCenter.model.param.JobInfoSaveParam;
 import com.jobCenter.model.param.JobInfoSearchParam;
 import com.jobCenter.service.HeartBeatService;
 import com.jobCenter.service.JobInfoService;
+import com.jobCenter.service.JobService;
 import com.jobCenter.util.UserUtil;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,7 +103,7 @@ public class JobController extends BaseController {
 	 * 日期 ：2016-11-27 22:16:11
 	 */
 	@RequestMapping(value = "/toAddJob.do", method = {RequestMethod.GET, RequestMethod.POST})
-	public ModelAndView toAddJob(HttpServletRequest request, ModelMap modelMap) {
+	public ModelAndView toAddJob(HttpServletRequest request, String jobId, ModelMap modelMap) {
 		modelMap.put("IsMap", IsType.lookup);
 		modelMap.put("jobExecuteTypeMap", JobExecuteType.lookup);
 		modelMap.put("jobSystemTypeMap", JobSystemType.lookup);
@@ -127,4 +128,58 @@ public class JobController extends BaseController {
 			return errorReturn(1111);
 		}
 	}
+	/**
+	 * 描述：保存定时任务
+	 * 作者 ：kangzz
+	 * 日期 ：2016-12-01 11:53:29
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/deleteJobInfoById.do", method = {RequestMethod.GET, RequestMethod.POST})
+	public CommonResponse deleteJobInfoById(HttpServletRequest request, String jobId){
+		try{
+			UserAccount userAccount = UserUtil.getCurrentUser();
+			jobInfoService.deleteJobInfoById(jobId, userAccount);
+			return successReturn(null);
+		}catch (CommonException e){
+			return errorReturn(e.getCode());
+		}catch (Exception e){
+			logger.error("保存失败",e);
+			return errorReturn(1111);
+		}
+	}
+	/**
+	 * 描述：保存定时任务
+	 * 作者 ：kangzz
+	 * 日期 ：2016-12-01 11:53:29
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/changeJobValidById.do", method = {RequestMethod.GET, RequestMethod.POST})
+	public CommonResponse changeJobValidById(HttpServletRequest request, String jobId, Integer isValid){
+		try{
+			UserAccount userAccount = UserUtil.getCurrentUser();
+			jobInfoService.changeJobValidById(jobId, isValid, userAccount);
+			return successReturn(null);
+		}catch (CommonException e){
+			return errorReturn(e.getCode());
+		}catch (Exception e){
+			logger.error("保存失败",e);
+			return errorReturn(1111);
+		}
+	}
+	/**
+	 * 描述：定时任务整体情况
+	 * 作者 ：kangzz
+	 * 日期 ：2016-11-27 22:16:11
+	 */
+	@RequestMapping(value = "/toUpdateJobInfo.do", method = {RequestMethod.GET, RequestMethod.POST})
+	public ModelAndView toUpdateJobInfo(HttpServletRequest request, String jobId, ModelMap modelMap) {
+		modelMap.put("IsMap", IsType.lookup);
+		modelMap.put("jobExecuteTypeMap", JobExecuteType.lookup);
+		modelMap.put("jobSystemTypeMap", JobSystemType.lookup);
+		JobInfoSaveParam jobInfoSaveParam = jobInfoService.getJobInfoToEdit(jobId);
+		modelMap.put("jobInfo", jobInfoSaveParam);
+		return new ModelAndView("/job/manager/editJob", modelMap);
+	}
+
+
 }

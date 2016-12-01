@@ -21,5 +21,8 @@ public interface JobInfoService {
     Map<String,Object> queryJobListByJobInfoSearchParam(JobInfoSearchParam jobInfoSearchParam);
 
     void saveJobInfo(JobInfoSaveParam jobInfoSaveParam, UserAccount userAccount);
+    void deleteJobInfoById(String jobId,UserAccount userAccount);
+    void changeJobValidById(String jobId, Integer isValid, UserAccount userAccount);
+    JobInfoSaveParam getJobInfoToEdit(String jobId);
 }
 
