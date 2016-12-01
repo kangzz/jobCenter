@@ -2,6 +2,13 @@ package com.jobCenter.mapper;
 
 
 import com.jobCenter.domain.JobExecuteResult;
+import com.jobCenter.model.dto.JobExecuteResultDto;
+import com.jobCenter.model.param.JobExecuteResultParam;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * 描述：执行计划记录表
  * @return
@@ -30,4 +37,7 @@ public interface JobExecuteResultMapper {
      * 日期 ：2016-03-22 22:19:36
      */
     int updateByUuid(JobExecuteResult record);
+
+    List<JobExecuteResultDto> queryJobExecuteListSearchParam(JobExecuteResultParam jobExecuteResultParam);
+    long queryCountJobExecuteListSearchParam(JobExecuteResultParam jobExecuteResultParam);;
 }

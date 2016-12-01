@@ -167,5 +167,54 @@
     </set>
     where job_uuid = #{jobUuid,jdbcType=BIGINT}
   </update>
+  <sql id="searchParamWhereSql">
+    <trim prefix="WHERE" prefixOverrides="AND">
+      <if test="jobUuid != null" >
+        AND t2.job_uuid = #{jobUuid,jdbcType=VARCHAR}
+      </if>
+      <if test="jobId != null" >
+        AND t0.job_id = #{jobId,jdbcType=VARCHAR}
+      </if>
+      <if test="jobLinkId != null" >
+        AND t1.job_link_id = #{jobLinkId,jdbcType=INTEGER}
+      </if>
+      <if test="jobStartTimeBegin != null" >
+        AND job_start_time >= #{jobStartTimeBegin,jdbcType=VARCHAR}
+      </if>
+      <if test="jobStartTimeEnd != null" >
+        AND #{jobStartTimeEnd,jdbcType=VARCHAR} >= job_start_time
+      </if>
+      <if test="jobEndTimeBegin != null" >
+        AND job_end_time >= #{jobStartTimeBegin,jdbcType=VARCHAR}
+      </if>
+      <if test="jobEndTimeEnd != null" >
+        AND #{jobStartTimeEnd,jdbcType=VARCHAR} >= job_end_time
+      </if>
+      <if test="resultStatus != null" >
+        AND result_status = #{resultStatus,jdbcType=VARCHAR}
+      </if>
+    </trim>
+  </sql>
+
+  <!-- 根据实体查询数据 -->
+  <select id="queryJobExecuteListSearchParam" resultType="com.jobCenter.model.dto.JobExecuteResultDto"  parameterType="com.jobCenter.model.param.JobExecuteResultParam" >
+    select t2.job_uuid as jobUuid,t0.job_name as jobName,t1.job_link as jobLink,
+    t1.service_name as jobService ,t2.job_start_time as jobStartTime,t2.job_end_time as jobEndTime,
+    t2.result_status resultStatus,t2.result_message as resultMessage
+    FROM job_info t0 join job_link_info t1 on t0.job_id = t1.job_id AND t0.is_del = 0 AND t1.is_del = 0
+    JOIN job_execute_result t2 on t0.job_id = t2.job_id
+    <include refid="searchParamWhereSql"/>
+    ORDER BY t2.job_start_time desc
+    <if test="startNum != null and pageSize !=null" >
+      LIMIT #{startNum,jdbcType=INTEGER}, #{pageSize,jdbcType=INTEGER}
+    </if>
+  </select>
+
+  <select id="queryCountJobExecuteListSearchParam" resultType="java.lang.Long"  parameterType="com.jobCenter.model.param.JobExecuteResultParam" >
+    select count(0)
+    FROM job_info t0 join job_link_info t1 on t0.job_id = t1.job_id AND t0.is_del = 0 AND t1.is_del = 0
+    JOIN job_execute_result t2 on t0.job_id = t2.job_id
+    <include refid="searchParamWhereSql"/>
+  </select>
 
 </mapper>

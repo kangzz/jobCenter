@@ -268,6 +268,7 @@ public class JobServiceImpl implements JobService {
             String jobLinkId = String.valueOf(jobLinkInfoModel.getJobLinkId());
             //封装加密字符串信息 加密字符串使用两个uuid截取部分拼装后再加密
             String uuid = UUID.randomUUID().toString();
+            uuid.replace("-","");
             int jobLinkIdSubCount = jobLinkId.length() / SystemConstant.MD5_RATIO;
             jobLinkIdSubCount = jobLinkIdSubCount == 0 ? jobLinkId.length() : jobLinkIdSubCount;
             int uuidSubCount = uuid.length() / SystemConstant.MD5_RATIO;

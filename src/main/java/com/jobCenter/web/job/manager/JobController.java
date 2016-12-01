@@ -3,16 +3,20 @@ package com.jobCenter.web.job.manager;
 import com.jobCenter.comm.BaseController;
 import com.jobCenter.comm.CommonException;
 import com.jobCenter.comm.CommonResponse;
+import com.jobCenter.domain.JobInfo;
+import com.jobCenter.domain.JobLinkInfo;
+import com.jobCenter.enums.DoneStatus;
 import com.jobCenter.enums.IsType;
 import com.jobCenter.enums.JobExecuteType;
 import com.jobCenter.enums.JobSystemType;
 import com.jobCenter.model.authority.logon.UserAccount;
 import com.jobCenter.model.param.HeartBeatInfoParam;
+import com.jobCenter.model.param.JobExecuteResultParam;
 import com.jobCenter.model.param.JobInfoSaveParam;
 import com.jobCenter.model.param.JobInfoSearchParam;
 import com.jobCenter.service.HeartBeatService;
 import com.jobCenter.service.JobInfoService;
-import com.jobCenter.service.JobService;
+import com.jobCenter.service.JobLinkService;
 import com.jobCenter.util.UserUtil;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +45,8 @@ public class JobController extends BaseController {
 	private JobInfoService jobInfoService;
 	@Autowired
 	private HeartBeatService heartBeatService;
+	@Autowired
+	private JobLinkService jobLinkService;
 
 
 	/**
@@ -180,6 +186,40 @@ public class JobController extends BaseController {
 		modelMap.put("jobInfo", jobInfoSaveParam);
 		return new ModelAndView("/job/manager/editJob", modelMap);
 	}
+	/**
+	 * 描述：定时任务整体情况
+	 * 作者 ：kangzz
+	 * 日期 ：2016-11-27 22:16:11
+	 */
+	@RequestMapping(value = "/toQueryJobExecuteList.do", method = {RequestMethod.GET, RequestMethod.POST})
+	public ModelAndView toQueryJobExecuteList(HttpServletRequest request, String jobId, ModelMap modelMap) {
+		modelMap.put("jobId", jobId);
+		modelMap.put("doneStatusMap", DoneStatus.lookup);
+		JobLinkInfo jobLinkInfo = new JobLinkInfo();
+		jobLinkInfo.setJobId(Integer.valueOf(jobId));
+		modelMap.put("jobLinkList", jobLinkService.queryJobLinkList(jobLinkInfo));
+		JobInfo jobInfo = new JobInfo();
+		jobInfo.setIsDel(IsType.NO.getValue());
+		modelMap.put("jobInfoList", jobInfoService.queryJobInfoList(jobInfo));
+		return new ModelAndView("/job/manager/jobExecuteList", modelMap);
+	}
+	/**
+	 * 描述：获取定时任务列表
+	 * 作者 ：kangzz
+	 * 日期 ：2016-11-28 22:58:16
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/queryJobExecuteList.do", method = {RequestMethod.GET, RequestMethod.POST})
+	public Map<String, Object> queryJobExecuteList(HttpServletRequest request,
+												   JobExecuteResultParam jobExecuteResultParam){
+		try{
+			return jobInfoService.queryJobExecuteListSearchParam(jobExecuteResultParam);
+		}catch (Exception e){
+			e.printStackTrace();
+			return null;
+		}
+	}
+
 
 
 }

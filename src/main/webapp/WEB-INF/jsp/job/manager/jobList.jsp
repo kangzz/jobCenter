@@ -73,41 +73,6 @@
 						<div class="col-sm-1">
 							<button class="btn btn-primary" id="queryBtn" type="button" onclick="query();">查询</button>
 						</div>
-							<%--
-						<div class="col-sm-2">
-							<div class="input-group">
-								<span class="input-group-addon">区域：</span>
-								<select name="areaName" id="areaName" class="form-control">
-									<option value="">请选择</option>
-								</select>
-							</div>
-						</div>
-
-
-					</div>
-					<div class="row m-t">
-						<div class="col-sm-4">
-							<div class="input-group">
-								<span class="input-group-addon">房间数：</span>
-								<input type="text" onkeyup="value=value.replace(/[^\d]/g,'')" maxlength="3"
-									   class="form-control" id="startRoomTotalcount" name="startRoomTotalcount">
-								<span class="input-group-addon">-</span>
-								<input type="text" onkeyup="value=value.replace(/[^\d]/g,'')" maxlength="3"
-									   class="form-control" id="endRoomTotalcount" name="endRoomTotalcount">
-								<span class="input-group-addon">间</span>
-							</div>
-						</div>
-						<div class="col-sm-4">
-							<div class="input-group">
-								<span class="input-group-addon">租赁年限：</span>
-								<input type="text" onkeyup="value=value.replace(/[^\d]/g,'')" maxlength="3"
-									   class="form-control" id="startRentYears" name="startRentYears">
-								<span class="input-group-addon">-</span>
-								<input type="text" onkeyup="value=value.replace(/[^\d]/g,'')" maxlength="3"
-									   class="form-control" id="endRentYears" name="endRentYears">
-								<span class="input-group-addon">年</span>
-							</div>
-						</div>--%>
 					</div>
 				</form>
 			</div>
@@ -451,6 +416,11 @@
 	function toUpdateJobInfo(jobId) {
 		parent.addMenuItem("${path}/job/toUpdateJobInfo.do?jobId=" + jobId, "updateJobInfo", "修改任务页");
 	}
+	function toQueryJobExecuteList(jobId) {
+		parent.addMenuItem("${path}/job/toQueryJobExecuteList.do?jobId=" + jobId, "toQueryJobExecuteList", "执行结果查询");
+	}
+
+
 
 
 	function serialNumber(value, row, index){
@@ -485,6 +455,7 @@
 		}else{
 			str = str + "<a href=\"javascript:;\" onclick=\"changeJobValidById('"+jobId+"', '1');\">启用</a>&nbsp;";
 		}
+		str = str + "<a href=\"#\" onclick=\"toQueryJobExecuteList('"+jobId+"');\">执行结果</a>&nbsp;";
 		return str;
 	}
 </script>

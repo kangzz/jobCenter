@@ -1,10 +1,13 @@
 package com.jobCenter.service;
 
 
+import com.jobCenter.domain.JobInfo;
 import com.jobCenter.model.authority.logon.UserAccount;
+import com.jobCenter.model.param.JobExecuteResultParam;
 import com.jobCenter.model.param.JobInfoSaveParam;
 import com.jobCenter.model.param.JobInfoSearchParam;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -24,5 +27,7 @@ public interface JobInfoService {
     void deleteJobInfoById(String jobId,UserAccount userAccount);
     void changeJobValidById(String jobId, Integer isValid, UserAccount userAccount);
     JobInfoSaveParam getJobInfoToEdit(String jobId);
+    List<JobInfo> queryJobInfoList(JobInfo jobInfo);
+    Map<String,Object> queryJobExecuteListSearchParam(JobExecuteResultParam jobExecuteResultParam);
 }
 

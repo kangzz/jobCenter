@@ -32,7 +32,7 @@ public class GrabToMasterListener implements ServletContextListener {
         String str = null;
         if (str == null && myThread == null) {
             myThread = new GrabToMasterListenerThread();
-            myThread.start(); // servlet 上下文初始化时启动 socket
+           // myThread.start(); // servlet 上下文初始化时启动 socket
         }
     }
 }

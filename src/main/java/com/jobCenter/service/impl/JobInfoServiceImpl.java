@@ -4,10 +4,13 @@ import com.jobCenter.comm.CommonException;
 import com.jobCenter.domain.JobInfo;
 import com.jobCenter.domain.JobLinkInfo;
 import com.jobCenter.enums.IsType;
+import com.jobCenter.mapper.JobExecuteResultMapper;
 import com.jobCenter.mapper.JobInfoMapper;
 import com.jobCenter.mapper.JobLinkInfoMapper;
 import com.jobCenter.model.authority.logon.UserAccount;
+import com.jobCenter.model.dto.JobExecuteResultDto;
 import com.jobCenter.model.dto.JobInfoDto;
+import com.jobCenter.model.param.JobExecuteResultParam;
 import com.jobCenter.model.param.JobInfoSaveParam;
 import com.jobCenter.model.param.JobInfoSearchParam;
 import com.jobCenter.service.JobInfoService;
@@ -30,6 +33,8 @@ public class JobInfoServiceImpl implements JobInfoService {
     private JobInfoMapper jobInfoMapper;
     @Autowired
     private JobLinkInfoMapper jobLinkInfoMapper;
+    @Autowired
+    private JobExecuteResultMapper jobExecuteResultMapper;
 
     private final static Logger logger = Logger.getLogger(JobInfoServiceImpl.class);
     /**
@@ -251,6 +256,17 @@ public class JobInfoServiceImpl implements JobInfoService {
         }
         jobInfoSaveParam.setJobLinkListStr(jobLinkListStr.toString());
         return jobInfoSaveParam;
+    }
+    public List<JobInfo> queryJobInfoList(JobInfo jobInfo){
+        return jobInfoMapper.selectByJobInfo(jobInfo);
+    }
+    public Map<String,Object> queryJobExecuteListSearchParam(JobExecuteResultParam jobExecuteResultParam){
+        List<JobExecuteResultDto> list = jobExecuteResultMapper.queryJobExecuteListSearchParam(jobExecuteResultParam);
+        Map<String, Object> result = new HashMap<String, Object>();
+        long totalCount = jobExecuteResultMapper.queryCountJobExecuteListSearchParam(jobExecuteResultParam);;
+        result.put("rows", list);
+        result.put("total", totalCount);
+        return result;
     }
 
 
