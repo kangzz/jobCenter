@@ -38,7 +38,7 @@
       #{createTime,jdbcType=TIMESTAMP}, #{updateId,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.jobCenter.domain.JobLinkInfo">
+  <insert id="insertSelective" useGeneratedKeys="true" keyProperty="jobLinkId" parameterType="com.jobCenter.domain.JobLinkInfo">
     insert into job_link_info
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="jobLinkId != null">

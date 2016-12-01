@@ -4,7 +4,7 @@
 <html>
 <head>
 	<meta charset="UTF-8"/>
-	<title>房型页</title>
+	<title>任务列表</title>
 	<%@include file="/WEB-INF/jsp/common/header.jsp"%>
 	<!-- Sweet Alert -->
 	<link href="${path}/css/plugins/sweetalert/sweetalert.css?v=2016051601" rel="stylesheet">
@@ -117,19 +117,19 @@
 			<div class="row row-lg">
 				<div class="col-sm-12">
 					<div class="example">
-						<div class="hidden-xs" id="projectTableToolbar" role="group">
-							<button type="button" class="btn btn-primary" onclick="addProject();">
-								新增项目
+						<div class="hidden-xs" id="jobTableToolbar" role="group">
+							<button type="button" class="btn btn-primary" onclick="addJob();">
+								新增任务
 							</button>
 						</div>
-						<table id="projectTableColumns"
+						<table id="jobTableColumns"
 							   data-toggle="table"
 							   data-url="${path}/job/queryJobList.do"
 							   data-height="508"
 							   data-mobile-responsive="true"
 							   data-classes="table table-hover table-condensed"
 							   data-striped="true"
-							   data-toolbar="#projectTableToolbar"
+							   data-toolbar="#jobTableToolbar"
 							   data-show-columns="true"
 							   data-card-view="true"
 							   data-show-toggle="true"
@@ -210,12 +210,12 @@
 		laydate(jobStartTime);
 		laydate(jobEndTime);
 	})();
-	/*
-	// 跳转到新增项目页面
-	function addProject() {
-		parent.addMenuItem("${path}/project/toAddProject.action", "addProject", "新增项目页");
-	}
 
+	// 跳转到新增项目页面
+	function addJob() {
+		parent.addMenuItem("${path}/job/toAddJob.do", "addJob", "新增任务页");
+	}
+	/*
 	// 逻辑删除项目
 	function deleteById(id) {
 		// 询问框
@@ -254,7 +254,7 @@
 	// 带条件查询
 	function query() {
 		isSearchParams = true;
-		$("#projectTableColumns").bootstrapTable('refresh',{silent: true});  //指定查询参数重新查询
+		$("#jobTableColumns").bootstrapTable('refresh',{silent: true});  //指定查询参数重新查询
 	}
 
 /*
@@ -450,11 +450,11 @@
 	}
 	 */
 	function serialNumber(value, row, index){
-		var options = $("#projectTableColumns").bootstrapTable('getOptions');
+		var options = $("#jobTableColumns").bootstrapTable('getOptions');
 		return (options.pageNumber-1) * options.pageSize + index+1;
 	}
 
-	$('#projectTableColumns').bootstrapTable({
+	$('#jobTableColumns').bootstrapTable({
 		queryParams:function queryParams(params) {  	//配置参数
 			var tempParams = {
 				pageSize: params.limit,   	//页面大小

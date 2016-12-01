@@ -1,13 +1,18 @@
 package com.jobCenter.web.job.manager;
 
+import com.jobCenter.comm.BaseController;
+import com.jobCenter.comm.CommonException;
+import com.jobCenter.comm.CommonResponse;
 import com.jobCenter.enums.IsType;
+import com.jobCenter.enums.JobExecuteType;
+import com.jobCenter.enums.JobSystemType;
+import com.jobCenter.model.authority.logon.UserAccount;
 import com.jobCenter.model.param.HeartBeatInfoParam;
+import com.jobCenter.model.param.JobInfoSaveParam;
 import com.jobCenter.model.param.JobInfoSearchParam;
 import com.jobCenter.service.HeartBeatService;
 import com.jobCenter.service.JobInfoService;
-import com.jobCenter.service.JobService;
-import com.jobCenter.util.StringUtil;
-import com.xiaoleilu.hutool.http.HttpUtil;
+import com.jobCenter.util.UserUtil;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -29,7 +34,7 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping(value="/job")
-public class JobController {
+public class JobController extends BaseController {
 	private final static Logger logger = Logger.getLogger(JobController.class);
 	@Autowired
 	private JobInfoService jobInfoService;
@@ -86,6 +91,40 @@ public class JobController {
 		}catch (Exception e){
 			e.printStackTrace();
 			return null;
+		}
+	}
+
+
+
+	/**
+	 * 描述：定时任务整体情况
+	 * 作者 ：kangzz
+	 * 日期 ：2016-11-27 22:16:11
+	 */
+	@RequestMapping(value = "/toAddJob.do", method = {RequestMethod.GET, RequestMethod.POST})
+	public ModelAndView toAddJob(HttpServletRequest request, ModelMap modelMap) {
+		modelMap.put("IsMap", IsType.lookup);
+		modelMap.put("jobExecuteTypeMap", JobExecuteType.lookup);
+		modelMap.put("jobSystemTypeMap", JobSystemType.lookup);
+		return new ModelAndView("/job/manager/addJob", modelMap);
+	}
+	/**
+	 * 描述：保存定时任务
+	 * 作者 ：kangzz
+	 * 日期 ：2016-12-01 11:53:29
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/saveJobInfo.do", method = {RequestMethod.GET, RequestMethod.POST})
+	public CommonResponse saveJobInfo(HttpServletRequest request, JobInfoSaveParam jobInfoSaveParam){
+		try{
+			UserAccount userAccount = UserUtil.getCurrentUser();
+			jobInfoService.saveJobInfo(jobInfoSaveParam, userAccount);
+			return successReturn(null);
+		}catch (CommonException e){
+			return errorReturn(e.getCode());
+		}catch (Exception e){
+			logger.error("保存失败",e);
+			return errorReturn(1111);
 		}
 	}
 }

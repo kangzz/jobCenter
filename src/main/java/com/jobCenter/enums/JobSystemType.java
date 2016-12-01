@@ -5,17 +5,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 描述：执行类型枚举
+ * 描述：心跳类型枚举
  * 作者 ：kangzz
  * 日期 ：2016-03-18 00:53:56
  */
-public enum JobExecuteType {
-	ALL("全部执行", 1), ONE("任意一台", 0);
+public enum JobSystemType {
+	SYSTEM_DEFAULT("System", "system");
 	// 成员变量
 	private String name;
-	private Integer value;
+	private String value;
 
-	private JobExecuteType(String name, Integer value) {
+	private JobSystemType(String name, String value) {
 		this.name = name;
 		this.value = value;
 	}
@@ -28,21 +28,21 @@ public enum JobExecuteType {
 		this.name = name;
 	}
 
-	public Integer getValue() {
+	public String getValue() {
 		return value;
 	}
 
-	public void setValue(Integer value) {
+	public void setValue(String value) {
 		this.value = value;
 	}
 
 	/**
      * enum lookup map 
      */  
-    public static final Map<Integer, String> lookup = new HashMap<Integer, String>();
+    public static final Map<String, String> lookup = new HashMap<String, String>();
 
     static {  
-        for (JobExecuteType s : EnumSet.allOf(JobExecuteType.class)) {
+        for (JobSystemType s : EnumSet.allOf(JobSystemType.class)) {
             lookup.put(s.getValue(), s.getName());
         }  
     }

@@ -1,7 +1,7 @@
 package com.jobCenter.model.dto;
 
 import com.jobCenter.enums.IsType;
-import com.xiaoleilu.hutool.util.DateUtil;
+import com.kangzz.mtool.util.DateUtil;
 
 import java.util.Date;
 
@@ -113,7 +113,7 @@ public class JobInfoDto{
 
     public void setJobEndTime(Date jobEndTime) {
         if (jobEndTime != null) {
-            this.jobEndTime = DateUtil.format(jobEndTime,DateUtil.NORM_DATETIME_PATTERN);
+            this.jobEndTime = DateUtil.format(jobEndTime, DateUtil.NORM_DATETIME_PATTERN);
         }else {
             this.jobEndTime = null;
         }

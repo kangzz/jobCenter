@@ -1,7 +1,7 @@
 package com.jobCenter.model.dto;
 
 import com.jobCenter.util.StringUtil;
-import com.xiaoleilu.hutool.util.DateUtil;
+import com.kangzz.mtool.util.DateUtil;
 
 import java.util.Date;
 
@@ -59,7 +59,7 @@ public class HeartBeatInfoDto {
 
     public void setHeartBeatTime(Date heartBeatTime) {
         if (heartBeatTime != null) {
-            this.heartBeatTime = DateUtil.format(heartBeatTime,DateUtil.NORM_DATETIME_PATTERN);
+            this.heartBeatTime = DateUtil.format(heartBeatTime, DateUtil.NORM_DATETIME_PATTERN);
         } else {
             this.heartBeatTime = null;
         }

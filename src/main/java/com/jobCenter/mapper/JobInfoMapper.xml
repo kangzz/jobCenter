@@ -62,7 +62,7 @@
       #{createId,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateId,jdbcType=VARCHAR}, 
       #{updateTime,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.jobCenter.domain.JobInfo" >
+  <insert id="insertSelective" useGeneratedKeys="true" keyProperty="jobId" parameterType="com.jobCenter.domain.JobInfo" >
     insert into job_info
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="jobId != null" >
@@ -83,7 +83,7 @@
       <if test="jobNotifySucc != null" >
         job_notify_succ,
       </if>
-      <if test="jibRetryTimes != null" >
+      <if test="jobRetryTimes != null" >
         job_retry_times,
       </if>
       <if test="jobStartTime != null" >

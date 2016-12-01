@@ -1,7 +1,7 @@
 package com.jobCenter.comm;
 
 import com.jobCenter.enums.HeartType;
-import com.xiaoleilu.hutool.system.SystemUtil;
+import com.kangzz.mtool.system.SystemUtil;
 
 /**
  * 描述：系统常量

@@ -2,11 +2,10 @@ package com.jobCenter.util;
 
 
 import com.jobCenter.enums.JobWarningPersonReceiveType;
-import com.jobCenter.enums.JobWarningPersonType;
 import com.jobCenter.model.JobWarningModel;
 import com.jobCenter.model.JobWarningPersonModel;
 import com.jobCenter.util.mail.MailUtils;
-import com.xiaoleilu.hutool.system.SystemUtil;
+import com.kangzz.mtool.system.SystemUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +48,7 @@ public class NotifyWarningUtil {
      */
     public static String getStackMsg(Throwable e) {
         StringBuffer sb = new StringBuffer();
-        sb.append("异常服务器地址信息:"+SystemUtil.getHostInfo().getAddress());
+        sb.append("异常服务器地址信息:"+ SystemUtil.getHostInfo().getAddress());
         sb.append("</br>");
         sb.append("异常信息:"+e.getMessage()+"</br>");
         sb.append("具体异常信息如下:</br>");
