@@ -317,7 +317,7 @@
     <include refid="Base_Column_List" />
     from job_info
     <include refid="searchParamWhereSql"/>
-    order by update_time desc,create_time desc
+    order by is_valid DESC,update_time desc,create_time desc
     <if test="startNum != null and pageSize !=null" >
       LIMIT #{startNum,jdbcType=INTEGER}, #{pageSize,jdbcType=INTEGER}
     </if>
