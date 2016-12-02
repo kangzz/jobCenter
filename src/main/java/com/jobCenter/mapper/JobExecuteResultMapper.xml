@@ -179,19 +179,19 @@
         AND t1.job_link_id = #{jobLinkId,jdbcType=INTEGER}
       </if>
       <if test="jobStartTimeBegin != null" >
-        AND job_start_time >= #{jobStartTimeBegin,jdbcType=VARCHAR}
+        AND t2.job_start_time >= #{jobStartTimeBegin,jdbcType=VARCHAR}
       </if>
       <if test="jobStartTimeEnd != null" >
-        AND #{jobStartTimeEnd,jdbcType=VARCHAR} >= job_start_time
+        AND #{jobStartTimeEnd,jdbcType=VARCHAR} >= t2.job_start_time
       </if>
       <if test="jobEndTimeBegin != null" >
-        AND job_end_time >= #{jobStartTimeBegin,jdbcType=VARCHAR}
+        AND t2.job_end_time >= #{jobStartTimeBegin,jdbcType=VARCHAR}
       </if>
       <if test="jobEndTimeEnd != null" >
-        AND #{jobStartTimeEnd,jdbcType=VARCHAR} >= job_end_time
+        AND #{jobStartTimeEnd,jdbcType=VARCHAR} >= t2.job_end_time
       </if>
       <if test="resultStatus != null" >
-        AND result_status = #{resultStatus,jdbcType=VARCHAR}
+        AND t2.result_status = #{resultStatus,jdbcType=VARCHAR}
       </if>
     </trim>
   </sql>

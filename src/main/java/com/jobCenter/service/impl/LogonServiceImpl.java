@@ -63,8 +63,10 @@ public class LogonServiceImpl implements LogonService {
         List<MenuDto> firstChildList = new ArrayList<MenuDto>();
         MenuDto firstChild1 = new MenuDto(2,"定时任务列表","/job/jobList.do",null);
         MenuDto firstChild2 = new MenuDto(3,"心跳信息列表","/job/heartBeatList.do",null);
+        MenuDto firstChild3 = new MenuDto(4,"执行结果列表","/job/toQueryJobExecuteList.do",null);
         firstChildList.add(firstChild1);
         firstChildList.add(firstChild2);
+        firstChildList.add(firstChild3);
         MenuDto first = new MenuDto(1,"定时任务管理","",firstChildList);
         list.add(first);
         return list;

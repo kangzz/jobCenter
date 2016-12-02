@@ -195,9 +195,6 @@ public class JobController extends BaseController {
 	public ModelAndView toQueryJobExecuteList(HttpServletRequest request, String jobId, ModelMap modelMap) {
 		modelMap.put("jobId", jobId);
 		modelMap.put("doneStatusMap", DoneStatus.lookup);
-		JobLinkInfo jobLinkInfo = new JobLinkInfo();
-		jobLinkInfo.setJobId(Integer.valueOf(jobId));
-		modelMap.put("jobLinkList", jobLinkService.queryJobLinkList(jobLinkInfo));
 		JobInfo jobInfo = new JobInfo();
 		jobInfo.setIsDel(IsType.NO.getValue());
 		modelMap.put("jobInfoList", jobInfoService.queryJobInfoList(jobInfo));
@@ -219,7 +216,25 @@ public class JobController extends BaseController {
 			return null;
 		}
 	}
-
+	/**
+	 * 描述：保存定时任务
+	 * 作者 ：kangzz
+	 * 日期 ：2016-12-01 11:53:29
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/getJobLinkListByJobId.do", method = {RequestMethod.GET, RequestMethod.POST})
+	public CommonResponse getJobLinkListByJobId(HttpServletRequest request, String jobId){
+		try{
+			JobLinkInfo jobLinkInfo = new JobLinkInfo();
+			jobLinkInfo.setJobId(Integer.valueOf(jobId));
+			return successReturn(jobLinkService.queryJobLinkList(jobLinkInfo));
+		}catch (CommonException e){
+			return errorReturn(e.getCode());
+		}catch (Exception e){
+			logger.error("保存失败",e);
+			return errorReturn(1111);
+		}
+	}
 
 
 }

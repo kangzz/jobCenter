@@ -26,7 +26,7 @@
 						<div class="col-sm-4">
 							<div class="input-group">
 								<span class="input-group-addon">任务名称：</span>
-								<select name="jobId" id="jobId" class="form-control">
+								<select name="jobId" id="jobId" class="form-control" onchange="getLinkList();">
 									<option value="">请选择</option>
 									<c:forEach items="${jobInfoList }" var="jobInfo" varStatus="vs">
 										<option value="${jobInfo.jobId }" <c:if test="${jobInfo.jobId == jobId}">selected="selected"</c:if> >
@@ -44,43 +44,38 @@
 						</div>
 						<div class="col-sm-4">
 							<div class="input-group">
-								<span class="input-group-addon">LinkId：</span>
+								<span class="input-group-addon">jobLink：</span>
 								<select name="jobLinkId" id="jobLinkId" class="form-control">
 									<option value="">请选择</option>
-									<c:forEach items="${jobLinkList }" var="jobLink" varStatus="vs">
-										<option value="${jobLink.jobLinkId }">${jobLink.jobLinkId }</option>
-									</c:forEach>
 								</select>
 							</div>
 						</div>
-
 					</div>
 					<div class="row m-t">
 						<div class="col-sm-4">
 							<div class="input-group">
-								<span class="input-group-addon">jobLink：</span>
-								<select name="jobLinkId" id="jobLinkId2" class="form-control">
-									<option value="">请选择</option>
-									<c:forEach items="${jobLinkList }" var="jobLink" varStatus="vs">
-										<option value="${jobLink.jobLinkId }">${jobLink.jobLink }</option>
-									</c:forEach>
-								</select>
+								<span class="input-group-addon">执行时间：</span>
+								<input name="jobStartTimeBegin" id="jobStartTimeBegin" class="form-control col-sm-4"
+									   type="text" placeholder="请选择" readonly="readonly">
+								<span class="input-group-addon">-</span>
+								<input name="jobStartTimeEnd" id="jobStartTimeEnd" class="form-control col-sm-4" type="text"
+									   placeholder="请选择" readonly="readonly">
 							</div>
 						</div>
 						<div class="col-sm-4">
 							<div class="input-group">
-								<span class="input-group-addon">执行时间：</span>
-								<input name="startCreateTime" id="startCreateTime" class="form-control col-sm-4"
+								<span class="input-group-addon">回调时间：</span>
+								<input name="jobEndTimeBegin" id="jobEndTimeBegin" class="form-control col-sm-4"
 									   type="text" placeholder="请选择" readonly="readonly">
 								<span class="input-group-addon">-</span>
-								<input name="endCreateTime" id="endCreateTime" class="form-control col-sm-4" type="text"
+								<input name="jobEndTimeEnd" id="jobEndTimeEnd" class="form-control col-sm-4" type="text"
 									   placeholder="请选择" readonly="readonly">
 							</div>
 						</div>
 						<div class="col-sm-4">
 							<div class="input-group">
 								<span class="input-group-addon">执行结果：</span>
-								<select id="jobSystem" class="input-sm form-control input-s-sm inline" name="jobSystem" style="width: 100px;">
+								<select id="resultStatus" class="input-sm form-control input-s-sm inline" name="resultStatus" style="width: 100px;">
 									<option value="">请选择</option>
 									<c:forEach items="${doneStatusMap}" var="doneStatus">
 										<option value="${doneStatus.key }">${doneStatus.value }</option>
@@ -128,9 +123,10 @@
 								<th data-field="jobUuid" data-align="center">本次Uid</th>
 								<th data-field="jobLink" data-align="center">任务链接</th>
 								<th data-field="jobService" data-align="center">执行Service</th>
+								<th data-field="resultStatus" data-align="center">执行结果</th>
+								<th data-field="resultMessage" data-align="center">执行结果信息</th>
 								<th data-field="jobStartTime" data-align="center">定时任务开始时间</th>
 								<th data-field="jobEndTime" data-align="center">定时任务回调时间</th>
-								<th data-field="resultStatus" data-align="center">执行结果</th>
 							</tr>
 							</thead>
 						</table>
@@ -158,36 +154,36 @@
 	var isSearchParams = false;
 	(function () {
 		//时间插件
-		var startCreateTime = {
-			elem: '#startCreateTime', format: 'YYYY-MM-DD', max: '2099-06-16', istime: false, istoday: true,
+		var jobStartTimeBegin = {
+			elem: '#jobStartTimeBegin', format: 'YYYY-MM-DD', max: '2099-06-16', istime: false, istoday: true,
 			choose: function (datas) {
-				endCreateTime.min = datas; //开始日选好后，重置结束日的最小日期
-				endCreateTime.start = datas; //将结束日的初始值设定为开始日
+				jobStartTimeEnd.min = datas; //开始日选好后，重置结束日的最小日期
+				jobStartTimeEnd.start = datas; //将结束日的初始值设定为开始日
 			}
 		};
-		var endCreateTime = {
-			elem: '#endCreateTime', format: 'YYYY-MM-DD', max: '2099-06-16', istime: false, istoday: true,
+		var jobStartTimeEnd = {
+			elem: '#jobStartTimeEnd', format: 'YYYY-MM-DD', max: '2099-06-16', istime: false, istoday: true,
 			choose: function (datas) {
-				startCreateTime.max = datas; //结束日选好后，重置开始日的最大日期
+				jobStartTimeBegin.max = datas; //结束日选好后，重置开始日的最大日期
 			}
 		};
-		var jobStartTime = {
-			elem: '#jobStartTime', format: 'YYYY-MM-DD', max: '2099-06-16', istime: false, istoday: true,
+		var jobEndTimeBegin = {
+			elem: '#jobEndTimeBegin', format: 'YYYY-MM-DD', max: '2099-06-16', istime: false, istoday: true,
 			choose: function (datas) {
-				jobEndTime.min = datas; //开始日选好后，重置结束日的最小日期
-				jobEndTime.start = datas; //将结束日的初始值设定为开始日
+				jobEndTimeEnd.min = datas; //开始日选好后，重置结束日的最小日期
+				jobEndTimeEnd.start = datas; //将结束日的初始值设定为开始日
 			}
 		};
-		var jobEndTime = {
-			elem: '#jobEndTime', format: 'YYYY-MM-DD', max: '2099-06-16', istime: false, istoday: true,
+		var jobEndTimeEnd = {
+			elem: '#jobEndTimeEnd', format: 'YYYY-MM-DD', max: '2099-06-16', istime: false, istoday: true,
 			choose: function (datas) {
-				jobStartTime.max = datas; //结束日选好后，重置开始日的最大日期
+				jobEndTimeBegin.max = datas; //结束日选好后，重置开始日的最大日期
 			}
 		};
-		laydate(startCreateTime);
-		laydate(endCreateTime);
-		laydate(jobStartTime);
-		laydate(jobEndTime);
+		laydate(jobStartTimeBegin);
+		laydate(jobStartTimeEnd);
+		laydate(jobEndTimeBegin);
+		laydate(jobEndTimeEnd);
 	})();
 
 	// 带条件查询
@@ -216,5 +212,35 @@
 		}
 
 	});
-	query();
+	// 根据城市获取区域列表
+	function getLinkList() {
+		var jobId = $('#jobId option:selected').val();// 选中的值
+		// var cc = $("#city").get(0).selectedIndex;// 索引
+		if (isnull(jobId)) {
+			// 选中请选择选项
+			$("#jobLinkId").html('<option value="">请选择</option>');
+		} else {
+			// 查询区域列表，填充数据
+			$.ajax({
+				url: "${path}/job/getJobLinkListByJobId.do",
+				dataType: "json",
+				data: {jobId: jobId},
+				type: "post",
+				success: function (result) {
+					var jobLinkList = result.data;
+					var html = '<option value="">请选择</option>';
+					for (var i = 0; i < jobLinkList.length; i++) {
+						html += '<option value="' + jobLinkList[i].jobLinkId + '">' + jobLinkList[i].jobLink + '</option>';
+					}
+					$("#jobLinkId").html(html);
+				}
+			});
+		}
+	}
+
+	window.onload = function () {
+		getLinkList();
+		query();
+	}
+
 </script>
