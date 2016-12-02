@@ -77,17 +77,7 @@ public class LogonController {
 	public String index(HttpServletRequest request) {
 		Subject subject=SecurityUtils.getSubject();
 		Long userId = (Long) subject.getPrincipal();
-		Session session=subject.getSession();
-		UserAccount userAccount = UserUtil.getCurrentUser();
-		if(userAccount == null) {
-			UserInfo userInfo = logonService.getUserInfoById(userId);
-			userAccount =
-					new UserAccount(userInfo.getId(), userInfo.getUserName(), userInfo.getUserCode()
-							, userInfo.getUserPhone(), userInfo.getUserMail());
-			session.setAttribute(GlobalVariable.SESSION_CURRENT_USER_KEY, userAccount);
-			userAccount = UserUtil.getCurrentUser();
-			logger.info(userAccount.toString());
-		}
+
 		List<MenuDto> menuList = logonService.findMenuTreeByUserId(userId);
 		request.setAttribute("menuList", menuList);
 		return "index";

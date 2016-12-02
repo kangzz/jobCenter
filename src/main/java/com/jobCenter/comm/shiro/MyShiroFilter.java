@@ -1,9 +1,16 @@
 package com.jobCenter.comm.shiro;
 
+import com.jobCenter.comm.GlobalVariable;
+import com.jobCenter.domain.UserInfo;
+import com.jobCenter.model.authority.logon.UserAccount;
+import com.jobCenter.service.LogonService;
+import com.jobCenter.util.UserUtil;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.AccessControlFilter;
 import org.apache.shiro.web.util.WebUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -16,12 +23,24 @@ import javax.servlet.http.HttpServletResponse;
  * 日期 ：2016-11-27 12:55:50
  */
 public class MyShiroFilter extends AccessControlFilter {
+    @Autowired
+    private LogonService logonService;
     @Override
     protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) throws Exception {
         if (isLoginRequest(request, response)) {
             return true;
         } else {
             Subject subject = getSubject(request, response);
+            Long userId = (Long) subject.getPrincipal();
+            Session session=subject.getSession();
+            UserAccount userAccount = UserUtil.getCurrentUser();
+            if(userId != null && userAccount == null) {
+                UserInfo userInfo = logonService.getUserInfoById(userId);
+                userAccount =
+                        new UserAccount(userInfo.getId(), userInfo.getUserName(), userInfo.getUserCode()
+                                , userInfo.getUserPhone(), userInfo.getUserMail());
+                session.setAttribute(GlobalVariable.SESSION_CURRENT_USER_KEY, userAccount);
+            }
             return subject.getPrincipal() != null;
         }
     }
