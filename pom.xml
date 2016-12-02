@@ -347,7 +347,7 @@
             <artifactId>mtool</artifactId>
             <version>1.0.0</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/mtool-1.0.0.jar</systemPath>
+            <systemPath>/Users/kangzz/Pro/Personal/mtool/target/mtool-1.0.0.jar</systemPath>
         </dependency>
 
     </dependencies>
