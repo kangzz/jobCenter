@@ -112,6 +112,9 @@
 								<th data-field="jobName" data-align="center">任务名称</th>
 								<th data-field="jobSystem" data-align="center">任务归属系统</th>
 								<th data-field="jobExecuteRule" data-align="center">执行规则</th>
+								<th data-field="previousFireTime" data-align="center">上次执行时间</th>
+								<th data-field="nextFireTime" data-align="center">下次执行时间</th>
+								<th data-field="executeType" data-align="center">运行状态</th>
 								<th data-field="jobStartTime" data-align="center">任务开始日期</th>
 								<th data-field="jobEndTime" data-align="center">任务结束日期</th>
 								<th data-field="isValid" data-align="center">是否有效</th>

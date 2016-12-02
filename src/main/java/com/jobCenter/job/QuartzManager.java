@@ -11,11 +11,13 @@
  */
 package com.jobCenter.job;
 
+import com.jobCenter.enums.TriggerState;
+import com.jobCenter.model.JobExecuteModel;
 import com.jobCenter.model.JobInfoModel;
+import com.jobCenter.util.DateUtil;
 import org.apache.log4j.Logger;
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
-
 
 
 /**
@@ -57,6 +59,8 @@ public class QuartzManager {
 			// 触发器
 			CronTrigger trigger = new CronTrigger(jobName, TRIGGER_GROUP_NAME);// 触发器名,触发器组
 			trigger.setCronExpression(time);// 触发器时间设定
+			trigger.setJobDataMap(jobDetail.getJobDataMap());
+			trigger.setEndTime(jobInfoMode.getJobEndTime());
 			sched.scheduleJob(jobDetail, trigger);
 			// 启动
 			if (!sched.isShutdown()) {
@@ -282,4 +286,40 @@ public class QuartzManager {
 			throw new RuntimeException(e);
 		}
 	}
+
+	public static JobInfoModel getJobInfoModelFromQuartzManager(String jobName){
+		try {
+			Scheduler sched = gSchedulerFactory.getScheduler();
+			CronTrigger trigger = (CronTrigger) sched.getTrigger(jobName,TRIGGER_GROUP_NAME);
+			if(trigger != null){
+				JobInfoModel model = (JobInfoModel) trigger.getJobDataMap().get("jobInfoMode");
+				return model;
+			}
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		return null;
+	}
+	public static JobExecuteModel getJobExecuteModel(String jobName){
+		JobExecuteModel model = new JobExecuteModel();
+		try {
+			Scheduler sched = gSchedulerFactory.getScheduler();
+			CronTrigger trigger = (CronTrigger) sched.getTrigger(jobName,TRIGGER_GROUP_NAME);
+			if(trigger != null){
+				if(trigger.getNextFireTime()!=null){
+					model.setNextFireTime(DateUtil.formatDate(trigger.getNextFireTime(),DateUtil.DATETIME24_PATTERN_LINE));
+				}
+				if(trigger.getPreviousFireTime()!=null){
+					model.setPreviousFireTime(DateUtil.formatDate(trigger.getPreviousFireTime(),DateUtil.DATETIME24_PATTERN_LINE));
+				}
+				int state = sched.getTriggerState(trigger.getName(),TRIGGER_GROUP_NAME);
+				model.setExecuteType(TriggerState.lookup.get(Integer.valueOf(state)));
+			}
+		} catch (Exception e) {
+			logger.error("",e);
+		}
+		return model;
+	}
+
+
 }

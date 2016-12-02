@@ -22,7 +22,6 @@ public interface JobInfoService {
      * 日期 ：2016-11-28 21:27:58
      */
     Map<String,Object> queryJobListByJobInfoSearchParam(JobInfoSearchParam jobInfoSearchParam);
-
     void saveJobInfo(JobInfoSaveParam jobInfoSaveParam, UserAccount userAccount);
     void deleteJobInfoById(String jobId,UserAccount userAccount);
     void changeJobValidById(String jobId, Integer isValid, UserAccount userAccount);

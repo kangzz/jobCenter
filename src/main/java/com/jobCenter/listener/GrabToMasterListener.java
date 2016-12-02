@@ -32,7 +32,7 @@ public class GrabToMasterListener implements ServletContextListener {
         String str = null;
         if (str == null && myThread == null) {
             myThread = new GrabToMasterListenerThread();
-           // myThread.start(); // servlet 上下文初始化时启动 socket
+            myThread.start(); // servlet 上下文初始化时启动 socket
         }
     }
 }
@@ -116,14 +116,10 @@ class GrabToMasterListenerThread extends Thread {
                     isNeedRemoveJobs = true;
                 }
             } else if (SystemConstant.LOCAL_IS_MASTER) {
-                //校验当前机器是否为主机
-                HeartBeatInfo heartBeatInfo = new HeartBeatInfo();
-                heartBeatInfo.setMasterIdentity(SystemConstant.MASTER_IDENTITY);
-                heartBeatInfo.setHeartBeatTime(new Date());
                 //检查本机是否为主机 同时更新心跳时间
                 Boolean isMaster = false;
                 try {
-                    isMaster = jobService.checkIsMasterAndUpdateHeartBeat(heartBeatInfo);
+                    isMaster = jobService.checkIsMasterAndUpdateHeartBeat();
                 } catch (Exception e) {
                     logger.error(e.getMessage(), e);
                 }

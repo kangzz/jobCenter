@@ -1,12 +1,17 @@
 package com.jobCenter.service.impl;
 
 import com.jobCenter.comm.CommonException;
+import com.jobCenter.comm.SystemConstant;
+import com.jobCenter.domain.HeartBeatInfo;
 import com.jobCenter.domain.JobInfo;
 import com.jobCenter.domain.JobLinkInfo;
 import com.jobCenter.enums.IsType;
+import com.jobCenter.job.QuartzJob;
+import com.jobCenter.job.QuartzManager;
 import com.jobCenter.mapper.JobExecuteResultMapper;
 import com.jobCenter.mapper.JobInfoMapper;
 import com.jobCenter.mapper.JobLinkInfoMapper;
+import com.jobCenter.model.JobInfoModel;
 import com.jobCenter.model.authority.logon.UserAccount;
 import com.jobCenter.model.dto.JobExecuteResultDto;
 import com.jobCenter.model.dto.JobInfoDto;
@@ -14,16 +19,15 @@ import com.jobCenter.model.param.JobExecuteResultParam;
 import com.jobCenter.model.param.JobInfoSaveParam;
 import com.jobCenter.model.param.JobInfoSearchParam;
 import com.jobCenter.service.JobInfoService;
+import com.jobCenter.service.JobService;
 import com.jobCenter.util.DateUtil;
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 @Service(value = "jobInfoService")
@@ -35,6 +39,8 @@ public class JobInfoServiceImpl implements JobInfoService {
     private JobLinkInfoMapper jobLinkInfoMapper;
     @Autowired
     private JobExecuteResultMapper jobExecuteResultMapper;
+    @Autowired
+    private JobService jobService;
 
     private final static Logger logger = Logger.getLogger(JobInfoServiceImpl.class);
     /**
@@ -44,6 +50,15 @@ public class JobInfoServiceImpl implements JobInfoService {
      */
     public Map<String,Object> queryJobListByJobInfoSearchParam(JobInfoSearchParam jobInfoSearchParam){
         List<JobInfoDto> list = jobInfoMapper.queryJobListByJobInfoSearchParam(jobInfoSearchParam);
+        if(jobService.checkIsMasterAndUpdateHeartBeat()){
+            for (int i = 0; list != null && i < list.size(); i++) {
+                try {
+                    BeanUtils.copyProperties(list.get(i), QuartzManager.getJobExecuteModel(list.get(i).getJobName()));
+                }catch (Exception e){
+
+                }
+            }
+        }
         Map<String, Object> result = new HashMap<String, Object>();
         long totalCount = jobInfoMapper.queryJobCountByJobInfoSearchParam(jobInfoSearchParam);;
         result.put("rows", list);
@@ -56,6 +71,7 @@ public class JobInfoServiceImpl implements JobInfoService {
      * 日期 ：2016-12-01 16:53:19
      */
     public void saveJobInfo(JobInfoSaveParam jobInfoSaveParam, UserAccount userAccount){
+        this.checkIsMaster();
         JobInfo jobInfo = this.getJobInfoForSave(jobInfoSaveParam, userAccount);
         if(jobInfo.getJobId() == null){
             jobInfoMapper.insertSelective(jobInfo);
@@ -63,6 +79,13 @@ public class JobInfoServiceImpl implements JobInfoService {
             jobInfoMapper.updateByPrimaryKeySelective(jobInfo);
         }
         this.saveJobLinkInfo(jobInfo,jobInfoSaveParam, userAccount);
+
+        //根据定时任务主体获取定时任务执行model
+        JobInfoModel jobInfoMode = jobService.getJobModel(jobInfo);
+        //先移除现有的定时任务 再添加定时任务
+        QuartzManager.removeJob(jobInfoMode.getJobName());
+        QuartzJob quartzJob = new QuartzJob();
+        QuartzManager.addJob(jobInfoMode.getJobName(), quartzJob.getClass(), jobInfoMode.getJobExecuteRule(), jobInfoMode);
     }
     //封装定时任务主表信息数据
     private JobInfo getJobInfoForSave(JobInfoSaveParam jobInfoSaveParam, UserAccount userAccount){
@@ -207,6 +230,7 @@ public class JobInfoServiceImpl implements JobInfoService {
     }
 
     public void deleteJobInfoById(String jobId,UserAccount userAccount){
+        this.checkIsMaster();
         JobInfo jobInfo = jobInfoMapper.selectByPrimaryKey(jobId);
         if(jobInfo != null){
             jobInfo.setIsDel(IsType.YES.getValue());
@@ -218,15 +242,27 @@ public class JobInfoServiceImpl implements JobInfoService {
             record.setIsDel(IsType.NO.getValue());
             List<JobLinkInfo> jobLinkList = jobLinkInfoMapper.selectByJobLinkInfo(record);
             this.deleteDbJobLinkInfo(jobLinkList,userAccount);
+            QuartzManager.removeJob(jobInfo.getJobName());
         }
     }
     public void changeJobValidById(String jobId, Integer isValid, UserAccount userAccount){
+        this.checkIsMaster();
         JobInfo jobInfo = jobInfoMapper.selectByPrimaryKey(jobId);
         if(jobInfo != null){
             jobInfo.setIsValid(isValid);
             jobInfo.setUpdateTime(DateUtil.getCurrentDate());
             jobInfo.setUpdateId(userAccount.getUserId()+"");
             jobInfoMapper.updateByPrimaryKeySelective(jobInfo);
+            if(isValid == IsType.YES.getValue()){
+                //根据定时任务主体获取定时任务执行model
+                JobInfoModel jobInfoMode = jobService.getJobModel(jobInfo);
+                //先移除现有的定时任务 再添加定时任务
+                QuartzManager.removeJob(jobInfoMode.getJobName());
+                QuartzJob quartzJob = new QuartzJob();
+                QuartzManager.addJob(jobInfoMode.getJobName(), quartzJob.getClass(), jobInfoMode.getJobExecuteRule(), jobInfoMode);
+            }else{
+                QuartzManager.removeJob(jobInfo.getJobName());
+            }
         }
     }
     public JobInfoSaveParam getJobInfoToEdit(String jobId){
@@ -267,6 +303,24 @@ public class JobInfoServiceImpl implements JobInfoService {
         result.put("rows", list);
         result.put("total", totalCount);
         return result;
+    }
+    /**
+     * 描述：校验当前机器是否为主机 非主机无法执行新增 修改 作废定时任务操作
+     * 作者 ：kangzz
+     * 日期 ：2016-12-02 20:31:13
+     */
+    private void checkIsMaster(){
+        //校验当前机器是否为主机
+        //检查本机是否为主机 同时更新心跳时间
+        Boolean isMaster = false;
+        try {
+            isMaster = jobService.checkIsMasterAndUpdateHeartBeat();
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
+        if(!isMaster){
+            throw new CommonException(1001);
+        }
     }
 
 

@@ -66,19 +66,17 @@ public class JobServiceImpl implements JobService {
      * 作者 ：kangzz
      * 日期 ：2016-03-18 23:25:16
      */
-    public Boolean checkIsMasterAndUpdateHeartBeat(HeartBeatInfo heartBeatInfo) {
-        try {
-            heartBeatInfo.setIsDel(IsType.NO.getValue());
-            int countNum = heartBeatInfoMapper.updateByMasterIdentity(heartBeatInfo);
-            if (countNum > 0) {
-                return true;
-            } else {
-                return false;
-            }
-        } catch (Exception e) {
-            throw new NeedWarningException(101, e);
+    public Boolean checkIsMasterAndUpdateHeartBeat() {
+        HeartBeatInfo heartBeatInfo = new HeartBeatInfo();
+        heartBeatInfo.setMasterIdentity(SystemConstant.MASTER_IDENTITY);
+        heartBeatInfo.setHeartBeatTime(new Date());
+        heartBeatInfo.setIsDel(IsType.NO.getValue());
+        int countNum = heartBeatInfoMapper.updateByMasterIdentity(heartBeatInfo);
+        if (countNum > 0) {
+            return true;
+        } else {
+            return false;
         }
-
     }
 
     /**
@@ -126,7 +124,6 @@ public class JobServiceImpl implements JobService {
                 QuartzJob quartzJob = new QuartzJob();
                 //添加任务信息
                 try {
-
                     //这里捕捉是因为不能因为个别任务添加失败影响大批任务添加 导致定时任务系统不可用
                     QuartzManager.addJob(jobInfoMode.getJobName(), quartzJob.getClass(), jobInfoMode.getJobExecuteRule(), jobInfoMode);
                 } catch (Exception e) {
@@ -149,9 +146,7 @@ public class JobServiceImpl implements JobService {
      * 日期 ：2016-03-18 00:48:44
      */
     public List<JobInfoModel> getAllJobInfo() {
-
         List<JobInfoModel> jobInfoModes = new ArrayList<JobInfoModel>();
-
         try {
             logger.info("查询全部定时任务信息开始!");
             Long startTime = System.currentTimeMillis();
@@ -160,49 +155,16 @@ public class JobServiceImpl implements JobService {
             jobInfo.setIsDel(IsType.NO.getValue());
             jobInfo.setIsValid(IsType.YES.getValue());
             //查询所有定时任务数据
-            List<JobInfo> jobInfolList = jobInfoMapper.selectByJobInfo(jobInfo);
+            List<JobInfo> jobInfoList = jobInfoMapper.selectByJobInfo(jobInfo);
             //遍历所有任务数据 进而查询每个任务下的链接请求信息
-            if (jobInfolList != null && !jobInfolList.isEmpty()) {
-                int size = jobInfolList.size();
-                JobInfo jobInfoDb = null;
-                //定义查询任务下请求信息的条件
-                JobLinkInfo searchJobLinkInfo = new JobLinkInfo();
+            if (jobInfoList != null && !jobInfoList.isEmpty()) {
+                int size = jobInfoList.size();
                 for (int i = 0; i < size; i++) {
-                    //最终封装返回的数据
-                    JobInfoModel jobInfoModel = new JobInfoModel();
-                    //根据主任务id查询主任务下子任务信息 如果为空 则不需要加载到任务列表中
-                    jobInfoDb = jobInfolList.get(i);
-                    searchJobLinkInfo.setJobId(jobInfoDb.getJobId());
-                    searchJobLinkInfo.setIsDel(IsType.NO.getValue());
-                    searchJobLinkInfo.setIsValid(IsType.YES.getValue());
-                    List<JobLinkInfo> jobLinkInfoList =
-                            jobLinkInfoMapper.selectByJobLinkInfo(searchJobLinkInfo);
-                    if (jobLinkInfoList == null || jobLinkInfoList.isEmpty()) {
+                    JobInfoModel model = this.getJobModel(jobInfoList.get(i));
+                    if(model == null){
                         continue;
                     }
-                    int linkSize = jobLinkInfoList.size();
-                    JobLinkInfo jobLinkInfoDb = null;
-                    List<JobLinkInfoModel> jobLinkInfoModels = new ArrayList<JobLinkInfoModel>();
-                    for (int j = 0; j < linkSize; j++) {
-                        JobLinkInfoModel jobLinkModel = new JobLinkInfoModel();
-                        jobLinkInfoDb = jobLinkInfoList.get(j);
-                        jobLinkModel.setJobId(jobLinkInfoDb.getJobId());
-                        jobLinkModel.setJobLink(jobLinkInfoDb.getJobLink());
-                        jobLinkModel.setJobLinkId(jobLinkInfoDb.getJobLinkId());
-                        jobLinkModel.setServiceName(jobLinkInfoDb.getServiceName());
-                        jobLinkInfoModels.add(jobLinkModel);
-                    }
-                    jobInfoModel.setJobLinkInfoModels(jobLinkInfoModels);
-                    jobInfoModel.setJobName(jobInfoDb.getJobName());
-                    jobInfoModel.setJobId(jobInfoDb.getJobId());
-                    jobInfoModel.setJobExecuteRule(jobInfoDb.getJobExecuteRule());
-                    jobInfoModel.setJobExecuteType(jobInfoDb.getJobExecuteType());
-                    jobInfoModel.setJobNotifySucc(jobInfoDb.getJobNotifySucc());
-                    jobInfoModel.setJobRetryTimes(jobInfoDb.getJobRetryTimes());
-                    jobInfoModel.setJobStartTime(jobInfoDb.getJobStartTime());
-                    jobInfoModel.setJobEndTime(jobInfoDb.getJobEndTime());
-                    jobInfoModes.add(jobInfoModel);
-
+                    jobInfoModes.add(model);
                 }
             }
             Long endTime = System.currentTimeMillis();
@@ -214,6 +176,50 @@ public class JobServiceImpl implements JobService {
         logger.info("添加任务总条数[" + jobInfoModes.size() + "]条");
         return jobInfoModes;
     }
+    /**
+     * 描述：根据定时任务主信息 获取加载定时任务需要的model数据
+     * 作者 ：kangzz
+     * 日期 ：2016-12-02 20:12:14
+     */
+    public JobInfoModel getJobModel(JobInfo jobInfo){
+        JobInfo jobInfoDb = jobInfo;
+        //定义查询任务下请求信息的条件
+        JobLinkInfo searchJobLinkInfo = new JobLinkInfo();
+        //最终封装返回的数据
+        JobInfoModel jobInfoModel = new JobInfoModel();
+        //根据主任务id查询主任务下子任务信息 如果为空 则不需要加载到任务列表中
+        searchJobLinkInfo.setJobId(jobInfoDb.getJobId());
+        searchJobLinkInfo.setIsDel(IsType.NO.getValue());
+        searchJobLinkInfo.setIsValid(IsType.YES.getValue());
+        List<JobLinkInfo> jobLinkInfoList =
+                jobLinkInfoMapper.selectByJobLinkInfo(searchJobLinkInfo);
+        if (jobLinkInfoList == null || jobLinkInfoList.isEmpty()) {
+            return null;
+        }
+        int linkSize = jobLinkInfoList.size();
+        JobLinkInfo jobLinkInfoDb = null;
+        List<JobLinkInfoModel> jobLinkInfoModels = new ArrayList<JobLinkInfoModel>();
+        for (int j = 0; j < linkSize; j++) {
+            JobLinkInfoModel jobLinkModel = new JobLinkInfoModel();
+            jobLinkInfoDb = jobLinkInfoList.get(j);
+            jobLinkModel.setJobId(jobLinkInfoDb.getJobId());
+            jobLinkModel.setJobLink(jobLinkInfoDb.getJobLink());
+            jobLinkModel.setJobLinkId(jobLinkInfoDb.getJobLinkId());
+            jobLinkModel.setServiceName(jobLinkInfoDb.getServiceName());
+            jobLinkInfoModels.add(jobLinkModel);
+        }
+        jobInfoModel.setJobLinkInfoModels(jobLinkInfoModels);
+        jobInfoModel.setJobName(jobInfoDb.getJobName());
+        jobInfoModel.setJobId(jobInfoDb.getJobId());
+        jobInfoModel.setJobExecuteRule(jobInfoDb.getJobExecuteRule());
+        jobInfoModel.setJobExecuteType(jobInfoDb.getJobExecuteType());
+        jobInfoModel.setJobNotifySucc(jobInfoDb.getJobNotifySucc());
+        jobInfoModel.setJobRetryTimes(jobInfoDb.getJobRetryTimes());
+        jobInfoModel.setJobStartTime(jobInfoDb.getJobStartTime());
+        jobInfoModel.setJobEndTime(jobInfoDb.getJobEndTime());
+        return jobInfoModel;
+    }
+
 
     /**
      * 描述：移除所有的定时任务信息

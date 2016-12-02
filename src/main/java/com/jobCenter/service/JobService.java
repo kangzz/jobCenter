@@ -3,6 +3,7 @@ package com.jobCenter.service;
 
 import com.jobCenter.domain.HeartBeatInfo;
 import com.jobCenter.domain.JobExecuteResult;
+import com.jobCenter.domain.JobInfo;
 import com.jobCenter.domain.JobLinkInfo;
 import com.jobCenter.model.JobInfoModel;
 import com.jobCenter.model.JobWarningModel;
@@ -28,7 +29,7 @@ public interface JobService {
      * 作者 ：kangzz
      * 日期 ：2016-03-18 23:25:16
      */
-    Boolean checkIsMasterAndUpdateHeartBeat(HeartBeatInfo heartBeatInfo) throws Exception;
+    Boolean checkIsMasterAndUpdateHeartBeat();
 
     /**
      * 描述：切换当前机器为主机是否成功 通过根据超时时间修改任务成功记录是否为0判断
@@ -51,6 +52,12 @@ public interface JobService {
      */
     List<JobInfoModel> getAllJobInfo() throws Exception;
 
+    /**
+     * 描述：根据定时任务主信息获取加载定时任务需要的信息集合
+     * 作者 ：kangzz
+     * 日期 ：2016-12-02 20:13:56
+     */
+    JobInfoModel getJobModel(JobInfo jobInfo);
     /**
      * 描述：移除所有的定时任务信息
      * 作者 ：kangzz
@@ -99,5 +106,7 @@ public interface JobService {
      * 日期 ：2016-03-25 18:09:30
      */
     JobLinkInfo getJobLinkInfoById(String linkId);
+
+
 }
 

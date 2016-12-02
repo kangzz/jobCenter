@@ -40,6 +40,10 @@ public class JobInfoDto{
 
     private String updateTime;//'修改时间'
 
+    private String nextFireTime;//下次执行时间
+    private String previousFireTime;//上次执行时间
+    private String executeType;//运行状态
+
     public Integer getJobId() {
         return jobId;
     }
@@ -171,24 +175,27 @@ public class JobInfoDto{
         }
     }
 
-    @Override
-    public String toString() {
-        return "JobInfoDto{" +
-                "jobId=" + jobId +
-                ", jobName='" + jobName + '\'' +
-                ", jobSystem='" + jobSystem + '\'' +
-                ", jobExecuteType=" + jobExecuteType +
-                ", jobExecuteRule='" + jobExecuteRule + '\'' +
-                ", jobNotifySucc=" + jobNotifySucc +
-                ", jobRetryTimes=" + jobRetryTimes +
-                ", jobStartTime='" + jobStartTime + '\'' +
-                ", jobEndTime='" + jobEndTime + '\'' +
-                ", isValid=" + isValid +
-                ", isDel=" + isDel +
-                ", createId='" + createId + '\'' +
-                ", createTime='" + createTime + '\'' +
-                ", updateId='" + updateId + '\'' +
-                ", updateTime='" + updateTime + '\'' +
-                '}';
+    public String getNextFireTime() {
+        return nextFireTime;
+    }
+
+    public void setNextFireTime(String nextFireTime) {
+        this.nextFireTime = nextFireTime;
+    }
+
+    public String getPreviousFireTime() {
+        return previousFireTime;
+    }
+
+    public void setPreviousFireTime(String previousFireTime) {
+        this.previousFireTime = previousFireTime;
+    }
+
+    public String getExecuteType() {
+        return executeType;
+    }
+
+    public void setExecuteType(String executeType) {
+        this.executeType = executeType;
     }
 }
