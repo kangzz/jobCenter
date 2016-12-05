@@ -173,7 +173,7 @@ public class JobInfoServiceImpl implements JobInfoService {
             //获取本次需要新增的任务机器列表数据
             JobLinkInfo thisModel = thisJobLinkList.get(i);
             for (int j = 0; j < dbJobLinkInfoList.size(); j++) {
-                JobLinkInfo dbModel = thisJobLinkList.get(j);
+                JobLinkInfo dbModel = dbJobLinkInfoList.get(j);
                 //如果这个数据再数据库中存在 需要判断一下是否已删除 如果删除状态 需要重新启用
                 if(thisModel.getJobLink().equals(dbModel.getJobLink())
                         && thisModel.getServiceName().equals(dbModel.getServiceName())){
@@ -186,7 +186,7 @@ public class JobInfoServiceImpl implements JobInfoService {
             }
         }
         for (int i = 0; i < dbJobLinkInfoList.size(); i++) {
-            JobLinkInfo dbModel = thisJobLinkList.get(i);
+            JobLinkInfo dbModel = dbJobLinkInfoList.get(i);
             for (int j = 0; j < thisJobLinkList.size(); j++) {
                 JobLinkInfo thisModel = thisJobLinkList.get(j);
                 if(!thisModel.getJobLink().equals(dbModel.getJobLink())
