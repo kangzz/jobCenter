@@ -12,6 +12,7 @@ import com.jobCenter.mapper.JobExecuteResultMapper;
 import com.jobCenter.mapper.JobInfoMapper;
 import com.jobCenter.mapper.JobLinkInfoMapper;
 import com.jobCenter.model.JobInfoModel;
+import com.jobCenter.model.JobLinkInfoModel;
 import com.jobCenter.model.authority.logon.UserAccount;
 import com.jobCenter.model.dto.JobExecuteResultDto;
 import com.jobCenter.model.dto.JobInfoDto;
@@ -21,6 +22,7 @@ import com.jobCenter.model.param.JobInfoSearchParam;
 import com.jobCenter.service.JobInfoService;
 import com.jobCenter.service.JobService;
 import com.jobCenter.util.DateUtil;
+import com.jobCenter.util.StringUtil;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,14 +80,37 @@ public class JobInfoServiceImpl implements JobInfoService {
         }else{
             jobInfoMapper.updateByPrimaryKeySelective(jobInfo);
         }
-        this.saveJobLinkInfo(jobInfo,jobInfoSaveParam, userAccount);
-
-        //根据定时任务主体获取定时任务执行model
-        JobInfoModel jobInfoMode = jobService.getJobModel(jobInfo);
+        List<JobLinkInfo> jobLinkInfoList = this.saveJobLinkInfo(jobInfo,jobInfoSaveParam, userAccount);
+        //获取定时任务实体
+        JobInfoModel jobInfoMode = this.changeJobAndLinkToModel(jobInfo,jobLinkInfoList);
         //先移除现有的定时任务 再添加定时任务
         QuartzManager.removeJob(jobInfoMode.getJobName());
-        QuartzJob quartzJob = new QuartzJob();
-        QuartzManager.addJob(jobInfoMode.getJobName(), quartzJob.getClass(), jobInfoMode.getJobExecuteRule(), jobInfoMode);
+        if(IsType.YES.getValue() == jobInfo.getIsValid()){
+            QuartzJob quartzJob = new QuartzJob();
+            QuartzManager.addJob(jobInfoMode.getJobName(), quartzJob.getClass(), jobInfoMode.getJobExecuteRule(), jobInfoMode);
+        }
+    }
+    /**
+     * 描述：封装加载到任务中的实体数据
+     * 作者 ：kangzz
+     * 日期 ：2016-12-05 23:33:55
+     */
+    private JobInfoModel changeJobAndLinkToModel(JobInfo jobInfo, List<JobLinkInfo> jobLinkInfoList){
+        JobInfoModel model = new JobInfoModel();
+        try{
+            BeanUtils.copyProperties(model,jobInfo);
+            List<JobLinkInfoModel> jobLinkInfoModels = new ArrayList<JobLinkInfoModel>();
+            for (int i = 0; jobLinkInfoList!=null && i < jobLinkInfoList.size(); i++) {
+                JobLinkInfoModel linkModel = new JobLinkInfoModel();
+                JobLinkInfo jobLinkInfo = jobLinkInfoList.get(i);
+                BeanUtils.copyProperties(linkModel,jobLinkInfo);
+                jobLinkInfoModels.add(linkModel);
+            }
+            model.setJobLinkInfoModels(jobLinkInfoModels);
+        }catch (Exception e){
+            logger.error("",e);
+        }
+        return model;
     }
     //封装定时任务主表信息数据
     private JobInfo getJobInfoForSave(JobInfoSaveParam jobInfoSaveParam, UserAccount userAccount){
@@ -115,7 +140,7 @@ public class JobInfoServiceImpl implements JobInfoService {
      * 作者 ：kangzz
      * 日期 ：2016-12-01 16:49:31
      */
-    private void saveJobLinkInfo(JobInfo jobInfo, JobInfoSaveParam jobInfoSaveParam, UserAccount userAccount){
+    private List<JobLinkInfo> saveJobLinkInfo(JobInfo jobInfo, JobInfoSaveParam jobInfoSaveParam, UserAccount userAccount){
         //查询本次操作的任务是有已配置调用列表
         JobLinkInfo record = new JobLinkInfo();
         record.setJobId(jobInfo.getJobId());
@@ -124,10 +149,10 @@ public class JobInfoServiceImpl implements JobInfoService {
         List<JobLinkInfo> thisJobLinkList = this.changeJobLinkStrToList(jobInfoSaveParam.getJobLinkListStr());
         //如果之前没有过 那么直接保存插入数据
         if(dbJobLinkInfoList == null || dbJobLinkInfoList.isEmpty()){
-            this.saveInsertJobLinkInfo(thisJobLinkList,jobInfo,userAccount);
+            return this.saveInsertJobLinkInfo(thisJobLinkList,jobInfo,userAccount);
         }else{
             //拆分数据 如果已经存在并且再用 那么不做操作; 如果不存在 那么插入; 如果有移除 那么修改数据库数据
-            this.updateJobLinkInfo(thisJobLinkList,dbJobLinkInfoList,jobInfo,userAccount);
+            return this.updateJobLinkInfo(thisJobLinkList,dbJobLinkInfoList,jobInfo,userAccount);
         }
     }
     /**
@@ -135,13 +160,15 @@ public class JobInfoServiceImpl implements JobInfoService {
      * 作者 ：kangzz
      * 日期 ：2016-12-01 16:51:44
      */
-    private void updateJobLinkInfo(List<JobLinkInfo> thisJobLinkList, List<JobLinkInfo> dbJobLinkInfoList, JobInfo jobInfo,UserAccount userAccount){
+    private List<JobLinkInfo> updateJobLinkInfo(List<JobLinkInfo> thisJobLinkList, List<JobLinkInfo> dbJobLinkInfoList, JobInfo jobInfo,UserAccount userAccount){
         //需要新增的link数据
         List<JobLinkInfo> needInsertList = new ArrayList<JobLinkInfo>();
         //需要恢复的link数据
         List<JobLinkInfo> needReviveList = new ArrayList<JobLinkInfo>();
         //需要移除的link数据
         List<JobLinkInfo> needDeleteList = new ArrayList<JobLinkInfo>();
+        //需要返回的有效link数据
+        List<JobLinkInfo> returnList = new ArrayList<JobLinkInfo>();
         for (int i = 0; i < thisJobLinkList.size(); i++) {
             //获取本次需要新增的任务机器列表数据
             JobLinkInfo thisModel = thisJobLinkList.get(i);
@@ -168,9 +195,17 @@ public class JobInfoServiceImpl implements JobInfoService {
                 }
             }
         }
-        this.saveInsertJobLinkInfo(needInsertList,jobInfo,userAccount);
-        this.reviveJobLinkInfoList(needReviveList,userAccount);
+        List<JobLinkInfo> successSaveList = this.saveInsertJobLinkInfo(needInsertList,jobInfo,userAccount);
+        if(successSaveList!=null && !successSaveList.isEmpty()){
+            returnList.addAll(successSaveList);
+        }
+        List<JobLinkInfo> successReviveList = this.reviveJobLinkInfoList(needReviveList,userAccount);
+        if(successReviveList!=null && !successReviveList.isEmpty()){
+            returnList.addAll(successReviveList);
+        }
         this.deleteDbJobLinkInfo(needDeleteList,userAccount);
+        return returnList;
+
     }
     //将本次配置信息转换成List
     private List<JobLinkInfo> changeJobLinkStrToList(String jobLinkListStr){
@@ -182,9 +217,11 @@ public class JobInfoServiceImpl implements JobInfoService {
                 JobLinkInfo jobLinkInfo = new JobLinkInfo();
                 String jobLinkStr = jobLink[0];
                 String serviceName = jobLink[1];
-                jobLinkInfo.setJobLink(jobLinkStr);
-                jobLinkInfo.setServiceName(jobLink[1]);
-                list.add(jobLinkInfo);
+                if(!StringUtil.isBlank(jobLinkStr) && !StringUtil.isBlank(serviceName)){
+                    jobLinkInfo.setJobLink(jobLinkStr);
+                    jobLinkInfo.setServiceName(serviceName);
+                    list.add(jobLinkInfo);
+                }
             }
         }catch (Exception e){
             throw new CommonException(1000);
@@ -192,8 +229,8 @@ public class JobInfoServiceImpl implements JobInfoService {
         return list;
     }
     //保存调用列表信息
-    private void saveInsertJobLinkInfo(List<JobLinkInfo> jobLinkInfoList, JobInfo jobInfo, UserAccount userAccount){
-        if(jobLinkInfoList == null || jobLinkInfoList.isEmpty()){
+    private List<JobLinkInfo> saveInsertJobLinkInfo(List<JobLinkInfo> jobLinkInfoList, JobInfo jobInfo, UserAccount userAccount){
+        if(jobLinkInfoList != null && !jobLinkInfoList.isEmpty()){
             for (int i = 0; i < jobLinkInfoList.size(); i++) {
                 JobLinkInfo jobLinkInfo = jobLinkInfoList.get(i);
                 jobLinkInfo.setIsValid(IsType.YES.getValue());
@@ -206,9 +243,10 @@ public class JobInfoServiceImpl implements JobInfoService {
                 jobLinkInfoMapper.insertSelective(jobLinkInfo);
             }
         }
+        return jobLinkInfoList;
     }
     //复活以前可能作废的信息
-    private void reviveJobLinkInfoList(List<JobLinkInfo> jobLinkInfoList, UserAccount userAccount){
+    private List<JobLinkInfo> reviveJobLinkInfoList(List<JobLinkInfo> jobLinkInfoList, UserAccount userAccount){
         for (int i = 0; jobLinkInfoList!=null && i < jobLinkInfoList.size(); i++) {
             JobLinkInfo jobLinkInfo = jobLinkInfoList.get(i);
             jobLinkInfo.setIsDel(IsType.NO.getValue());
@@ -217,6 +255,7 @@ public class JobInfoServiceImpl implements JobInfoService {
             jobLinkInfo.setUpdateTime(DateUtil.getCurrentDate());
             jobLinkInfoMapper.updateByPrimaryKeySelective(jobLinkInfo);
         }
+        return jobLinkInfoList;
     }
     //移除本次删除的机器信息
     private void deleteDbJobLinkInfo(List<JobLinkInfo> jobLinkInfoList, UserAccount userAccount){
