@@ -1,8 +1,6 @@
 package com.jobCenter.service.impl;
 
 import com.jobCenter.comm.CommonException;
-import com.jobCenter.comm.SystemConstant;
-import com.jobCenter.domain.HeartBeatInfo;
 import com.jobCenter.domain.JobInfo;
 import com.jobCenter.domain.JobLinkInfo;
 import com.jobCenter.enums.IsType;
@@ -29,7 +27,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 @Service(value = "jobInfoService")
@@ -167,34 +168,41 @@ public class JobInfoServiceImpl implements JobInfoService {
         List<JobLinkInfo> needReviveList = new ArrayList<JobLinkInfo>();
         //需要移除的link数据
         List<JobLinkInfo> needDeleteList = new ArrayList<JobLinkInfo>();
+        //将本次新增的数据封装到map中 key是 link+serviceName Value是实体
+        Map<String,JobLinkInfo> thisJobLinkMap = new HashMap<String, JobLinkInfo>();
+        for (int i = 0; thisJobLinkList != null && i < thisJobLinkList.size(); i++) {
+            JobLinkInfo jobLinkInfo = thisJobLinkList.get(i);
+            thisJobLinkMap.put(jobLinkInfo.getJobLink()+jobLinkInfo.getServiceName(),jobLinkInfo);
+        }
+        //将数据库的数据封装到map中 key是 link+serviceName Value是实体
+        Map<String,JobLinkInfo> dbJobLinkMap = new HashMap<String, JobLinkInfo>();
+        for (int i = 0; dbJobLinkInfoList != null && i < dbJobLinkInfoList.size(); i++) {
+            JobLinkInfo jobLinkInfo = dbJobLinkInfoList.get(i);
+            dbJobLinkMap.put(jobLinkInfo.getJobLink()+jobLinkInfo.getServiceName(),jobLinkInfo);
+        }
+        //分发本次数据 是需要复活还是需要新增
+        for (int i = 0; thisJobLinkList != null && i < thisJobLinkList.size(); i++) {
+            JobLinkInfo jobLinkInfo = thisJobLinkList.get(i);
+            JobLinkInfo mapModel = dbJobLinkMap.get(jobLinkInfo.getJobLink()+jobLinkInfo.getServiceName());
+            //如果数据库中有这个配置url了
+            if(mapModel != null){
+                //如果原来的数据已经作废 那么要恢复启用 否则不需要处理
+                if(mapModel.getIsDel() == IsType.YES.getValue() || mapModel.getIsValid() == IsType.NO.getValue()){
+                    needReviveList.add(mapModel);
+                }
+            }else{//如果数据库中没有当前这个配置 那么需要新增
+                needInsertList.add(jobLinkInfo);
+            }
+        }
+        //校验数据库中的记录在本次添加是否存在 如果没有 那么要移除掉
+        for (int i = 0; dbJobLinkInfoList != null && i < dbJobLinkInfoList.size(); i++) {
+            JobLinkInfo jobLinkInfo = dbJobLinkInfoList.get(i);
+            if(!thisJobLinkMap.containsKey(jobLinkInfo.getJobLink()+jobLinkInfo.getServiceName())){
+                needDeleteList.add(jobLinkInfo);
+            }
+        }
         //需要返回的有效link数据
         List<JobLinkInfo> returnList = new ArrayList<JobLinkInfo>();
-        for (int i = 0; i < thisJobLinkList.size(); i++) {
-            //获取本次需要新增的任务机器列表数据
-            JobLinkInfo thisModel = thisJobLinkList.get(i);
-            for (int j = 0; j < dbJobLinkInfoList.size(); j++) {
-                JobLinkInfo dbModel = dbJobLinkInfoList.get(j);
-                //如果这个数据再数据库中存在 需要判断一下是否已删除 如果删除状态 需要重新启用
-                if(thisModel.getJobLink().equals(dbModel.getJobLink())
-                        && thisModel.getServiceName().equals(dbModel.getServiceName())){
-                    if(dbModel.getIsDel() == IsType.YES.getValue() || dbModel.getIsValid() == IsType.NO.getValue()){
-                        needReviveList.add(dbModel);
-                    }
-                }else{
-                    needInsertList.add(thisModel);
-                }
-            }
-        }
-        for (int i = 0; i < dbJobLinkInfoList.size(); i++) {
-            JobLinkInfo dbModel = dbJobLinkInfoList.get(i);
-            for (int j = 0; j < thisJobLinkList.size(); j++) {
-                JobLinkInfo thisModel = thisJobLinkList.get(j);
-                if(!thisModel.getJobLink().equals(dbModel.getJobLink())
-                        && !thisModel.getServiceName().equals(dbModel.getServiceName())){
-                    needDeleteList.add(dbModel);
-                }
-            }
-        }
         List<JobLinkInfo> successSaveList = this.saveInsertJobLinkInfo(needInsertList,jobInfo,userAccount);
         if(successSaveList!=null && !successSaveList.isEmpty()){
             returnList.addAll(successSaveList);
@@ -205,7 +213,6 @@ public class JobInfoServiceImpl implements JobInfoService {
         }
         this.deleteDbJobLinkInfo(needDeleteList,userAccount);
         return returnList;
-
     }
     //将本次配置信息转换成List
     private List<JobLinkInfo> changeJobLinkStrToList(String jobLinkListStr){
