@@ -39,6 +39,8 @@
                 /js/* = anon
                 /plugins/* = anon
                 /login.do = anon
+                /serviceSystem/notify.do = anon
+                /callBackToJobCenter/callBack.do = anon
                 /logout.do = shiroLogout
                 /** = authc
             </value>
