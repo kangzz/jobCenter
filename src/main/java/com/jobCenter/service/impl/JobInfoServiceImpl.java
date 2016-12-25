@@ -21,6 +21,7 @@ import com.jobCenter.service.JobInfoService;
 import com.jobCenter.service.JobService;
 import com.jobCenter.util.DateUtil;
 import com.jobCenter.util.StringUtil;
+import com.kangzz.mtool.util.ObjectUtil;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,7 +77,7 @@ public class JobInfoServiceImpl implements JobInfoService {
     public void saveJobInfo(JobInfoSaveParam jobInfoSaveParam, UserAccount userAccount){
         this.checkIsMaster();
         JobInfo jobInfo = this.getJobInfoForSave(jobInfoSaveParam, userAccount);
-        if(jobInfo.getJobId() == null){
+        if(ObjectUtil.isNull(jobInfo.getJobId())){
             jobInfoMapper.insertSelective(jobInfo);
         }else{
             jobInfoMapper.updateByPrimaryKeySelective(jobInfo);
@@ -86,7 +87,7 @@ public class JobInfoServiceImpl implements JobInfoService {
         JobInfoModel jobInfoMode = this.changeJobAndLinkToModel(jobInfo,jobLinkInfoList);
         //先移除现有的定时任务 再添加定时任务
         QuartzManager.removeJob(jobInfoMode.getJobName());
-        if(IsType.YES.getValue() == jobInfo.getIsValid()){
+        if(ObjectUtil.equals(IsType.YES.getValue(),jobInfo.getIsValid())){
             QuartzJob quartzJob = new QuartzJob();
             QuartzManager.addJob(jobInfoMode.getJobName(), quartzJob.getClass(), jobInfoMode.getJobExecuteRule(), jobInfoMode);
         }
@@ -118,7 +119,7 @@ public class JobInfoServiceImpl implements JobInfoService {
         JobInfo jobInfo = new JobInfo();
         Integer jobId = jobInfoSaveParam.getJobId();
         jobInfo.setJobId(jobId);
-        if(jobId == null){
+        if(ObjectUtil.isNull(jobId)){
             jobInfo.setCreateId(userAccount.getUserId()+"");
             jobInfo.setCreateTime(DateUtil.getCurrentDate());
         }
