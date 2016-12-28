@@ -20,8 +20,9 @@ import com.jobCenter.model.param.JobInfoSearchParam;
 import com.jobCenter.service.JobInfoService;
 import com.jobCenter.service.JobService;
 import com.jobCenter.util.DateUtil;
-import com.jobCenter.util.StringUtil;
+import com.kangzz.mtool.util.BooleanUtils;
 import com.kangzz.mtool.util.ObjectUtil;
+import com.kangzz.mtool.util.StrUtil;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -150,7 +151,7 @@ public class JobInfoServiceImpl implements JobInfoService {
         //将本次保存的数据转换成任务对应列表数据
         List<JobLinkInfo> thisJobLinkList = this.changeJobLinkStrToList(jobInfoSaveParam.getJobLinkListStr());
         //如果之前没有过 那么直接保存插入数据
-        if(dbJobLinkInfoList == null || dbJobLinkInfoList.isEmpty()){
+        if(ObjectUtil.isNullOrEmpty(dbJobLinkInfoList)){
             return this.saveInsertJobLinkInfo(thisJobLinkList,jobInfo,userAccount);
         }else{
             //拆分数据 如果已经存在并且再用 那么不做操作; 如果不存在 那么插入; 如果有移除 那么修改数据库数据
@@ -219,13 +220,13 @@ public class JobInfoServiceImpl implements JobInfoService {
     private List<JobLinkInfo> changeJobLinkStrToList(String jobLinkListStr){
         List<JobLinkInfo> list = new ArrayList<JobLinkInfo>();
         try{
-            String[] jobLinkArr = jobLinkListStr.split(";");
+            String[] jobLinkArr = StrUtil.split(jobLinkListStr,";");
             for (int i = 0; i < jobLinkArr.length; i++) {
-                String[] jobLink = jobLinkArr[i].split("\\|");
+                String[] jobLink = StrUtil.split(jobLinkArr[i],"\\|");
                 JobLinkInfo jobLinkInfo = new JobLinkInfo();
                 String jobLinkStr = jobLink[0];
                 String serviceName = jobLink[1];
-                if(!StringUtil.isBlank(jobLinkStr) && !StringUtil.isBlank(serviceName)){
+                if(BooleanUtils.andNotNullOrEmpty(jobLinkStr,serviceName)){
                     jobLinkInfo.setJobLink(jobLinkStr);
                     jobLinkInfo.setServiceName(serviceName);
                     list.add(jobLinkInfo);
@@ -238,7 +239,7 @@ public class JobInfoServiceImpl implements JobInfoService {
     }
     //保存调用列表信息
     private List<JobLinkInfo> saveInsertJobLinkInfo(List<JobLinkInfo> jobLinkInfoList, JobInfo jobInfo, UserAccount userAccount){
-        if(jobLinkInfoList != null && !jobLinkInfoList.isEmpty()){
+        if(ObjectUtil.isNotNullOrEmpty(jobLinkInfoList)){
             for (int i = 0; i < jobLinkInfoList.size(); i++) {
                 JobLinkInfo jobLinkInfo = jobLinkInfoList.get(i);
                 jobLinkInfo.setIsValid(IsType.YES.getValue());

@@ -4,7 +4,6 @@ import com.jobCenter.domain.UserInfo;
 import com.jobCenter.model.authority.logon.MenuDto;
 import com.jobCenter.service.LogonService;
 import com.jobCenter.util.MD5Util;
-import com.jobCenter.util.StringUtil;
 import com.kangzz.mtool.util.BooleanUtils;
 import org.apache.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
@@ -44,7 +43,7 @@ public class LogonController {
 		}
 		String userCode = request.getParameter("userCode");
 		String userPwd = request.getParameter("userPwd");
-		if(BooleanUtils.or(StringUtil.isBlank(userCode),StringUtil.isBlank(userPwd))){
+		if(BooleanUtils.orNullOrEmpty(userCode,userPwd)){
 			logger.info("用户名或密码为空!");
 			return "login";
 		}

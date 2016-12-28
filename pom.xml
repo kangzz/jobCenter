@@ -6,7 +6,7 @@
 
     <groupId>jobCenter</groupId>
     <artifactId>jobCenter</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0</version>
     <packaging>war</packaging>
     <name>jobCenter</name>
 
@@ -345,9 +345,7 @@
         <dependency>
             <groupId>com.kangzz</groupId>
             <artifactId>mtool</artifactId>
-            <version>1.0.0</version>
-            <scope>system</scope>
-            <systemPath>/Users/kangzz/Pro/Personal/mtool/target/mtool-1.0.0.jar</systemPath>
+            <version>1.0.2</version>
         </dependency>
 
     </dependencies>
