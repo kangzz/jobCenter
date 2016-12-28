@@ -1,7 +1,7 @@
 package com.jobCenter.model.dto;
 
 import com.jobCenter.enums.IsType;
-import com.kangzz.mtool.util.DateUtil;
+import com.kangzz.mtool.date.DateUtil;
 
 import java.util.Date;
 

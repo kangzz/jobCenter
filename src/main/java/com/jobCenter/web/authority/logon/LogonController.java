@@ -1,17 +1,14 @@
 package com.jobCenter.web.authority.logon;
 
-import com.jobCenter.comm.GlobalVariable;
 import com.jobCenter.domain.UserInfo;
 import com.jobCenter.model.authority.logon.MenuDto;
-import com.jobCenter.model.authority.logon.UserAccount;
 import com.jobCenter.service.LogonService;
 import com.jobCenter.util.MD5Util;
 import com.jobCenter.util.StringUtil;
-import com.jobCenter.util.UserUtil;
+import com.kangzz.mtool.util.BooleanUtils;
 import org.apache.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -47,7 +44,7 @@ public class LogonController {
 		}
 		String userCode = request.getParameter("userCode");
 		String userPwd = request.getParameter("userPwd");
-		if(StringUtil.isBlank(userCode) || StringUtil.isBlank(userPwd)){
+		if(BooleanUtils.or(StringUtil.isBlank(userCode),StringUtil.isBlank(userPwd))){
 			logger.info("用户名或密码为空!");
 			return "login";
 		}
