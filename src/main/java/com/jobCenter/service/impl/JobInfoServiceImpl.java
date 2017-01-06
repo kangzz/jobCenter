@@ -280,7 +280,7 @@ public class JobInfoServiceImpl implements JobInfoService {
     public void deleteJobInfoById(String jobId,UserAccount userAccount){
         this.checkIsMaster();
         JobInfo jobInfo = jobInfoMapper.selectByPrimaryKey(jobId);
-        if(jobInfo != null){
+        if(ObjectUtil.isNotNull(jobInfo)){
             jobInfo.setIsDel(IsType.YES.getValue());
             jobInfo.setUpdateTime(DateUtil.getCurrentDate());
             jobInfo.setUpdateId(userAccount.getUserId()+"");
@@ -296,12 +296,12 @@ public class JobInfoServiceImpl implements JobInfoService {
     public void changeJobValidById(String jobId, Integer isValid, UserAccount userAccount){
         this.checkIsMaster();
         JobInfo jobInfo = jobInfoMapper.selectByPrimaryKey(jobId);
-        if(jobInfo != null){
+        if(ObjectUtil.isNotNull(jobInfo)){
             jobInfo.setIsValid(isValid);
             jobInfo.setUpdateTime(DateUtil.getCurrentDate());
             jobInfo.setUpdateId(userAccount.getUserId()+"");
             jobInfoMapper.updateByPrimaryKeySelective(jobInfo);
-            if(isValid == IsType.YES.getValue()){
+            if(ObjectUtil.equals(isValid,IsType.YES.getValue())){
                 //根据定时任务主体获取定时任务执行model
                 JobInfoModel jobInfoMode = jobService.getJobModel(jobInfo);
                 //先移除现有的定时任务 再添加定时任务
