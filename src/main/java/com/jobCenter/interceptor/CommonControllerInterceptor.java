@@ -1,6 +1,6 @@
 package com.jobCenter.interceptor;
 
-import com.jobCenter.util.StringUtil;
+import com.kangzz.mtool.util.StrUtil;
 import org.apache.log4j.Logger;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
@@ -46,7 +46,7 @@ public class CommonControllerInterceptor extends HandlerInterceptorAdapter {
 		String  aa = request.getCharacterEncoding();
 		//设置请求唯一值
 		String uuid = request.getParameter("uuid");
-		if (!StringUtil.isBlank(uuid)) {
+		if (StrUtil.isNotBlank(uuid)) {
 			String oldThreadName = Thread.currentThread().getName();
 			StringBuilder tn = new StringBuilder();
 			tn.append(oldThreadName).append("_uuid:").append(uuid);

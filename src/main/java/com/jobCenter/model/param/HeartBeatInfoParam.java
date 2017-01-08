@@ -1,6 +1,6 @@
 package com.jobCenter.model.param;
 
-import com.jobCenter.util.StringUtil;
+import com.kangzz.mtool.util.StrUtil;
 
 /**
  * 描述：心跳信息实体
@@ -33,7 +33,7 @@ public class HeartBeatInfoParam extends PageParam{
     }
 
     public void setMasterIdentity(String masterIdentity) {
-        if(StringUtil.isBlank(masterIdentity)){
+        if(StrUtil.isBlank(masterIdentity)){
             masterIdentity = null;
         }
         this.masterIdentity = masterIdentity;
@@ -44,7 +44,7 @@ public class HeartBeatInfoParam extends PageParam{
     }
 
     public void setHeartType(String heartType) {
-        if(StringUtil.isBlank(heartType)){
+        if(StrUtil.isBlank(heartType)){
             heartType = null;
         }
         this.heartType = heartType;
@@ -55,7 +55,7 @@ public class HeartBeatInfoParam extends PageParam{
     }
 
     public void setHeartBeatTime(String heartBeatTime) {
-        if(StringUtil.isBlank(heartBeatTime)){
+        if(StrUtil.isBlank(heartBeatTime)){
             heartBeatTime = null;
         }
         this.heartBeatTime = heartBeatTime;

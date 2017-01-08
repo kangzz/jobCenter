@@ -3,9 +3,9 @@ package com.jobCenter.util.http;
 
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
-import com.jobCenter.util.StringUtil;
 import com.jobCenter.util.http.bean.HttpPoster;
 import com.jobCenter.util.http.bean.JsonResponse;
+import com.kangzz.mtool.util.StrUtil;
 import org.apache.log4j.Logger;
 
 import java.util.Map;
@@ -376,7 +376,7 @@ public class MessageUtil {
         }else{
 
         }
-        if(StringUtil.isBlank(jsonStr)){
+        if(StrUtil.isBlank(jsonStr)){
             //未返回结果或者返回结果为空
         }
         //根据返回结果校验错误信息，如果返回结果中包含错误信息

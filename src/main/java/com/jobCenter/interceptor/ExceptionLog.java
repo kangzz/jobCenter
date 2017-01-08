@@ -1,11 +1,8 @@
 package com.jobCenter.interceptor;
 
-import com.jobCenter.comm.CommonException;
 import com.jobCenter.comm.NeedWarningException;
 import com.jobCenter.model.JobWarningModel;
-import com.jobCenter.service.JobService;
 import com.jobCenter.util.NotifyWarningUtil;
-import com.jobCenter.util.SpringTool;
 import org.apache.log4j.Logger;
 import org.springframework.aop.ThrowsAdvice;
 
@@ -30,6 +27,7 @@ public class ExceptionLog implements ThrowsAdvice {
      * 作者 ：kangzz
      * 日期 ：2016-03-24 09:40:56
      */
+
     public void afterThrowing(Method method, Object[] args, Object target,
                               RuntimeException  throwable) {
 

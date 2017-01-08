@@ -18,6 +18,7 @@ import com.jobCenter.model.JobWarningPersonModel;
 import com.jobCenter.service.JobService;
 import com.jobCenter.util.*;
 import com.jobCenter.util.http.MessageUtil;
+import com.kangzz.mtool.util.StrUtil;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -298,9 +299,9 @@ public class JobServiceImpl implements JobService {
 
             //本次请求是否成功
             Boolean sendIsSuccess = false;
-            String jsonStr = StringUtil.EMPTY;
-            String status = "";//通知成功 业务系统返回状态
-            JSONObject jsonObj = null;
+            String jsonStr;
+            String status;//通知成功 业务系统返回状态
+            JSONObject jsonObj;
             int notifyFailTimes = 0;//访问失败次数
             //调用结果数据保存实体
             JobExecuteResult record = new JobExecuteResult();
@@ -402,11 +403,11 @@ public class JobServiceImpl implements JobService {
      * 日期 ：2016-03-19 21:16:04
      */
     private Boolean checkIsSuccess(String returnJson) {
-        if (StringUtil.isBlank(returnJson)) {
+        if (StrUtil.isBlank(returnJson)) {
             return false;
         } else {
             JSONObject jsonObj = JSONObject.parseObject(returnJson);
-            if (!jsonObj.containsKey(StringUtil.STATUS)) {
+            if (!jsonObj.containsKey("status")) {
                 return false;
             }
             return true;

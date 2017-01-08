@@ -1,6 +1,7 @@
 package com.jobCenter.util;
 
 
+import com.kangzz.mtool.util.StrUtil;
 import org.apache.log4j.Logger;
 
 import java.security.MessageDigest;
@@ -31,7 +32,7 @@ public class MD5Util {
         char hexDigits[]={'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
 
         try {
-        	if(StringUtil.isBlank(str)) {
+        	if(StrUtil.isBlank(str)) {
             	logger.info("MD5 加密字符串为空");
         		return null;
         	}

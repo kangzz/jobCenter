@@ -3,7 +3,7 @@ package com.jobCenter.comm;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.jobCenter.util.ErrorCodeMsgUtil;
-import com.jobCenter.util.StringUtil;
+import com.kangzz.mtool.util.StrUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -93,7 +93,7 @@ public class BaseController {
         response.setStatus("failure");
         response.setErrorCode(code);
         //如果未设置错误提示 则按照错误编码查询配置信息提示
-        if(StringUtil.isBlank(message)){
+        if(StrUtil.isBlank(message)){
             response.setErrorMessage(ErrorCodeMsgUtil.getMessage(code));
         }else{
             response.setErrorMessage(message);

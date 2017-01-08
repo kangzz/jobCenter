@@ -1,7 +1,7 @@
 package com.jobCenter.model.param;
 
 import com.jobCenter.util.DateUtil;
-import com.jobCenter.util.StringUtil;
+import com.kangzz.mtool.util.StrUtil;
 
 /**
  * 描述：任务执行记录实体
@@ -32,7 +32,7 @@ public class JobExecuteResultParam extends PageParam{
     }
 
     public void setJobUuid(String jobUuid) {
-        if(StringUtil.isBlank(jobUuid)){
+        if(StrUtil.isBlank(jobUuid)){
             jobUuid = null;
         }
         this.jobUuid = jobUuid;
@@ -43,7 +43,7 @@ public class JobExecuteResultParam extends PageParam{
     }
 
     public void setJobId(String jobId) {
-        if(StringUtil.isBlank(jobId)){
+        if(StrUtil.isBlank(jobId)){
             jobId = null;
         }
         this.jobId = jobId;
@@ -54,7 +54,7 @@ public class JobExecuteResultParam extends PageParam{
     }
 
     public void setJobLinkId(String jobLinkId) {
-        if(StringUtil.isBlank(jobLinkId)){
+        if(StrUtil.isBlank(jobLinkId)){
             jobLinkId = null;
         }
         this.jobLinkId = jobLinkId;
@@ -65,7 +65,7 @@ public class JobExecuteResultParam extends PageParam{
     }
 
     public void setJobStartTimeBegin(String jobStartTimeBegin) {
-        if(StringUtil.isBlank(jobStartTimeBegin)){
+        if(StrUtil.isBlank(jobStartTimeBegin)){
             jobStartTimeBegin = null;
         }
         this.jobStartTimeBegin = jobStartTimeBegin;
@@ -76,7 +76,7 @@ public class JobExecuteResultParam extends PageParam{
     }
 
     public void setJobStartTimeEnd(String jobStartTimeEnd) {
-        if(!StringUtil.isBlank(jobStartTimeEnd)){
+        if(!StrUtil.isBlank(jobStartTimeEnd)){
             jobStartTimeEnd = DateUtil.formatDate(DateUtil.addDays(DateUtil.parseDate(jobStartTimeEnd),1),DateUtil.DATE_PATTERN_LINE);
         }else{
             jobStartTimeEnd = null;
@@ -89,7 +89,7 @@ public class JobExecuteResultParam extends PageParam{
     }
 
     public void setJobEndTimeBegin(String jobEndTimeBegin) {
-        if(StringUtil.isBlank(jobEndTimeBegin)){
+        if(StrUtil.isBlank(jobEndTimeBegin)){
             jobEndTimeBegin = null;
         }
         this.jobEndTimeBegin = jobEndTimeBegin;
@@ -100,7 +100,7 @@ public class JobExecuteResultParam extends PageParam{
     }
 
     public void setJobEndTimeEnd(String jobEndTimeEnd) {
-        if(!StringUtil.isBlank(jobEndTimeEnd)){
+        if(!StrUtil.isBlank(jobEndTimeEnd)){
             jobEndTimeEnd = DateUtil.formatDate(DateUtil.addDays(DateUtil.parseDate(jobEndTimeEnd),1),DateUtil.DATE_PATTERN_LINE);
         }else{
             jobEndTimeEnd = null;
@@ -113,7 +113,7 @@ public class JobExecuteResultParam extends PageParam{
     }
 
     public void setResultStatus(String resultStatus) {
-        if(StringUtil.isBlank(resultStatus)){
+        if(StrUtil.isBlank(resultStatus)){
             resultStatus = null;
         }
         this.resultStatus = resultStatus;

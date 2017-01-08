@@ -2,7 +2,7 @@ package com.jobCenter.model.dto;
 
 import com.jobCenter.enums.DoneStatus;
 import com.jobCenter.util.DateUtil;
-import com.jobCenter.util.StringUtil;
+import com.kangzz.mtool.util.StrUtil;
 
 /**
  * 描述：任务执行记录实体
@@ -59,7 +59,7 @@ public class JobExecuteResultDto {
     }
 
     public void setJobStartTime(String jobStartTime) {
-        if(!StringUtil.isBlank(jobStartTime)){
+        if(!StrUtil.isBlank(jobStartTime)){
             jobStartTime = DateUtil.formatDate(jobStartTime,DateUtil.DATETIME24_PATTERN_LINE);
         }
         this.jobStartTime = jobStartTime;
@@ -70,7 +70,7 @@ public class JobExecuteResultDto {
     }
 
     public void setJobEndTime(String jobEndTime) {
-        if(!StringUtil.isBlank(jobEndTime)){
+        if(!StrUtil.isBlank(jobEndTime)){
             jobEndTime = DateUtil.formatDate(jobEndTime,DateUtil.DATETIME24_PATTERN_LINE);
         }
         this.jobEndTime = jobEndTime;

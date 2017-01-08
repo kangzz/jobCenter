@@ -1,7 +1,7 @@
 package com.jobCenter.model.param;
 
 import com.jobCenter.util.DateUtil;
-import com.jobCenter.util.StringUtil;
+import com.kangzz.mtool.util.StrUtil;
 
 /**
  * 描述：定时任务主信息
@@ -28,7 +28,7 @@ public class JobInfoSearchParam extends PageParam {
     }
 
     public void setJobName(String jobName) {
-        if(StringUtil.isBlank(jobName)){
+        if(StrUtil.isBlank(jobName)){
             jobName = null;
         }
         this.jobName = jobName;
@@ -39,7 +39,7 @@ public class JobInfoSearchParam extends PageParam {
     }
 
     public void setJobSystem(String jobSystem) {
-        if(StringUtil.isBlank(jobSystem)){
+        if(StrUtil.isBlank(jobSystem)){
             jobSystem = null;
         }
         this.jobSystem = jobSystem;
@@ -58,7 +58,7 @@ public class JobInfoSearchParam extends PageParam {
     }
 
     public void setStartCreateTime(String startCreateTime) {
-        if(StringUtil.isBlank(startCreateTime)){
+        if(StrUtil.isBlank(startCreateTime)){
             startCreateTime = null;
         }
         this.startCreateTime = startCreateTime;
@@ -68,7 +68,7 @@ public class JobInfoSearchParam extends PageParam {
         return endCreateTime;
     }
     public void setEndCreateTime(String endCreateTime) {
-        if(!StringUtil.isBlank(endCreateTime)){
+        if(!StrUtil.isBlank(endCreateTime)){
             endCreateTime = DateUtil.formatDate(DateUtil.addDays(DateUtil.parseDate(endCreateTime),1),DateUtil.DATE_PATTERN_LINE);
         }else{
             endCreateTime = null;
@@ -81,7 +81,7 @@ public class JobInfoSearchParam extends PageParam {
     }
 
     public void setJobStartTime(String jobStartTime) {
-        if(StringUtil.isBlank(jobStartTime)){
+        if(StrUtil.isBlank(jobStartTime)){
             jobStartTime = null;
         }
         this.jobStartTime = jobStartTime;
@@ -92,7 +92,7 @@ public class JobInfoSearchParam extends PageParam {
     }
 
     public void setJobEndTime(String jobEndTime) {
-        if(!StringUtil.isBlank(jobEndTime)){
+        if(!StrUtil.isBlank(jobEndTime)){
             jobEndTime = DateUtil.formatDate(DateUtil.addDays(DateUtil.parseDate(jobEndTime),1),DateUtil.DATE_PATTERN_LINE);
         }else{
             jobEndTime = null;

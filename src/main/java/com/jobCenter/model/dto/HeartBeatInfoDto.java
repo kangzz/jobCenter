@@ -1,7 +1,7 @@
 package com.jobCenter.model.dto;
 
-import com.jobCenter.util.StringUtil;
 import com.kangzz.mtool.date.DateUtil;
+import com.kangzz.mtool.util.StrUtil;
 
 import java.util.Date;
 
@@ -36,7 +36,7 @@ public class HeartBeatInfoDto {
     }
 
     public void setMasterIdentity(String masterIdentity) {
-        if(StringUtil.isBlank(masterIdentity)){
+        if(StrUtil.isBlank(masterIdentity)){
             masterIdentity = null;
         }
         this.masterIdentity = masterIdentity;
@@ -47,7 +47,7 @@ public class HeartBeatInfoDto {
     }
 
     public void setHeartType(String heartType) {
-        if(StringUtil.isBlank(heartType)){
+        if(StrUtil.isBlank(heartType)){
             heartType = null;
         }
         this.heartType = heartType;
