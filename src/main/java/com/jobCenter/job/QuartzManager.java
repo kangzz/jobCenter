@@ -1,20 +1,9 @@
-/**
- * @Description: 
- *
- * @Title: QuartzManager.java
- * @Package com.joyce.quartz
- * @Copyright: Copyright (c) 2014
- *
- * @author Comsys-LZP
- * @date 2014-6-26 下午03:15:52
- * @version V2.0
- */
 package com.jobCenter.job;
 
 import com.jobCenter.enums.TriggerState;
 import com.jobCenter.model.JobExecuteModel;
 import com.jobCenter.model.JobInfoModel;
-import com.jobCenter.util.DateUtil;
+import com.kangzz.mtool.date.DateUtil;
 import org.apache.log4j.Logger;
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
@@ -307,10 +296,10 @@ public class QuartzManager {
 			CronTrigger trigger = (CronTrigger) sched.getTrigger(jobName,TRIGGER_GROUP_NAME);
 			if(trigger != null){
 				if(trigger.getNextFireTime()!=null){
-					model.setNextFireTime(DateUtil.formatDate(trigger.getNextFireTime(),DateUtil.DATETIME24_PATTERN_LINE));
+					model.setNextFireTime(DateUtil.format(trigger.getNextFireTime(),DateUtil.NORM_DATETIME_PATTERN));
 				}
 				if(trigger.getPreviousFireTime()!=null){
-					model.setPreviousFireTime(DateUtil.formatDate(trigger.getPreviousFireTime(),DateUtil.DATETIME24_PATTERN_LINE));
+					model.setPreviousFireTime(DateUtil.format(trigger.getPreviousFireTime(),DateUtil.NORM_DATETIME_PATTERN));
 				}
 				int state = sched.getTriggerState(trigger.getName(),TRIGGER_GROUP_NAME);
 				model.setExecuteType(TriggerState.lookup.get(Integer.valueOf(state)));
