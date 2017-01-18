@@ -21,6 +21,7 @@ import com.jobCenter.service.JobInfoService;
 import com.jobCenter.service.JobService;
 import com.jobCenter.util.DateUtil;
 import com.kangzz.mtool.util.BooleanUtils;
+import com.kangzz.mtool.util.CollectionUtil;
 import com.kangzz.mtool.util.ObjectUtil;
 import com.kangzz.mtool.util.StrUtil;
 import org.apache.commons.beanutils.BeanUtils;
@@ -187,7 +188,7 @@ public class JobInfoServiceImpl implements JobInfoService {
             JobLinkInfo jobLinkInfo = thisJobLinkList.get(i);
             JobLinkInfo mapModel = dbJobLinkMap.get(jobLinkInfo.getJobLink()+jobLinkInfo.getServiceName());
             //如果数据库中有这个配置url了
-            if(mapModel != null){
+            if(ObjectUtil.isNotNull(mapModel)){
                 //如果原来的数据已经作废 那么要恢复启用 否则不需要处理
                 if(mapModel.getIsDel() == IsType.YES.getValue() || mapModel.getIsValid() == IsType.NO.getValue()){
                     needReviveList.add(mapModel);
@@ -206,11 +207,11 @@ public class JobInfoServiceImpl implements JobInfoService {
         //需要返回的有效link数据
         List<JobLinkInfo> returnList = new ArrayList<JobLinkInfo>();
         List<JobLinkInfo> successSaveList = this.saveInsertJobLinkInfo(needInsertList,jobInfo,userAccount);
-        if(successSaveList!=null && !successSaveList.isEmpty()){
+        if(CollectionUtil.isNotEmpty(successSaveList)){
             returnList.addAll(successSaveList);
         }
         List<JobLinkInfo> successReviveList = this.reviveJobLinkInfoList(needReviveList,userAccount);
-        if(successReviveList!=null && !successReviveList.isEmpty()){
+        if(CollectionUtil.isNotEmpty(successReviveList)){
             returnList.addAll(successReviveList);
         }
         this.deleteDbJobLinkInfo(needDeleteList,userAccount);
