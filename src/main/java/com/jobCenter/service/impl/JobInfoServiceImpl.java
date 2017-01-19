@@ -190,7 +190,7 @@ public class JobInfoServiceImpl implements JobInfoService {
             //如果数据库中有这个配置url了
             if(ObjectUtil.isNotNull(mapModel)){
                 //如果原来的数据已经作废 那么要恢复启用 否则不需要处理
-                if(mapModel.getIsDel() == IsType.YES.getValue() || mapModel.getIsValid() == IsType.NO.getValue()){
+                if(BooleanUtils.or(mapModel.getIsDel() == IsType.YES.getValue(),mapModel.getIsValid() == IsType.NO.getValue())){
                     needReviveList.add(mapModel);
                 }
             }else{//如果数据库中没有当前这个配置 那么需要新增

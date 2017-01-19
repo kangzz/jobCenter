@@ -18,6 +18,8 @@ import com.jobCenter.model.JobWarningPersonModel;
 import com.jobCenter.service.JobService;
 import com.jobCenter.util.*;
 import com.jobCenter.util.http.MessageUtil;
+import com.kangzz.mtool.util.BooleanUtils;
+import com.kangzz.mtool.util.CollectionUtil;
 import com.kangzz.mtool.util.StrUtil;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,7 +55,7 @@ public class JobServiceImpl implements JobService {
             searchParam.setHeartType(heartBeatInfo.getHeartType());
             searchParam.setIsDel(IsType.NO.getValue());
             List<HeartBeatInfo> infoList = heartBeatInfoMapper.selectByRecord(searchParam);
-            if (infoList == null || infoList.isEmpty()) {
+            if (CollectionUtil.isEmpty(infoList)) {
                 heartBeatInfoMapper.insertSelective(heartBeatInfo);
             }
 
@@ -88,11 +90,7 @@ public class JobServiceImpl implements JobService {
     public Boolean changeToMaster(HeartBeatInfo heartBeatInfo) {
         try {
             int countNum = heartBeatInfoMapper.updateByOutTime(heartBeatInfo);
-            if (countNum > 0) {
-                return true;
-            } else {
-                return false;
-            }
+            return BooleanUtils.toObjByBoolean(countNum > 0 ,true ,false);
         } catch (Exception e) {
             throw new NeedWarningException(102, e);
         }
@@ -119,7 +117,7 @@ public class JobServiceImpl implements JobService {
                 JobInfoModel jobInfoMode = jobList.get(i);
                 //获取所有的主任务下子任务信息 如果为空 不用加载到任务列表中
                 List<JobLinkInfoModel> linkList = jobInfoMode.getJobLinkInfoModels();
-                if (linkList == null || linkList.isEmpty()) {
+                if (CollectionUtil.isEmpty(linkList)) {
                     continue;
                 }
                 QuartzJob quartzJob = new QuartzJob();
@@ -158,7 +156,7 @@ public class JobServiceImpl implements JobService {
             //查询所有定时任务数据
             List<JobInfo> jobInfoList = jobInfoMapper.selectByJobInfo(jobInfo);
             //遍历所有任务数据 进而查询每个任务下的链接请求信息
-            if (jobInfoList != null && !jobInfoList.isEmpty()) {
+            if (CollectionUtil.isNotEmpty(jobInfoList)) {
                 int size = jobInfoList.size();
                 for (int i = 0; i < size; i++) {
                     JobInfoModel model = this.getJobModel(jobInfoList.get(i));
@@ -194,11 +192,11 @@ public class JobServiceImpl implements JobService {
         searchJobLinkInfo.setIsValid(IsType.YES.getValue());
         List<JobLinkInfo> jobLinkInfoList =
                 jobLinkInfoMapper.selectByJobLinkInfo(searchJobLinkInfo);
-        if (jobLinkInfoList == null || jobLinkInfoList.isEmpty()) {
+        if (CollectionUtil.isEmpty(jobLinkInfoList)) {
             return null;
         }
         int linkSize = jobLinkInfoList.size();
-        JobLinkInfo jobLinkInfoDb = null;
+        JobLinkInfo jobLinkInfoDb;
         List<JobLinkInfoModel> jobLinkInfoModels = new ArrayList<JobLinkInfoModel>();
         for (int j = 0; j < linkSize; j++) {
             JobLinkInfoModel jobLinkModel = new JobLinkInfoModel();
