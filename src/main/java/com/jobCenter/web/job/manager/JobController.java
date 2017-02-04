@@ -235,8 +235,4 @@ public class JobController extends BaseController {
 			return errorReturn(1111);
 		}
 	}
-
-
-
-
 }
