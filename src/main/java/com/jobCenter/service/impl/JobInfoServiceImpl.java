@@ -25,6 +25,7 @@ import com.kangzz.mtool.util.CollectionUtil;
 import com.kangzz.mtool.util.ObjectUtil;
 import com.kangzz.mtool.util.StrUtil;
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -223,10 +224,13 @@ public class JobInfoServiceImpl implements JobInfoService {
         try{
             String[] jobLinkArr = StrUtil.split(jobLinkListStr,";");
             for (int i = 0; i < jobLinkArr.length; i++) {
-                String[] jobLink = StrUtil.split(jobLinkArr[i],"\\|");
+                if(StringUtils.isBlank(jobLinkArr[i])){
+                    continue;
+                }
+                String[] jobLink = StrUtil.split(jobLinkArr[i],":");
                 JobLinkInfo jobLinkInfo = new JobLinkInfo();
-                String jobLinkStr = jobLink[0];
-                String serviceName = jobLink[1];
+                String serviceName = jobLink[0];
+                String jobLinkStr = jobLink[1];
                 if(BooleanUtils.andNotNullOrEmpty(jobLinkStr,serviceName)){
                     jobLinkInfo.setJobLink(jobLinkStr);
                     jobLinkInfo.setServiceName(serviceName);
@@ -334,10 +338,12 @@ public class JobInfoServiceImpl implements JobInfoService {
         record.setIsValid(IsType.YES.getValue());
         List<JobLinkInfo> jobLinkList = jobLinkInfoMapper.selectByJobLinkInfo(record);
         for (int i = 0; i < jobLinkList.size(); i++) {
-            jobLinkListStr.append(jobLinkList.get(i).getJobLink());
-            jobLinkListStr.append("|");
             jobLinkListStr.append(jobLinkList.get(i).getServiceName());
-            jobLinkListStr.append(";");
+            jobLinkListStr.append(":");
+            jobLinkListStr.append(jobLinkList.get(i).getJobLink());
+            if(i != jobLinkList.size() - 1){
+                jobLinkListStr.append(";");
+            }
         }
         jobInfoSaveParam.setJobLinkListStr(jobLinkListStr.toString());
         return jobInfoSaveParam;
