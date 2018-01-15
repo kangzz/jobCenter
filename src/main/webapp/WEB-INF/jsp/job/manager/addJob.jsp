@@ -102,7 +102,7 @@
                         <td style="width: 12%;" align="right"><font style="color: red;">*</font>执行机器:</td>
                         <td>
                             <input id="jobLinkListStr" maxlength="200" name="jobLinkListStr" type="text" class="form-control"
-                                   style="width: 480px;" placeholder="格式:serviceName1=jobLinkUrl1;serviceName2=jobLinkUrl2">
+                                   style="width: 480px;" placeholder="格式:serviceName1,jobLinkUrl1;serviceName2,jobLinkUrl2">
                         </td>
                     </tr>
                 </table>

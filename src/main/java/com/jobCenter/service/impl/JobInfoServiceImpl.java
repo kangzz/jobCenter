@@ -227,7 +227,7 @@ public class JobInfoServiceImpl implements JobInfoService {
                 if(StringUtils.isBlank(jobLinkArr[i])){
                     continue;
                 }
-                String[] jobLink = StrUtil.split(jobLinkArr[i],"=");
+                String[] jobLink = StrUtil.split(jobLinkArr[i],",");
                 JobLinkInfo jobLinkInfo = new JobLinkInfo();
                 String serviceName = jobLink[0];
                 String jobLinkStr = jobLink[1];
@@ -339,7 +339,7 @@ public class JobInfoServiceImpl implements JobInfoService {
         List<JobLinkInfo> jobLinkList = jobLinkInfoMapper.selectByJobLinkInfo(record);
         for (int i = 0; i < jobLinkList.size(); i++) {
             jobLinkListStr.append(jobLinkList.get(i).getServiceName());
-            jobLinkListStr.append("=");
+            jobLinkListStr.append(",");
             jobLinkListStr.append(jobLinkList.get(i).getJobLink());
             if(i != jobLinkList.size() - 1){
                 jobLinkListStr.append(";");
