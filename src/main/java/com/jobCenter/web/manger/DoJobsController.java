@@ -25,30 +25,4 @@ public class DoJobsController extends JobCenterCommonController {
 	public void notify(HttpServletRequest request, HttpServletResponse response) {
 		super.notify(request, response);
 	}
-
-
-	public static void main(String[] aa){
-
-		String bb = "str";
-		changeString(bb);
-		System.out.println(bb);
-
-		Integer integerVal = 0;
-		changeInteger(integerVal);
-		System.out.println(integerVal);
-
-		int intVal = 0;
-		changeInt(intVal);
-		System.out.println(intVal);
-
-	}
-	public static void changeString(String bb){
-		bb = bb+"___str";
-	}
-	public static void changeInteger(Integer integerVal){
-		integerVal = integerVal+123;
-	}
-	public static void changeInt(int intVal){
-		intVal = intVal+234;
-	}
 }

@@ -11,6 +11,7 @@ import com.jobCenter.mapper.JobInfoMapper;
 import com.jobCenter.mapper.JobLinkInfoMapper;
 import com.jobCenter.model.JobInfoModel;
 import com.jobCenter.model.JobLinkInfoModel;
+import com.jobCenter.model.JobWarningModel;
 import com.jobCenter.model.authority.logon.UserAccount;
 import com.jobCenter.model.dto.JobExecuteResultDto;
 import com.jobCenter.model.dto.JobInfoDto;
@@ -20,6 +21,7 @@ import com.jobCenter.model.param.JobInfoSearchParam;
 import com.jobCenter.service.JobInfoService;
 import com.jobCenter.service.JobService;
 import com.jobCenter.util.DateUtil;
+import com.jobCenter.util.NotifyWarningUtil;
 import com.kangzz.mtool.util.BooleanUtils;
 import com.kangzz.mtool.util.CollectionUtil;
 import com.kangzz.mtool.util.ObjectUtil;
@@ -227,7 +229,7 @@ public class JobInfoServiceImpl implements JobInfoService {
                 if(StringUtils.isBlank(jobLinkArr[i])){
                     continue;
                 }
-                String[] jobLink = StrUtil.split(jobLinkArr[i],",");
+                String[] jobLink = StrUtil.split(jobLinkArr[i],"|");
                 JobLinkInfo jobLinkInfo = new JobLinkInfo();
                 String serviceName = jobLink[0];
                 String jobLinkStr = jobLink[1];
@@ -339,11 +341,9 @@ public class JobInfoServiceImpl implements JobInfoService {
         List<JobLinkInfo> jobLinkList = jobLinkInfoMapper.selectByJobLinkInfo(record);
         for (int i = 0; i < jobLinkList.size(); i++) {
             jobLinkListStr.append(jobLinkList.get(i).getServiceName());
-            jobLinkListStr.append(",");
+            jobLinkListStr.append("|");
             jobLinkListStr.append(jobLinkList.get(i).getJobLink());
-            if(i != jobLinkList.size() - 1){
-                jobLinkListStr.append(";");
-            }
+            jobLinkListStr.append(";");
         }
         jobInfoSaveParam.setJobLinkListStr(jobLinkListStr.toString());
         return jobInfoSaveParam;
@@ -377,6 +377,25 @@ public class JobInfoServiceImpl implements JobInfoService {
             throw new CommonException(1001);
         }
     }
-
-
+    /**
+     * <pre>
+     * desc : 立即执行任务
+     * @author : kangzz
+     * date : 2018-01-15 18:46:39
+     *
+     * @Param jobId 任务ID
+     * @return
+     * </pre>
+     */
+    public void dealJobNowById(String jobId){
+        JobInfo jobInfo = jobInfoMapper.selectByPrimaryKey(jobId);
+        if(ObjectUtil.isNotNull(jobInfo)){
+            JobInfoModel jobInfoMode = jobService.getJobModel(jobInfo);
+            try {
+                jobService.sendJobRequest(jobInfoMode);
+            } catch (Exception e) {
+                logger.error("定时任务发送请求异常", e);
+            }
+        }
+    }
 }

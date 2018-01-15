@@ -235,4 +235,24 @@ public class JobController extends BaseController {
 			return errorReturn(1111);
 		}
 	}
+	/**
+	 * 描述：立即执行任务
+	 * 作者 ：kangzz
+	 * 日期 ：2016-12-01 11:53:29
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/dealJobNowById.do", method = {RequestMethod.GET, RequestMethod.POST})
+	public CommonResponse dealJobNowById(String jobId){
+		try{
+			jobInfoService.dealJobNowById(jobId);
+			return successReturn(null);
+		}catch (CommonException e){
+			return errorReturn(e.getCode());
+		}catch (Exception e){
+			logger.error("执行失败",e);
+			return errorReturn(1111);
+		}
+	}
+
+
 }

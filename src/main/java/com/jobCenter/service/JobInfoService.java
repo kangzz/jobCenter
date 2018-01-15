@@ -28,5 +28,16 @@ public interface JobInfoService {
     JobInfoSaveParam getJobInfoToEdit(String jobId);
     List<JobInfo> queryJobInfoList(JobInfo jobInfo);
     Map<String,Object> queryJobExecuteListSearchParam(JobExecuteResultParam jobExecuteResultParam);
+    /**
+     * <pre>
+     * desc : 立即执行任务
+     * @author : kangzz
+     * date : 2018-01-15 18:46:39
+     *
+     * @Param jobId 任务ID
+     * @return
+     * </pre>
+     */
+    void dealJobNowById(String jobId);
 }
 

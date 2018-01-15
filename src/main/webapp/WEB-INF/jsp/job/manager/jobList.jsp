@@ -416,6 +416,34 @@
 		});
 	}
 
+	//不展示/展示项目
+	function dealJobNowById(jobId) {
+		var message = "您确认要立即执行该任务？";
+
+		parent.layer.confirm(message, {
+			icon: 3,
+			btn: ['确认', '取消'], //按钮
+			shade: false //不显示遮罩
+		}, function () {
+			$.ajax({
+				url: "${path}/job/dealJobNowById.do",
+				dataType: "json",
+				data: {jobId: jobId},
+				type: "post",
+				success: function (result) {
+					if (result.status != null && 'success' == result.status) {
+						parent.layer.msg("操作成功！", {icon: 1});
+						query();
+					} else {
+						parent.layer.alert(result.error_message, {icon: 2});
+					}
+				}
+			});
+		}, function () {
+			// parent.layer.msg('奇葩么么哒', {shift: 6});
+		});
+	}
+
 	function toUpdateJobInfo(jobId) {
 		parent.addMenuItem("${path}/job/toUpdateJobInfo.do?jobId=" + jobId, "updateJobInfo", "修改任务页");
 	}
@@ -458,6 +486,7 @@
 		}else{
 			str = str + "<a href=\"javascript:;\" onclick=\"changeJobValidById('"+jobId+"', '1');\">启用</a>&nbsp;";
 		}
+		str = str + "<a href=\"javascript:;\" onclick=\"dealJobNowById('"+jobId+"', '1');\">立即执行</a>&nbsp;";
 		str = str + "<a href=\"#\" onclick=\"toQueryJobExecuteList('"+jobId+"');\">执行结果</a>&nbsp;";
 		return str;
 	}
